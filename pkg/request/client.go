@@ -12,10 +12,11 @@ import (
 const ServerURL string = "https://cloudor.io/api/v1"
 
 // PostCloudor issues a POST to ServerURL
-func PostCloudor(requestBody []byte, token *string, apiPath string) ([]byte, error) {
+func PostCloudor(requestBody []byte, username *string, token *string, apiPath string) ([]byte, error) {
 	client := resty.New()
 	resp, err := client.R().SetHeader("Content-Type", "application/json").
 		SetHeader("Authorization", "Bearer "+*token).
+		SetHeader("From", *username).
 		SetBody(requestBody).
 		Post(ServerURL + apiPath)
 	if err != nil {

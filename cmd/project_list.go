@@ -21,18 +21,27 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	user string
+)
+
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "list projects",
+	Long:  `list projects from current user (default) or public projects from other users`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		username, _, err := GetLoginToken()
+		if err != nil {
+			return fmt.Errorf("Error getting user credentails, please log in.")
+		}
+		// default to myself
+		if user == "" {
+			user = *username
+		}
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("list called")
+		return nil
 	},
 }
 

@@ -27,7 +27,7 @@ var projectCmd = &cobra.Command{
 	Short: "project sub-command",
 	Long:  `Entry point to issue all project-related commands: create, list, describe etc. `,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("project called")
+		fmt.Println("Please add -h for how to run project commands.")
 	},
 }
 

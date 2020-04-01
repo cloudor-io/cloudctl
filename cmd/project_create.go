@@ -71,7 +71,7 @@ var createCmd = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("%v", err)
 		}
-		resp, err := request.PostCloudor(createInputBytes, token, "/project/create")
+		resp, err := request.PostCloudor(createInputBytes, username, token, "/project/create")
 
 		if err != nil {
 			return err
