@@ -41,14 +41,18 @@ var createCmd = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("Error getting user credentails, please log in.")
 		}
-		if name == "" && file == "" {
-			name = randomdata.SillyName()
+		// create a backup name if not specified
+		if name == "" {
+			name = randomdata.SillyName() // TODO lower case
 		}
 		if file == "" && len(args) == 0 {
 			return fmt.Errorf("Either the input file (-f) or the docker image is missing, recommend a name %s", name)
 		}
-		fmt.Printf("username %s\n", *username)
-		createInput := request.CreateRequest{}
+
+		createInput := request.CreateRequest{
+			UserName: *username,
+			Name:     name, // add a name anyway
+		}
 		if file != "" {
 			content, err := ioutil.ReadFile(file)
 			if err != nil {

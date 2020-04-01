@@ -30,8 +30,6 @@ type Project struct {
 	Kind string
 
 	Name string
-	// unique id, read-only
-	UUID string
 
 	// optional, false
 	Public bool
@@ -56,7 +54,7 @@ type Job struct {
 	// must be job
 	Kind string
 	// unique id, read-only
-	UID     string
+	UUID    string
 	Name    string
 	Vendors []CloudVendor
 }
