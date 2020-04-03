@@ -1,28 +1,15 @@
 package api
 
 //////////////////////////////////////////////////
-// Project
-type RunType struct {
-	// Supported CPU, NVIDIA-GPU, AMD-GPU, (TPU)
-	Type string
-	// Minimal core/card
-	// optional 1
-	Min int32
-	// optional -1
-	Max int32
-	// Minimal Memory in GB
-	// optional 4 (GB)
-	MinMem int32
-}
 
 type Command struct {
 	Entry string
 	Args  []string
 }
-type ProjSpec struct {
+
+type RunSpec struct {
 	Image    string
 	Commands []Command
-	RunType  RunType
 }
 
 type Project struct {
@@ -38,23 +25,65 @@ type Project struct {
 	// optional, empty
 	Description string
 
-	Spec ProjSpec
+	Spec RunSpec
 }
 
 //////////////////////////////////////////////////
+type StorageSpec struct {
+	Type  string // local, s3
+	Path  string // local path or cloud path (s3 path e)
+	Mount string // mounting path in the docker image
+}
 
 // Job
 type CloudVendor struct {
+	Tag          string
 	Name         string
 	InstanceType string
 	Region       string
+	Inputs       []StorageSpec
+	Outputs      []StorageSpec
 }
 
 type Job struct {
 	// must be job
 	Kind string
 	// unique id, read-only
-	UUID    string
-	Name    string
+	UUID string
+	// name, can be auto-generated
+	Name   string
+	RunTag string
+	Spec   RunSpec
+
 	Vendors []CloudVendor
+}
+
+func DefaultJob() *Job {
+	return &Job{
+		Kind: "job",
+		UUID: "",
+		Name: "",
+		Spec: RunSpec{
+			Image: "",
+		},
+		RunTag: "",
+		Vendors: []CloudVendor{
+			CloudVendor{
+				Tag:          "",
+				Name:         "aws",
+				InstanceType: "",
+				Region:       "us-west-2",
+				Inputs: []StorageSpec{
+					StorageSpec{
+						Type: "local",
+					},
+				},
+				Outputs: []StorageSpec{
+					StorageSpec{
+						Type: "local",
+					},
+				},
+			},
+		},
+	}
 }

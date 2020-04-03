@@ -15,7 +15,9 @@ limitations under the License.
 */
 package main
 
-import "github.com/cloudor-io/cloudctl/cmd"
+import (
+	"github.com/cloudor-io/cloudctl/cmd"
+)
 
 func main() {
 	cmd.Execute()

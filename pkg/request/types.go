@@ -12,3 +12,9 @@ type CreateRequest struct {
 	Name     string `json:"name,omitempty"`
 	Image    string `json:"image,omitempty"`
 }
+
+// RunJobRequest defines the request for running a job
+type RunJobRequest struct {
+	UserName string `json:"user_name,omitempty"`
+	YAML     string `json:"yaml,omitempty"`
+}
