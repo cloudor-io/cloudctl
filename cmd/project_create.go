@@ -76,7 +76,7 @@ var createCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		fmt.Printf("Create project succeeded: %s", string(resp))
+		fmt.Printf("Create project succeeded: %s", *resp)
 		return nil
 	},
 }

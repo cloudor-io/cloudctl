@@ -104,9 +104,15 @@ func (run *RunEngine) Run(username, token *string) error {
 	}
 	resp, err := request.PostCloudor(runJobBytes, username, token, "/job/create")
 	if err != nil {
-		log.Printf("Submitting job failed error code %v: %s", err, string(resp))
+		log.Fatalf("Submitting job failed %v", err)
 		return err
 	}
-	log.Printf("Submitting job succeeded: %s", string(resp))
+	log.Printf("Submitting job succeeded: %s", *resp)
+	localInput, localOutput := run.Job.HasLocals()
+	// if no local input, just return. User will poll the job status
+	if !localInput && !localOutput {
+		return nil
+	}
+	log.Fatalf("Not implemented")
 	return nil
 }

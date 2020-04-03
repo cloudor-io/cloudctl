@@ -66,7 +66,8 @@ func init() {
 	runCmd.Flags().StringVarP(&runArgs.Region, "region", "", "us-west-2", "region code in the vendor")
 	runCmd.Flags().StringVarP(&runArgs.Vendor, "vendor", "", "aws", "cloud vendor name: aws")
 	runCmd.Flags().StringVarP(&runArgs.InstanceType, "instance-type", "", "aws", "instance-type in the cloud vendor")
-	runCmd.Flags().StringVarP(&runArgs.Input, "input", "i", "", "input, local directory or a cloud storage object")
-	runCmd.Flags().StringVarP(&runArgs.InputMount, "input-mount", "i", "", "input directory mounted to the docker image")
-	runCmd.Flags().StringVarP(&runArgs.OutputMount, "output-mount", "o", "", "output directory mounted the docker image")
+	runCmd.Flags().StringVarP(&runArgs.Input, "input", "i", "", "input, local directory. Use yaml file if use cloud storage for input")
+	runCmd.Flags().StringVarP(&runArgs.Output, "output", "o", "", "output, local directory. User yaml file if use cloud storage for output")
+	runCmd.Flags().StringVarP(&runArgs.InputMount, "input-mount", "", "", "input directory mounted to the docker image")
+	runCmd.Flags().StringVarP(&runArgs.OutputMount, "output-mount", "", "", "output directory mounted the docker image")
 }

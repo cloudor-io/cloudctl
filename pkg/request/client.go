@@ -1,18 +1,30 @@
 package request
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-resty/resty/v2"
 )
 
+func trimQuotes(s string) string {
+	if len(s) >= 2 {
+		if s[0] == '"' && s[len(s)-1] == '"' {
+			return s[1 : len(s)-1]
+		}
+	}
+	return s
+}
+
 // ServerURL is the cloudor.io's URL
 const ServerURL string = "https://cloudor.io/api/v1"
 
 // PostCloudor issues a POST to ServerURL
-func PostCloudor(requestBody []byte, username *string, token *string, apiPath string) ([]byte, error) {
+func PostCloudor(requestBody []byte, username *string, token *string, apiPath string) (*string, error) {
 	client := resty.New()
 	resp, err := client.R().SetHeader("Content-Type", "application/json").
 		SetHeader("Authorization", "Bearer "+*token).
@@ -20,20 +32,20 @@ func PostCloudor(requestBody []byte, username *string, token *string, apiPath st
 		SetBody(requestBody).
 		Post(ServerURL + apiPath)
 	if err != nil {
-		fmt.Printf("Remote login restful error: %v", err)
 		return nil, err
 	}
 	if resp.StatusCode() == http.StatusUnauthorized {
-		return nil, fmt.Errorf("Unauthorized, please log in.")
+		return nil, errors.New("unauthorized, please log in.")
 	}
+	body := strings.TrimSuffix(trimQuotes(string(resp.Body())), "\\n")
 	if resp.StatusCode() == http.StatusOK {
-		return resp.Body(), nil
+		return &body, nil
 	} else {
-		body := string(resp.Body())
 		if body != "" {
-			return nil, fmt.Errorf("Remote API error code %d, response %s.", resp.StatusCode(), body)
+
+			return nil, errors.New("remote API error response: " + body)
 		}
-		return nil, fmt.Errorf("Remote API error code %d, .", resp.StatusCode())
+		return nil, errors.New("remote API error code " + strconv.Itoa(resp.StatusCode()))
 	}
 
 }

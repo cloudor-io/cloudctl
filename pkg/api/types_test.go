@@ -20,11 +20,12 @@ func TestDefaultJob(t *testing.T) {
 				Spec: RunSpec{
 					Image: "",
 				},
+				RunTag: "first_choice",
 				Vendors: []CloudVendor{
 					CloudVendor{
-						Tag:          "",
+						Tag:          "first_choice",
 						Name:         "aws",
-						InstanceType: "",
+						InstanceType: "g3s.xlarge",
 						Region:       "us-west-2",
 						Inputs: []StorageSpec{
 							StorageSpec{
