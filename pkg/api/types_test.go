@@ -18,7 +18,6 @@ func TestDefaultJob(t *testing.T) {
 				Spec: RunSpec{
 					Image: "",
 				},
-				RunTag: "first_choice",
 				Vendors: []CloudVendor{
 					CloudVendor{
 						Tag:          "first_choice",

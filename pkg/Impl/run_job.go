@@ -67,6 +67,7 @@ func updateJobByFile(job *api.Job, runArgs *RunArgs) error {
 
 type RunEngine struct {
 	JobName string
+	RunTag  string
 	Job     *api.Job
 }
 
@@ -90,6 +91,7 @@ func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {
 	}
 	runEngine := &RunEngine{
 		JobName: runArgs.Name,
+		RunTag:  runArgs.Tag,
 		Job:     job,
 	}
 	return runEngine, nil
@@ -104,6 +106,7 @@ func (run *RunEngine) Run(username, token *string) error {
 
 	runJobRequest := request.RunJobRequest{
 		UserName: *username,
+		RunTag:   run.RunTag,
 		JobName:  "",
 		YAML:     string(jobBytes),
 	}
@@ -122,7 +125,7 @@ func (run *RunEngine) Run(username, token *string) error {
 	if err != nil {
 		log.Fatalf("Internal error, cann't parse job response.")
 	}
-	localInput, localOutput := jobMessage.Job.HasLocals()
+	localInput, localOutput := jobMessage.Job.HasLocals(run.RunTag)
 	// if no local input, just return. User will poll the job status
 	if !localInput && !localOutput {
 		return nil

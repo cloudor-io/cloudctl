@@ -3,15 +3,15 @@ package api
 //////////////////////////////////////////////////
 // Find the chosen vendor by tag, if no tag is set, choose the first one
 // if no vendor exists, return -1
-func (job *Job) FindRunningVendorIndexByTag() int {
+func (job *Job) FindRunningVendorIndexByTag(tag string) int {
 	if len(job.Vendors) == 0 {
 		return -1
 	}
-	if job.RunTag == "" {
+	if tag == "" {
 		return 0
 	}
 	for id, vendor := range job.Vendors {
-		if vendor.Tag == job.RunTag {
+		if vendor.Tag == tag {
 			return id
 		}
 	}
@@ -25,8 +25,8 @@ func (job *Job) FindRunningVendorIndexByTag() int {
 // If both false, the job run can immediately return
 // If Input is true, the job run needs to wait for the instances to boot to copy the local dir
 // If output is true, the job run needs to wait for the run to finish to copy back to local dir
-func (job *Job) HasLocals() (bool, bool) {
-	runVendorIndex := job.FindRunningVendorIndexByTag()
+func (job *Job) HasLocals(tag string) (bool, bool) {
+	runVendorIndex := job.FindRunningVendorIndexByTag(tag)
 	if runVendorIndex < 0 {
 		return false, false
 	}

@@ -55,9 +55,8 @@ type CloudVendor struct {
 
 type Job struct {
 	// must be job
-	Kind   string  `json:"kind,omitempty"`
-	RunTag string  `json:"run_tag,omitempty"`
-	Spec   RunSpec `json:"spec,omitempty"`
+	Kind string  `json:"kind,omitempty"`
+	Spec RunSpec `json:"spec,omitempty"`
 
 	Vendors []CloudVendor `json:"vendors,omitempty"`
 }
@@ -68,7 +67,6 @@ func DefaultJob() *Job {
 		Spec: RunSpec{
 			Image: "",
 		},
-		RunTag: "first_choice",
 		Vendors: []CloudVendor{
 			CloudVendor{
 				Tag:          "first_choice",

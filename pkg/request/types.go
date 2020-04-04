@@ -21,6 +21,7 @@ type CreateRequest struct {
 type RunJobRequest struct {
 	UserName string `json:"user_name,omitempty"`
 	JobName  string `json:"job_name,omitempty"`
+	RunTag   string `json:"run_tag,omitempty"`
 	YAML     string `json:"yaml,omitempty"`
 }
 
