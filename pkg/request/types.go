@@ -42,6 +42,6 @@ type JobRunInfo struct {
 // Use structured data structure for communication
 type RunJobMessage struct {
 	UserName string
-	RunInfo  api.JobRunInfo
+	RunInfo  JobRunInfo
 	Job      api.Job
 }

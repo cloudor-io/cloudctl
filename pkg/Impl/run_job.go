@@ -108,7 +108,12 @@ func (run *RunEngine) Run(username, token *string) error {
 		return err
 	}
 	log.Printf("Submitting job succeeded: %s", *resp)
-	localInput, localOutput := run.Job.HasLocals()
+	jobMessage := &request.RunJobMessage{}
+	err = json.Unmarshal([]byte(*resp), jobMessage)
+	if err != nil {
+		log.Fatalf("Internal error, cann't parse job response.")
+	}
+	localInput, localOutput := jobMessage.Job.HasLocals()
 	// if no local input, just return. User will poll the job status
 	if !localInput && !localOutput {
 		return nil
