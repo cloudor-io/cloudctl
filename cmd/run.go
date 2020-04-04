@@ -63,6 +63,7 @@ func init() {
 	// is called directly, e.g.:
 	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	runCmd.Flags().StringVarP(&runArgs.File, "file", "f", "", "job config yaml file")
+	runCmd.Flags().StringVarP(&runArgs.Name, "name", "n", "", "job name")
 	runCmd.Flags().StringVarP(&runArgs.Region, "region", "", "us-west-2", "region code in the vendor")
 	runCmd.Flags().StringVarP(&runArgs.Vendor, "vendor", "", "aws", "cloud vendor name: aws")
 	runCmd.Flags().StringVarP(&runArgs.InstanceType, "instance-type", "", "aws", "instance-type in the cloud vendor")

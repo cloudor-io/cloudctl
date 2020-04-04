@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/Pallinder/go-randomdata"
 	"github.com/cloudor-io/cloudctl/pkg/api"
 	"github.com/cloudor-io/cloudctl/pkg/request"
 	"gopkg.in/yaml.v2"
@@ -13,6 +14,7 @@ import (
 type RunArgs struct {
 	File         string
 	Tag          string
+	Name         string
 	Vendor       string
 	Region       string
 	InstanceType string
@@ -64,7 +66,8 @@ func updateJobByFile(job *api.Job, runArgs *RunArgs) error {
 }
 
 type RunEngine struct {
-	Job *api.Job
+	JobName string
+	Job     *api.Job
 }
 
 func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {
@@ -81,8 +84,13 @@ func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {
 			return nil, err
 		}
 	}
+	// give it a random name if not specified
+	if runArgs.Name == "" {
+		runArgs.Name = randomdata.SillyName()
+	}
 	runEngine := &RunEngine{
-		Job: job,
+		JobName: runArgs.Name,
+		Job:     job,
 	}
 	return runEngine, nil
 }
@@ -96,6 +104,7 @@ func (run *RunEngine) Run(username, token *string) error {
 
 	runJobRequest := request.RunJobRequest{
 		UserName: *username,
+		JobName:  "",
 		YAML:     string(jobBytes),
 	}
 	runJobBytes, err := json.Marshal(runJobRequest)

@@ -43,7 +43,7 @@ var createCmd = &cobra.Command{
 		}
 		// create a backup name if not specified
 		if name == "" {
-			name = randomdata.SillyName() // TODO lower case
+			name = randomdata.SillyName()
 		}
 		if file == "" && len(args) == 0 {
 			return fmt.Errorf("Either the input file (-f) or the docker image is missing, recommend a name %s", name)
