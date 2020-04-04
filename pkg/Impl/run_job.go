@@ -49,8 +49,8 @@ func updateJobByArgs(job *api.Job, runArgs *RunArgs) error {
 		if runArgs.OutputMount == "" {
 			log.Fatalf("Output mounting point must be specified if output is used.")
 		}
-		job.Vendors[0].Outputs[0].Path = runArgs.Output
-		job.Vendors[0].Outputs[0].Mount = runArgs.OutputMount
+		job.Vendors[0].Output.Path = runArgs.Output
+		job.Vendors[0].Output.Mount = runArgs.OutputMount
 	}
 	return nil
 }

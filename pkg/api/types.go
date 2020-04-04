@@ -1,15 +1,16 @@
 package api
 
 //////////////////////////////////////////////////
-
-type Command struct {
-	Entry string
-	Args  []string
+type Env struct {
+	Name  string
+	Value string
 }
 
 type RunSpec struct {
-	Image    string
-	Commands []Command
+	Image   string
+	Envs    Env
+	Command string
+	Args    []string
 }
 
 type Project struct {
@@ -29,33 +30,40 @@ type Project struct {
 }
 
 //////////////////////////////////////////////////
-type StorageSpec struct {
-	Type  string // local, s3
-	Path  string // local path or cloud path (s3 path e)
-	Mount string // mounting path in the docker image
+type Stage struct {
+	Type       string `json:"type,omitempty"`
+	Entrypoint string `json:"url,omitempty"`
+	Secret     string `json:"secret,omitempty"`
+}
+
+type DataSpec struct {
+	Type  string `json:"type,omitempty"` // local, s3
+	Path  string `json:"path,omitempty"` // local path or cloud path (s3 path e)
+	Stage Stage  `json:"stage,omitempty"`
+	Mount string `json:"mount,omitempty"` // mounting path in the docker image
 }
 
 // Job
 type CloudVendor struct {
-	Tag          string
-	Name         string
-	InstanceType string
-	Region       string
-	Inputs       []StorageSpec
-	Outputs      []StorageSpec
+	Tag          string     `json:"tag,omitempty"`
+	Name         string     `json:"name,omitempty"`
+	InstanceType string     `json:"instance_type,omitempty"`
+	Region       string     `json:"region,omitempty"`
+	Inputs       []DataSpec `json:"inputs,omitempty"`
+	Output       DataSpec   `json:"output,omitempty"`
 }
 
 type Job struct {
 	// must be job
-	Kind string
+	Kind string `json:"kind,omitempty"`
 	// unique id, read-only
-	UUID string
+	UUID string `json:"uuid,omitempty"`
 	// name, can be auto-generated
-	Name   string
-	RunTag string
-	Spec   RunSpec
+	Name   string  `json:"name,omitempty"`
+	RunTag string  `json:"run_tag,omitempty"`
+	Spec   RunSpec `json:"spec,omitempty"`
 
-	Vendors []CloudVendor
+	Vendors []CloudVendor `json:"vendors,omitempty"`
 }
 
 func DefaultJob() *Job {
@@ -73,15 +81,13 @@ func DefaultJob() *Job {
 				Name:         "aws",
 				InstanceType: "g3s.xlarge",
 				Region:       "us-west-2",
-				Inputs: []StorageSpec{
-					StorageSpec{
+				Inputs: []DataSpec{
+					DataSpec{
 						Type: "local",
 					},
 				},
-				Outputs: []StorageSpec{
-					StorageSpec{
-						Type: "local",
-					},
+				Output: DataSpec{
+					Type: "local",
 				},
 			},
 		},

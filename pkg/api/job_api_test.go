@@ -103,8 +103,8 @@ func TestJob_HasLocals(t *testing.T) {
 				Vendors: []CloudVendor{
 					CloudVendor{
 						Tag: "tag1",
-						Inputs: []StorageSpec{
-							StorageSpec{
+						Inputs: []DataSpec{
+							DataSpec{
 								Type: "local",
 							},
 						},

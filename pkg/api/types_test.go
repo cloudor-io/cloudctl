@@ -27,15 +27,13 @@ func TestDefaultJob(t *testing.T) {
 						Name:         "aws",
 						InstanceType: "g3s.xlarge",
 						Region:       "us-west-2",
-						Inputs: []StorageSpec{
-							StorageSpec{
+						Inputs: []DataSpec{
+							DataSpec{
 								Type: "local",
 							},
 						},
-						Outputs: []StorageSpec{
-							StorageSpec{
-								Type: "local",
-							},
+						Output: DataSpec{
+							Type: "local",
 						},
 					},
 				},

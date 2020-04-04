@@ -37,10 +37,8 @@ func (job *Job) HasLocals() (bool, bool) {
 			inputHasLocal = true
 		}
 	}
-	for _, onput := range vendor.Outputs {
-		if onput.Type == "local" {
-			outputHasLocal = true
-		}
+	if vendor.Output.Type == "local" {
+		outputHasLocal = true
 	}
 	return inputHasLocal, outputHasLocal
 }

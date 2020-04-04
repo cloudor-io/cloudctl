@@ -18,3 +18,9 @@ type RunJobRequest struct {
 	UserName string `json:"user_name,omitempty"`
 	YAML     string `json:"yaml,omitempty"`
 }
+
+type RunJobResponse struct {
+	UserName string
+	UUID     string
+	JobName  string
+}
