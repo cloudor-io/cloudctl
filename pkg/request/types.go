@@ -1,5 +1,9 @@
 package request
 
+import (
+	"github.com/cloudor-io/cloudctl/pkg/api"
+)
+
 // LoginResponse defines the body from login request
 type LoginResponse struct {
 	Token string `json:"token,omitempty"`
@@ -19,8 +23,25 @@ type RunJobRequest struct {
 	YAML     string `json:"yaml,omitempty"`
 }
 
-type RunJobResponse struct {
+type JobRunInfo struct {
+	// unique id, read-only
+	UUID string `json:"uuid,omitempty"`
+	// name, can be auto-generated
+	Name        string           `json:"name,omitempty"`
+	JobName     string           `json:"job_name,omitempty"`
+	Vendor      string           `json:"vendor,omitempty"`
+	VendorMeta  string           `json:"vendor_meta,omitempty"`
+	Created     int64            `json:"created,omitempty"`
+	Finished    int64            `json:"finished,omitempty"`
+	LastUpdated int64            `json:"last_updated,omitempty"`
+	InputStage  api.CloudStorage `json:"input_stage,omitempty"`
+	OutputStage api.CloudStorage `json:"output_stage,omitempty"`
+	Status      string           `json:"status,omitempty"`
+}
+
+// Use structured data structure for communication
+type RunJobMessage struct {
 	UserName string
-	UUID     string
-	JobName  string
+	RunInfo  api.JobRunInfo
+	Job      api.Job
 }

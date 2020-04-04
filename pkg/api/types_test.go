@@ -15,8 +15,6 @@ func TestDefaultJob(t *testing.T) {
 			name: "default_value",
 			want: &Job{
 				Kind: "job",
-				UUID: "",
-				Name: "",
 				Spec: RunSpec{
 					Image: "",
 				},
@@ -27,6 +25,7 @@ func TestDefaultJob(t *testing.T) {
 						Name:         "aws",
 						InstanceType: "g3s.xlarge",
 						Region:       "us-west-2",
+						Instances:    1,
 						Inputs: []DataSpec{
 							DataSpec{
 								Type: "local",

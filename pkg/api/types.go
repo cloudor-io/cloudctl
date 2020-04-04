@@ -30,17 +30,16 @@ type Project struct {
 }
 
 //////////////////////////////////////////////////
-type Stage struct {
-	Type       string `json:"type,omitempty"`
+type CloudStorage struct {
 	Entrypoint string `json:"url,omitempty"`
 	Secret     string `json:"secret,omitempty"`
 }
 
 type DataSpec struct {
-	Type  string `json:"type,omitempty"` // local, s3
-	Path  string `json:"path,omitempty"` // local path or cloud path (s3 path e)
-	Stage Stage  `json:"stage,omitempty"`
-	Mount string `json:"mount,omitempty"` // mounting path in the docker image
+	Type         string       `json:"type,omitempty"` // local, s3
+	Path         string       `json:"path,omitempty"` // local path or cloud path (s3 path e)
+	CloudStorage CloudStorage `json:"cloud_storage,omitempty"`
+	Mount        string       `json:"mount,omitempty"` // mounting path in the docker image
 }
 
 // Job
@@ -49,17 +48,14 @@ type CloudVendor struct {
 	Name         string     `json:"name,omitempty"`
 	InstanceType string     `json:"instance_type,omitempty"`
 	Region       string     `json:"region,omitempty"`
+	Instances    int32      `json:"instances,omitempty"`
 	Inputs       []DataSpec `json:"inputs,omitempty"`
 	Output       DataSpec   `json:"output,omitempty"`
 }
 
 type Job struct {
 	// must be job
-	Kind string `json:"kind,omitempty"`
-	// unique id, read-only
-	UUID string `json:"uuid,omitempty"`
-	// name, can be auto-generated
-	Name   string  `json:"name,omitempty"`
+	Kind   string  `json:"kind,omitempty"`
 	RunTag string  `json:"run_tag,omitempty"`
 	Spec   RunSpec `json:"spec,omitempty"`
 
@@ -69,8 +65,6 @@ type Job struct {
 func DefaultJob() *Job {
 	return &Job{
 		Kind: "job",
-		UUID: "",
-		Name: "",
 		Spec: RunSpec{
 			Image: "",
 		},
@@ -81,6 +75,7 @@ func DefaultJob() *Job {
 				Name:         "aws",
 				InstanceType: "g3s.xlarge",
 				Region:       "us-west-2",
+				Instances:    1,
 				Inputs: []DataSpec{
 					DataSpec{
 						Type: "local",

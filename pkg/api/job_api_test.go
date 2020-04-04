@@ -61,8 +61,6 @@ func TestJob_FindRunningVendorIndexByTag(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			job := &Job{
 				Kind:    tt.fields.Kind,
-				UUID:    tt.fields.UUID,
-				Name:    tt.fields.Name,
 				RunTag:  tt.fields.RunTag,
 				Spec:    tt.fields.Spec,
 				Vendors: tt.fields.Vendors,
@@ -122,8 +120,6 @@ func TestJob_HasLocals(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			job := &Job{
 				Kind:    tt.fields.Kind,
-				UUID:    tt.fields.UUID,
-				Name:    tt.fields.Name,
 				RunTag:  tt.fields.RunTag,
 				Spec:    tt.fields.Spec,
 				Vendors: tt.fields.Vendors,
