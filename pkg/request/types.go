@@ -31,11 +31,15 @@ type JobRunInfo struct {
 	UserName string `json:"user_name,omitempty"`
 	// job name, can be auto-generated
 	JobName     string           `json:"job_name,omitempty"`
+	HourRate    float32          `json:"hour_rate,omitempty"`
+	RateUnit    string           `json:"rate_unit,omitempty"`
+	Cost        float32          `json:"cost,omitempty"`
 	Vendor      string           `json:"vendor,omitempty"`
 	VendorMeta  string           `json:"vendor_meta,omitempty"`
 	Created     int64            `json:"created,omitempty"`
 	Started     int64            `json:"started,omitempty"`
 	Finished    int64            `json:"finished,omitempty"`
+	Duration    int64            `json:"duration,omitempty"`
 	LastUpdated int64            `json:"last_updated,omitempty"`
 	InputStage  api.CloudStorage `json:"input_stage,omitempty"`
 	OutputStage api.CloudStorage `json:"output_stage,omitempty"`

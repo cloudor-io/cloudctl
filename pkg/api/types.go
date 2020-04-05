@@ -6,11 +6,17 @@ type Env struct {
 	Value string
 }
 
+type TempStorage struct {
+	SizeInGB int32
+	Mount    string
+}
+
 type RunSpec struct {
 	Image   string
 	Envs    Env
 	Command string
 	Args    []string
+	Temp    TempStorage
 }
 
 type Project struct {
@@ -32,6 +38,7 @@ type Project struct {
 //////////////////////////////////////////////////
 type CloudStorage struct {
 	Entrypoint string `json:"url,omitempty"`
+	Key        string `json:"key,omitempty"`
 	Secret     string `json:"secret,omitempty"`
 }
 
