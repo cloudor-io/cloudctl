@@ -33,6 +33,7 @@ type JobRunInfo struct {
 	JobName     string           `json:"job_name,omitempty"`
 	HourRate    float32          `json:"hour_rate,omitempty"`
 	RateUnit    string           `json:"rate_unit,omitempty"`
+	Instances   int32            `json:"instances,omitempty"`
 	Cost        float32          `json:"cost,omitempty"`
 	Vendor      string           `json:"vendor,omitempty"`
 	VendorMeta  string           `json:"vendor_meta,omitempty"`

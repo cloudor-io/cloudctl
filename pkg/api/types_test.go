@@ -24,7 +24,7 @@ func TestDefaultJob(t *testing.T) {
 						Name:         "aws",
 						InstanceType: "g3s.xlarge",
 						Region:       "us-west-2",
-						Instances:    1,
+						Instances:    "1-32",
 						Inputs: []DataSpec{
 							DataSpec{
 								Type: "local",

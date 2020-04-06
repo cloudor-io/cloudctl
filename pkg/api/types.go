@@ -55,7 +55,7 @@ type CloudVendor struct {
 	Name         string     `json:"name,omitempty"`
 	InstanceType string     `json:"instance_type,omitempty"`
 	Region       string     `json:"region,omitempty"`
-	Instances    int32      `json:"instances,omitempty"`
+	Instances    string     `json:"instances,omitempty"`
 	Inputs       []DataSpec `json:"inputs,omitempty"`
 	Output       DataSpec   `json:"output,omitempty"`
 }
@@ -80,7 +80,7 @@ func DefaultJob() *Job {
 				Name:         "aws",
 				InstanceType: "g3s.xlarge",
 				Region:       "us-west-2",
-				Instances:    1,
+				Instances:    "1-32",
 				Inputs: []DataSpec{
 					DataSpec{
 						Type: "local",

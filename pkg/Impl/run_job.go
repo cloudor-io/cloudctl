@@ -18,6 +18,7 @@ type RunArgs struct {
 	Vendor       string
 	Region       string
 	InstanceType string
+	NumInstances int32
 	Input        string
 	InputMount   string
 	Output       string
