@@ -35,7 +35,7 @@ type JobRunInfo struct {
 	RateUnit    string           `json:"rate_unit,omitempty"`
 	Instances   int32            `json:"instances,omitempty"`
 	Cost        float32          `json:"cost,omitempty"`
-	Vendor      string           `json:"vendor,omitempty"`
+	VendorIndex int32            `json:"vendor_index,omitempty"`
 	VendorMeta  string           `json:"vendor_meta,omitempty"`
 	Created     int64            `json:"created,omitempty"`
 	Started     int64            `json:"started,omitempty"`
