@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/Pallinder/go-randomdata"
 	"github.com/cloudor-io/cloudctl/pkg/api"
@@ -18,7 +19,7 @@ type RunArgs struct {
 	Vendor       string
 	Region       string
 	InstanceType string
-	NumInstances int32
+	NumInstances int
 	Input        string
 	InputMount   string
 	Output       string
@@ -41,6 +42,7 @@ func updateJobByArgs(job *api.Job, runArgs *RunArgs) error {
 	if runArgs.InstanceType != "" {
 		job.Vendors[0].InstanceType = runArgs.InstanceType
 	}
+	job.Vendors[0].Instances = strconv.Itoa(runArgs.NumInstances)
 	if runArgs.Input != "" {
 		if runArgs.InputMount == "" {
 			log.Fatalf("Input mounting point must be specified if input is used.")

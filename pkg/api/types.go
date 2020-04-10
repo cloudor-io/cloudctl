@@ -80,7 +80,7 @@ func DefaultJob() *Job {
 				Name:         "aws",
 				InstanceType: "g3s.xlarge",
 				Region:       "us-west-2",
-				Instances:    "1-32",
+				Instances:    "1-1",
 				Inputs: []DataSpec{
 					DataSpec{
 						Type: "local",
