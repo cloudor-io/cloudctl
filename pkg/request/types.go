@@ -45,6 +45,7 @@ type JobRunInfo struct {
 	InputStage  api.CloudStorage `json:"input_stage,omitempty"`
 	OutputStage api.CloudStorage `json:"output_stage,omitempty"`
 	Status      string           `json:"status,omitempty"`
+	Reason      string           `json:"reason,omitempty"`
 }
 
 // Use structured data structure for communication
