@@ -110,10 +110,11 @@ func (run *RunEngine) Run(username, token *string) error {
 	}
 
 	runJobRequest := request.RunJobRequest{
-		UserName: *username,
-		RunTag:   run.RunTag,
-		JobName:  "",
-		YAML:     string(jobBytes),
+		UserName:     *username,
+		RunTag:       run.RunTag,
+		JobName:      "",
+		NumInstances: run.NumInstances,
+		YAML:         string(jobBytes),
 	}
 	runJobBytes, err := json.Marshal(runJobRequest)
 	if err != nil {

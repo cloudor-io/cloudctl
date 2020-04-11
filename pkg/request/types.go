@@ -19,10 +19,11 @@ type CreateRequest struct {
 
 // RunJobRequest defines the request for running a job
 type RunJobRequest struct {
-	UserName string `json:"user_name,omitempty"`
-	JobName  string `json:"job_name,omitempty"`
-	RunTag   string `json:"run_tag,omitempty"`
-	YAML     string `json:"yaml,omitempty"`
+	UserName     string `json:"user_name,omitempty"`
+	JobName      string `json:"job_name,omitempty"`
+	RunTag       string `json:"run_tag,omitempty"`
+	NumInstances int    `json:"num_instances,omitempty"`
+	YAML         string `json:"yaml,omitempty"`
 }
 
 type JobRunInfo struct {
