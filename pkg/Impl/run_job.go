@@ -69,9 +69,10 @@ func updateJobByFile(job *api.Job, runArgs *RunArgs) error {
 }
 
 type RunEngine struct {
-	JobName string
-	RunTag  string
-	Job     *api.Job
+	JobName      string
+	RunTag       string
+	NumInstances int
+	Job          *api.Job
 }
 
 func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {
@@ -93,9 +94,10 @@ func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {
 		runArgs.Name = randomdata.SillyName()
 	}
 	runEngine := &RunEngine{
-		JobName: runArgs.Name,
-		RunTag:  runArgs.Tag,
-		Job:     job,
+		JobName:      runArgs.Name,
+		RunTag:       runArgs.Tag,
+		NumInstances: runArgs.NumInstances,
+		Job:          job,
 	}
 	return runEngine, nil
 }
