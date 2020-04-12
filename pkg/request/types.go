@@ -37,7 +37,6 @@ type JobRunInfo struct {
 	Instances   int32            `json:"instances,omitempty"`
 	Cost        float32          `json:"cost,omitempty"`
 	VendorIndex int32            `json:"vendor_index,omitempty"`
-	VendorMeta  string           `json:"vendor_meta,omitempty"`
 	Created     int64            `json:"created,omitempty"`
 	Started     int64            `json:"started,omitempty"`
 	Finished    int64            `json:"finished,omitempty"`
@@ -51,7 +50,8 @@ type JobRunInfo struct {
 
 // Use structured data structure for communication
 type RunJobMessage struct {
-	UserName string
-	RunInfo  JobRunInfo
-	Job      api.Job
+	UserName   string     `json:"user_name,omitempty"`
+	RunInfo    JobRunInfo `json:"run_info,omitempty"`
+	VendorMeta string     `json:"job_meta,omitempty"`
+	Job        api.Job    `json:"job,omitempty"`
 }
