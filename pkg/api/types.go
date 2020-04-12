@@ -2,21 +2,23 @@ package api
 
 //////////////////////////////////////////////////
 type Env struct {
-	Name  string
-	Value string
+	Name  string `json:"name,omitempty"`
+	Value string `json:"value,omitempty"`
 }
 
 type TempStorage struct {
-	SizeInGB int32
-	Mount    string
+	SizeInGB int32  `json:"size_in_gb,omitempty"`
+	Mount    string `json:"mount,omitempty"`
 }
 
 type RunSpec struct {
-	Image   string
-	Envs    Env
-	Command string
-	Args    []string
-	Temp    TempStorage
+	Image string `json:"image,omitempty"`
+	// for private docker registry
+	ImagePullSecret string      `json:"image_pull_secret,omitempty"`
+	Envs            Env         `json:"envs,omitempty"`
+	Command         string      `json:"command,omitempty"`
+	Args            []string    `json:"args,omitempty"`
+	Temp            TempStorage `json:"temp,omitempty"`
 }
 
 type Project struct {
