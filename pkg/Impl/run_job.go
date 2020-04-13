@@ -19,6 +19,7 @@ type RunArgs struct {
 	Vendor       string
 	Region       string
 	InstanceType string
+	TimeoutInMin float32
 	NumInstances int
 	Input        string
 	InputMount   string
@@ -69,10 +70,11 @@ func updateJobByFile(job *api.Job, runArgs *RunArgs) error {
 }
 
 type RunEngine struct {
-	JobName      string
-	RunTag       string
-	NumInstances int
-	Job          *api.Job
+	RunArgs *RunArgs
+	//JobName      string
+	//RunTag       string
+	//NumInstances int
+	Job *api.Job
 }
 
 func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {
@@ -94,10 +96,11 @@ func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {
 		runArgs.Name = randomdata.SillyName()
 	}
 	runEngine := &RunEngine{
-		JobName:      runArgs.Name,
-		RunTag:       runArgs.Tag,
-		NumInstances: runArgs.NumInstances,
-		Job:          job,
+		RunArgs: runArgs,
+		//JobName:      runArgs.Name,
+		//RunTag:       runArgs.Tag,
+		//NumInstances: runArgs.NumInstances,
+		Job: job,
 	}
 	return runEngine, nil
 }
@@ -111,9 +114,10 @@ func (run *RunEngine) Run(username, token *string) error {
 
 	runJobRequest := request.RunJobRequest{
 		UserName:     *username,
-		RunTag:       run.RunTag,
+		RunTag:       run.RunArgs.Tag,
 		JobName:      "",
-		NumInstances: run.NumInstances,
+		TimeoutInMin: run.RunArgs.TimeoutInMin,
+		NumInstances: run.RunArgs.NumInstances,
 		YAML:         string(jobBytes),
 	}
 	runJobBytes, err := json.Marshal(runJobRequest)
@@ -131,7 +135,7 @@ func (run *RunEngine) Run(username, token *string) error {
 	if err != nil {
 		log.Fatalf("Internal error, cann't parse job response.")
 	}
-	localInput, localOutput := jobMessage.Job.HasLocals(run.RunTag)
+	localInput, localOutput := jobMessage.Job.HasLocals(run.RunArgs.Tag)
 	// if no local input, just return. User will poll the job status
 	if !localInput && !localOutput {
 		return nil
