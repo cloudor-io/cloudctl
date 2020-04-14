@@ -15,7 +15,7 @@ type RunSpec struct {
 	Image string `json:"image,omitempty"`
 	// for private docker registry
 	ImagePullSecret string      `json:"image_pull_secret,omitempty"`
-	Envs            Env         `json:"envs,omitempty"`
+	Envs            []Env       `json:"envs,omitempty"`
 	Command         string      `json:"command,omitempty"`
 	Args            []string    `json:"args,omitempty"`
 	Temp            TempStorage `json:"temp,omitempty"`

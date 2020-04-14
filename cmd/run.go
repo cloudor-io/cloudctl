@@ -66,7 +66,7 @@ func init() {
 	runCmd.Flags().StringVarP(&runArgs.Name, "name", "n", "", "job name")
 	runCmd.Flags().StringVarP(&runArgs.Region, "region", "", "us-west-2", "region code in the vendor")
 	runCmd.Flags().StringVarP(&runArgs.Vendor, "vendor", "", "aws", "cloud vendor name: aws")
-	runCmd.Flags().FloatVarP(&runArgs.TimeoutInMin, "timeout", 30.0, "job timeout in minutes")
+	runCmd.Flags().Float32VarP(&runArgs.TimeoutInMin, "timeout", "", 30.0, "job timeout in minutes")
 	runCmd.Flags().StringVarP(&runArgs.InstanceType, "instance-type", "", "aws", "instance-type in the cloud vendor")
 	runCmd.Flags().IntVarP(&runArgs.NumInstances, "num-instances", "", 1, "number of instances to launch")
 	runCmd.Flags().StringVarP(&runArgs.Input, "input", "i", "", "input, local directory. Use yaml file if use cloud storage for input")
