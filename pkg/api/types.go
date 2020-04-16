@@ -2,23 +2,23 @@ package api
 
 //////////////////////////////////////////////////
 type Env struct {
-	Name  string `json:"name,omitempty"`
-	Value string `json:"value,omitempty"`
+	Name  string `json:"name,omitempty" yaml:"name,string"`
+	Value string `json:"value,omitempty" yaml:"value,string"`
 }
 
 type TempStorage struct {
-	SizeInGB int32  `json:"size_in_gb,omitempty"`
-	Mount    string `json:"mount,omitempty"`
+	SizeInGB int32  `json:"size_in_gb,omitempty" yaml:"size_in_gb,int"`
+	Mount    string `json:"mount,omitempty" yaml:"mount,string"`
 }
 
 type RunSpec struct {
-	Image string `json:"image,omitempty"`
+	Image string `json:"image,omitempty" yaml:"image,string"`
 	// for private docker registry
-	ImagePullSecret string      `json:"image_pull_secret,omitempty"`
-	Envs            []Env       `json:"envs,omitempty"`
-	Command         string      `json:"command,omitempty"`
-	Args            []string    `json:"args,omitempty"`
-	Temp            TempStorage `json:"temp,omitempty"`
+	ImagePullSecret string      `json:"image_pull_secret,omitempty" yaml:"image_pull_secret,string"`
+	Envs            []Env       `json:"envs,omitempty" yaml:"envs,"`
+	Command         string      `json:"command,omitempty" yaml:"command"`
+	Args            []string    `json:"args,omitempty" yaml:"args"`
+	Temp            TempStorage `json:"temp,omitempty" yaml:"temp"`
 }
 
 type Project struct {
@@ -39,35 +39,35 @@ type Project struct {
 
 //////////////////////////////////////////////////
 type CloudStorage struct {
-	Entrypoint string `json:"url,omitempty"`
-	Key        string `json:"key,omitempty"`
-	Secret     string `json:"secret,omitempty"`
+	Entrypoint string `json:"entrypoint,omitempty" yaml:"entry_point,string"`
+	Key        string `json:"key,omitempty" yaml:"key,string"`
+	Secret     string `json:"secret,omitempty" yaml:"secret,string"`
 }
 
 type DataSpec struct {
-	Type         string       `json:"type,omitempty"` // local, s3
-	Path         string       `json:"path,omitempty"` // local path or cloud path (s3 path e)
+	Type         string       `json:"type,omitempty" yaml:"type,string"` // local, s3
+	Path         string       `json:"path,omitempty" yaml:"path,string"` // local path or cloud path (s3 path e)
 	CloudStorage CloudStorage `json:"cloud_storage,omitempty"`
-	Mount        string       `json:"mount,omitempty"` // mounting path in the docker image
+	Mount        string       `json:"mount,omitempty" yaml:"mount,string"` // mounting path in the docker image
 }
 
 // Job
 type CloudVendor struct {
-	Tag          string     `json:"tag,omitempty"`
-	Name         string     `json:"name,omitempty"`
-	InstanceType string     `json:"instance_type,omitempty"`
-	Region       string     `json:"region,omitempty"`
-	Instances    string     `json:"instances,omitempty"`
-	Inputs       []DataSpec `json:"inputs,omitempty"`
-	Output       DataSpec   `json:"output,omitempty"`
+	Tag          string     `json:"tag,omitempty" yaml:"tag,string"`
+	Name         string     `json:"name,omitempty" yaml:"name,string"`
+	InstanceType string     `json:"instance_type,omitempty" yaml:"instance_type,string"`
+	Region       string     `json:"region,omitempty" yaml:"region,string"`
+	Instances    string     `json:"instances,omitempty" yaml:"instances,string"`
+	Inputs       []DataSpec `json:"inputs,omitempty" yaml:"inputs"`
+	Output       DataSpec   `json:"output,omitempty" yaml:"output"`
 }
 
 type Job struct {
 	// must be job
-	Kind string  `json:"kind,omitempty"`
-	Spec RunSpec `json:"spec,omitempty"`
+	Kind string  `json:"kind,omitempty" yaml:"kind,string"`
+	Spec RunSpec `json:"spec,omitempty" yaml:"spec"`
 
-	Vendors []CloudVendor `json:"vendors,omitempty"`
+	Vendors []CloudVendor `json:"vendors,omitempty" yaml:"vendors"`
 }
 
 func DefaultJob() *Job {
