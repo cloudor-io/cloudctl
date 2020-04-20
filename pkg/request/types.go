@@ -29,15 +29,14 @@ type RunJobRequest struct {
 
 type JobRunInfo struct {
 	// unique id, read-only
-	UUID     string `json:"uuid,omitempty" yaml:"uuid"`
-	UserName string `json:"user_name,omitempty" yaml:"user_name"`
 	// job name, can be auto-generated
 	JobName      string           `json:"job_name,omitempty" yaml:"job_name"`
 	HourRate     float32          `json:"hour_rate,omitempty" yaml:"hour_rate"`
 	TimeoutInMin float32          `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
 	RateUnit     string           `json:"rate_unit,omitempty" yaml:"rate_unit"`
-	Instances    int32            `json:"instances,omitempty" yaml:"instances`
-	Cost         float32          `json:"cost,omitempty" yaml:"cost"`
+	Instances    int32            `json:"instances,omitempty" yaml:"instances"`
+	ComputeCost  float32          `json:"compute_cost,omitempty" yaml:"compute_cost"`
+	AdjustCost   float32          `json:"adjust_cost,omitempty" yaml:"adjust_cost"`
 	VendorIndex  int32            `json:"vendor_index" yaml:"vendor_index"`
 	Created      int64            `json:"created,omitempty" yaml:"created"`
 	Started      int64            `json:"started,omitempty" yaml:"started"`
@@ -53,8 +52,10 @@ type JobRunInfo struct {
 
 // Use structured data structure for communication
 type RunJobMessage struct {
-	UserName   string     `json:"user_name,omitempty" yaml:"user_name"`
-	RunInfo    JobRunInfo `json:"run_info,omitempty" yaml:"run_info"`
-	VendorMeta string     `json:"job_meta,omitempty" yaml:"vendor_meta"`
-	Job        api.Job    `json:"job,omitempty" yaml:"job"`
+	UserName string     `json:"user_name,omitempty" yaml:"user_name"`
+	Created  int64      `json:"created,omitempty" yaml:"created"`
+	UUID     string     `json:"uuid,omitempty" yaml:"uuid"`
+	Status   string     `json:"status,omitempty" yaml:"status"`
+	RunInfo  JobRunInfo `json:"run_info,omitempty" yaml:"run_info"`
+	Job      api.Job    `json:"job,omitempty" yaml:"job"`
 }
