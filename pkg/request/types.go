@@ -45,17 +45,17 @@ type JobRunInfo struct {
 	LastUpdated  int64            `json:"last_updated,omitempty" yaml:"last_updated"`
 	InputStage   api.CloudStorage `json:"input_stage,omitempty" yaml:"input_stage"`
 	OutputStage  api.CloudStorage `json:"output_stage,omitempty" yaml:"output_stage"`
-	Status       string           `json:"status,omitempty" yaml:"status"`
 	Reason       string           `json:"reason,omitempty" yaml:"reason"`
 	StdOut       string           `json:"std_out,omitempty" yaml:"std_out"`
 }
 
 // Use structured data structure for communication
 type RunJobMessage struct {
-	UserName string     `json:"user_name,omitempty" yaml:"user_name"`
-	Created  int64      `json:"created,omitempty" yaml:"created"`
-	UUID     string     `json:"uuid,omitempty" yaml:"uuid"`
-	Status   string     `json:"status,omitempty" yaml:"status"`
-	RunInfo  JobRunInfo `json:"run_info,omitempty" yaml:"run_info"`
-	Job      api.Job    `json:"job,omitempty" yaml:"job"`
+	UserName   string     `json:"user_name,omitempty" yaml:"user_name"`
+	Created    int64      `json:"created,omitempty" yaml:"created"`
+	UUID       string     `json:"uuid,omitempty" yaml:"uuid"`
+	Status     string     `json:"status,omitempty" yaml:"status"`
+	RunInfo    JobRunInfo `json:"run_info,omitempty" yaml:"run_info"`
+	VendorMeta string     `json:"vendor_meta,omitempty" yaml:"vendor_meta"`
+	Job        api.Job    `json:"job,omitempty" yaml:"job"`
 }
