@@ -60,22 +60,37 @@ func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
+const DefaultServerURL string = "https://cloudor.dev/api/v1"
+
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
+		// Find home
 		home, err := homedir.Dir()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-
+		viper.SetConfigType("yaml")
 		// Search config in home directory with name ".cloudctl" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".cloudctl")
+		viper.AddConfigPath(home + "/.cloudor")
+		viper.SetConfigName("config.yaml")
+		if err := viper.ReadInConfig(); err != nil {
+			if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+				// set the default values
+				viper.Set("server", DefaultServerURL)
+				err = viper.WriteConfigAs(home + "/.cloudor/config.yaml")
+				if err != nil {
+					panic(fmt.Errorf("Fatal error writing config file %s \n", err))
+				}
+			} else {
+				// Config file was found but another error was produced
+				panic(fmt.Errorf("Fatal error config file: %s \n", err))
+			}
+		}
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

@@ -53,7 +53,7 @@ type JobRunInfo struct {
 type RunJobMessage struct {
 	UserName   string     `json:"user_name,omitempty" yaml:"user_name"`
 	Created    int64      `json:"created,omitempty" yaml:"created"`
-	UUID       string     `json:"uuid,omitempty" yaml:"uuid"`
+	ID         string     `json:"id,omitempty" yaml:"id"`
 	Status     string     `json:"status,omitempty" yaml:"status"`
 	RunInfo    JobRunInfo `json:"run_info,omitempty" yaml:"run_info"`
 	VendorMeta string     `json:"vendor_meta,omitempty" yaml:"vendor_meta"`

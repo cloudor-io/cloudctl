@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-resty/resty/v2"
+	"github.com/spf13/viper"
 )
 
 func trimQuotes(s string) string {
@@ -21,16 +22,18 @@ func trimQuotes(s string) string {
 }
 
 // ServerURL is the cloudor.io's URL
-const ServerURL string = "https://cloudor.io/api/v1"
+// const ServerURL string = "https://cloudor.io/api/v1"
+// const ServerURL string = "https://cloudor.dev/api/v1"
 
 // PostCloudor issues a POST to ServerURL
 func PostCloudor(requestBody []byte, username *string, token *string, apiPath string) (*string, error) {
+	serverURL := viper.GetString("server")
 	client := resty.New()
 	resp, err := client.R().SetHeader("Content-Type", "application/json").
 		SetHeader("Authorization", "Bearer "+*token).
 		SetHeader("From", *username).
 		SetBody(requestBody).
-		Post(ServerURL + apiPath)
+		Post(serverURL + apiPath)
 	if err != nil {
 		return nil, err
 	}
@@ -52,10 +55,11 @@ func PostCloudor(requestBody []byte, username *string, token *string, apiPath st
 
 // LoginHandler handles login requets
 func LoginCloudor(username, password string) ([]byte, error) {
+	serverURL := viper.GetString("server")
 	client := resty.New()
 	response, err := client.R().SetHeader("User-Agent", "CloudCtl").
 		SetBasicAuth(username, password).
-		Get(ServerURL + "/login")
+		Get(serverURL + "/login")
 	if err != nil {
 		return nil, fmt.Errorf("Login failed: %v", err)
 	}

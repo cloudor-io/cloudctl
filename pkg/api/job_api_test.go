@@ -8,7 +8,7 @@ func TestJob_FindRunningVendorIndexByTag(t *testing.T) {
 
 	type fields struct {
 		Kind    string
-		UUID    string
+		ID      string
 		Name    string
 		Spec    RunSpec
 		Vendors []CloudVendor
@@ -66,7 +66,7 @@ func TestJob_FindRunningVendorIndexByTag(t *testing.T) {
 func TestJob_HasLocals(t *testing.T) {
 	type fields struct {
 		Kind    string
-		UUID    string
+		ID      string
 		Name    string
 		Spec    RunSpec
 		Vendors []CloudVendor
