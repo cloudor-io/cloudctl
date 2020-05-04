@@ -106,7 +106,7 @@ func GetLoginToken() (*string, *string, error) {
 func credentials() (string, string, error) {
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Print("Enter your username at cloudor.io: ")
+	fmt.Print("Enter your username at cloudor: ")
 	username, _ := reader.ReadString('\n')
 
 	fmt.Print("Enter Password: ")
@@ -124,8 +124,8 @@ func credentials() (string, string, error) {
 // loginCmd represents the login command
 var loginCmd = &cobra.Command{
 	Use:   "login",
-	Short: "Login to cloudor.io",
-	Long:  ``,
+	Short: "Login to cloudor service",
+	Long:  `Login to cloudr service`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		username, password, err := credentials()
 		if err != nil {

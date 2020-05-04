@@ -1,8 +1,8 @@
 build: ./main.go
 	go build -o bin/cloudctl main.go
 
-test: pkg/*/*.go
-	go test github.com/cloudor-io/cloudctl/pkg/...
+test: pkg/*/*.go cmd/*.go
+	go test -v github.com/cloudor-io/cloudctl/...
 	
 # go test -v github.com/cloudor-io/cloudctl/pkg/...
 

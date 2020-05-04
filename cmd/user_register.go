@@ -16,23 +16,59 @@ limitations under the License.
 package cmd
 
 import (
+	"bufio"
+	"errors"
 	"fmt"
+	"os"
+	"regexp"
+	"strings"
 
+	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
+var IsLetterOrNumber = regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9]+$`).MatchString
+
+func signupForm() (string, string, error) {
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Print("Choose your username (length at least 5, alphabetic letters and numbers only): ")
+	username, _ := reader.ReadString('\n')
+	username = strings.TrimSpace(username)
+	if len(username) < 5 {
+		return "", "", errors.New("Username not long enough.")
+	}
+
+	if !IsLetterOrNumber(username) {
+		return "", "", errors.New("Username can only contain alphabetic letters and numbers.")
+	}
+
+	passwd, err := utils.GetFirstPassword()
+	if err != nil {
+		fmt.Printf("Error getting password: %v.", err)
+		return "", "", err
+	}
+	passwd2, err := utils.GetRetypePassword(passwd)
+	if err != nil {
+		fmt.Printf("Error getting password: %v.", err)
+		return "", "", err
+	}
+	return strings.TrimSpace(username), passwd, nil
+}
+
 // registerCmd represents the register command
 var registerCmd = &cobra.Command{
-	Use:   "register",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Use:   "signup",
+	Short: "Sign up for the cloudor service",
+	Long:  `Sign up for the cloudor service`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		username, passwd, err := signupForm()
+		if err != nil {
+			return err
+		}
+		fmt.Printf("user name %s password %s ", username, passwd)
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("register called")
+		return nil
 	},
 }
 
