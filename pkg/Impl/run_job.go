@@ -74,11 +74,12 @@ func NewJobByFile(filePath string) (*api.Job, error) {
 	job := api.DefaultJob()
 	yamlFile, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		fmt.Printf("yamlFile.Get err   #%v ", err)
+		log.Fatalf("Error reading job yaml file %v.", err)
+		return nil, err
 	}
 	err = yaml.Unmarshal(yamlFile, job)
 	if err != nil {
-		fmt.Printf("Unmarshal: %v", err)
+		log.Fatalf("Error parsing yaml file %v.", err)
 		return nil, err
 	}
 	return job, nil
