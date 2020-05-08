@@ -40,7 +40,7 @@ type JobRunInfo struct {
 	HourRate     float64          `json:"hour_rate,omitempty" yaml:"hour_rate"`
 	TimeoutInMin float64          `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
 	RateUnit     string           `json:"rate_unit,omitempty" yaml:"rate_unit"`
-	Instances    int32            `json:"instances,omitempty" yaml:"instances"`
+	Instances    string           `json:"instances,omitempty" yaml:"instances"`
 	ComputeCost  float64          `json:"compute_cost,omitempty" yaml:"compute_cost"`
 	AdjustCost   float64          `json:"adjust_cost,omitempty" yaml:"adjust_cost"`
 	VendorIndex  int32            `json:"vendor_index" yaml:"vendor_index"`
