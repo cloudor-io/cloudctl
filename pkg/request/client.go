@@ -29,11 +29,14 @@ func trimQuotes(s string) string {
 func PostCloudor(requestBody []byte, username *string, token *string, apiPath string) (*string, error) {
 	serverURL := viper.GetString("server")
 	client := resty.New()
-	resp, err := client.R().SetHeader("Content-Type", "application/json").
-		SetHeader("Authorization", "Bearer "+*token).
-		SetHeader("From", *username).
-		SetBody(requestBody).
-		Post(serverURL + apiPath)
+	request := client.R().SetHeader("Content-Type", "application/json").SetBody(requestBody)
+	if username != nil {
+		request.SetHeader("From", *username)
+	}
+	if token != nil {
+		request.SetHeader("Authorization", "Bearer "+*token)
+	}
+	resp, err := request.Post(serverURL + apiPath)
 	if err != nil {
 		return nil, err
 	}

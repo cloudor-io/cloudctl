@@ -64,11 +64,14 @@ type CloudVendor struct {
 
 type Job struct {
 	// must be job
-	Kind string  `json:"kind,omitempty" yaml:"kind"`
-	Spec RunSpec `json:"spec,omitempty" yaml:"spec"`
+	Kind    string  `json:"kind,omitempty" yaml:"kind"`
+	Version string  `json:"version,omitempty" yaml:"version"`
+	Spec    RunSpec `json:"spec,omitempty" yaml:"spec"`
 
 	Vendors []CloudVendor `json:"vendors,omitempty" yaml:"vendors"`
 }
+
+var DefaultTimeout = 30.0
 
 func DefaultJob() *Job {
 	return &Job{
@@ -80,7 +83,7 @@ func DefaultJob() *Job {
 			CloudVendor{
 				Tag:          "first_choice",
 				Name:         "aws",
-				InstanceType: "g3s.xlarge",
+				InstanceType: "g4dn.xlarg",
 				Region:       "us-west-2",
 				Instances:    "1-1",
 				Inputs: []DataSpec{

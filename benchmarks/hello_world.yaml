@@ -1,0 +1,12 @@
+kind: job
+version: v1alpha
+spec:
+  image: codemk8/conda_cuda:10.2
+  envs: 
+    - name: env1
+      value: 1
+vendors:
+  - tag: first_choice
+    name: aws
+    instance_type: g4dn.xlarge  # g3s.xlarge
+    region: us-west-2

@@ -9,6 +9,11 @@ type LoginResponse struct {
 	Token string `json:"token,omitempty"`
 }
 
+type SignupRequest struct {
+	UserName string `json:"user_name,omitempty"`
+	Password string `json:"password,omitempty"`
+}
+
 // CreateRequest defines the create request
 type CreateRequest struct {
 	UserName string `json:"user_name,omitempty" yaml:"user_name"`
@@ -22,8 +27,9 @@ type RunJobRequest struct {
 	UserName     string  `json:"user_name,omitempty" yaml:"user_name"`
 	JobName      string  `json:"job_name,omitempty" yaml:"job_name"`
 	RunTag       string  `json:"run_tag,omitempty" yaml:"run_tag"`
-	NumInstances int     `json:"num_instances,omitempty" yaml:"num_instances"`
-	TimeoutInMin float32 `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
+	DryRun       bool    `json:"dry_run,omitempty" yaml:"dry_run"`
+	NumInstances string  `json:"num_instances,omitempty" yaml:"num_instances"`
+	TimeoutInMin float64 `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
 	YAML         string  `json:"yaml,omitempty" yaml:"yaml"`
 }
 
@@ -31,12 +37,12 @@ type JobRunInfo struct {
 	// unique id, read-only
 	// job name, can be auto-generated
 	JobName      string           `json:"job_name,omitempty" yaml:"job_name"`
-	HourRate     float32          `json:"hour_rate,omitempty" yaml:"hour_rate"`
-	TimeoutInMin float32          `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
+	HourRate     float64          `json:"hour_rate,omitempty" yaml:"hour_rate"`
+	TimeoutInMin float64          `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
 	RateUnit     string           `json:"rate_unit,omitempty" yaml:"rate_unit"`
 	Instances    int32            `json:"instances,omitempty" yaml:"instances"`
-	ComputeCost  float32          `json:"compute_cost,omitempty" yaml:"compute_cost"`
-	AdjustCost   float32          `json:"adjust_cost,omitempty" yaml:"adjust_cost"`
+	ComputeCost  float64          `json:"compute_cost,omitempty" yaml:"compute_cost"`
+	AdjustCost   float64          `json:"adjust_cost,omitempty" yaml:"adjust_cost"`
 	VendorIndex  int32            `json:"vendor_index" yaml:"vendor_index"`
 	Created      int64            `json:"created,omitempty" yaml:"created"`
 	Started      int64            `json:"started,omitempty" yaml:"started"`

@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
+	"github.com/cloudor-io/cloudctl/pkg/api"
 	"github.com/spf13/cobra"
 )
 
@@ -34,6 +35,8 @@ var runCmd = &cobra.Command{
 	Short: "Run an docker image on the cloud",
 	Long: `Usage:
 	cloudctl run [OPTIONS] IMAGE [COMMAND] [ARG...]
+	or
+	cloudctl run [OPTIONS] -f JOB_YAML_FILE 
 	`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		username, token, err := GetLoginToken()
@@ -65,10 +68,11 @@ func init() {
 	runCmd.Flags().StringVarP(&runArgs.File, "file", "f", "", "job config yaml file")
 	runCmd.Flags().StringVarP(&runArgs.Name, "name", "n", "", "job name")
 	runCmd.Flags().StringVarP(&runArgs.Region, "region", "", "us-west-2", "region code in the vendor")
-	runCmd.Flags().StringVarP(&runArgs.Vendor, "vendor", "", "aws", "cloud vendor name: aws")
-	runCmd.Flags().Float32VarP(&runArgs.TimeoutInMin, "timeout", "", 30.0, "job timeout in minutes")
+	runCmd.Flags().StringVarP(&runArgs.Vendor, "vendor", "", "", "cloud vendor name: aws")
+	runCmd.Flags().Float64VarP(&runArgs.TimeoutInMin, "timeout", "", api.DefaultTimeout, "job timeout in minutes")
 	runCmd.Flags().StringVarP(&runArgs.InstanceType, "instance-type", "", "aws", "instance-type in the cloud vendor")
-	runCmd.Flags().IntVarP(&runArgs.NumInstances, "num-instances", "", 1, "number of instances to launch")
+	runCmd.Flags().StringVarP(&runArgs.NumInstances, "num-instances", "", "1-1", "number of instances to launch")
+	runCmd.Flags().BoolVarP(&runArgs.DryRun, "dryrun", "", false, "Dry run")
 	runCmd.Flags().StringVarP(&runArgs.Input, "input", "i", "", "input, local directory. Use yaml file if use cloud storage for input")
 	runCmd.Flags().StringVarP(&runArgs.Output, "output", "o", "", "output, local directory. User yaml file if use cloud storage for output")
 	runCmd.Flags().StringVarP(&runArgs.InputMount, "input-mount", "", "", "input directory mounted to the docker image")

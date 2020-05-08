@@ -17,12 +17,14 @@ package cmd
 
 import (
 	"bufio"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 	"regexp"
 	"strings"
 
+	"github.com/cloudor-io/cloudctl/pkg/request"
 	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/spf13/cobra"
 )
@@ -53,6 +55,9 @@ func signupForm() (string, string, error) {
 		fmt.Printf("Error getting password: %v.", err)
 		return "", "", err
 	}
+	if passwd != passwd2 {
+		return "", "", errors.New("Typed passwords do not match.")
+	}
 	return strings.TrimSpace(username), passwd, nil
 }
 
@@ -66,8 +71,20 @@ var registerCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		fmt.Printf("user name %s password %s ", username, passwd)
-
+		signUpRequest := request.SignupRequest{
+			UserName: username,
+			Password: passwd,
+		}
+		signUpBytes, err := json.Marshal(signUpRequest)
+		if err != nil {
+			return fmt.Errorf("Error marshalling signup struct: %v", err)
+		}
+		resp, err := request.PostCloudor(signUpBytes, nil, nil, "/register")
+		if err != nil {
+			fmt.Errorf("Error posting to server: %v", err)
+			return err
+		}
+		fmt.Printf("Register successful: %s.\n", *resp)
 		return nil
 	},
 }

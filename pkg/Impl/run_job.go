@@ -3,8 +3,8 @@ package impl
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
-	"strconv"
 
 	"github.com/Pallinder/go-randomdata"
 	"github.com/cloudor-io/cloudctl/pkg/api"
@@ -19,8 +19,9 @@ type RunArgs struct {
 	Vendor       string
 	Region       string
 	InstanceType string
-	TimeoutInMin float32
-	NumInstances int
+	DryRun       bool
+	TimeoutInMin float64
+	NumInstances string
 	Input        string
 	InputMount   string
 	Output       string
@@ -43,7 +44,7 @@ func updateJobByArgs(job *api.Job, runArgs *RunArgs) error {
 	if runArgs.InstanceType != "" {
 		job.Vendors[0].InstanceType = runArgs.InstanceType
 	}
-	job.Vendors[0].Instances = strconv.Itoa(runArgs.NumInstances)
+	job.Vendors[0].Instances = runArgs.NumInstances
 	if runArgs.Input != "" {
 		if runArgs.InputMount == "" {
 			log.Fatalf("Input mounting point must be specified if input is used.")
@@ -69,6 +70,20 @@ func updateJobByFile(job *api.Job, runArgs *RunArgs) error {
 	return nil
 }
 
+func NewJobByFile(filePath string) (*api.Job, error) {
+	job := api.DefaultJob()
+	yamlFile, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		fmt.Printf("yamlFile.Get err   #%v ", err)
+	}
+	err = yaml.Unmarshal(yamlFile, job)
+	if err != nil {
+		fmt.Printf("Unmarshal: %v", err)
+		return nil, err
+	}
+	return job, nil
+}
+
 type RunEngine struct {
 	RunArgs *RunArgs
 	//JobName      string
@@ -79,29 +94,28 @@ type RunEngine struct {
 
 func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {
 	// if file is specified, ignore all other fields except the tag
-	job := api.DefaultJob()
+	runEngine := &RunEngine{
+		RunArgs: runArgs,
+	}
 	if runArgs.File != "" {
-		err := updateJobByFile(job, runArgs)
+		job, err := NewJobByFile(runArgs.File)
 		if err != nil {
 			return nil, err
 		}
+		runEngine.Job = job
 	} else {
+		job := api.DefaultJob()
 		err := updateJobByArgs(job, runArgs)
 		if err != nil {
 			return nil, err
 		}
+		runEngine.Job = job
 	}
 	// give it a random name if not specified
 	if runArgs.Name == "" {
 		runArgs.Name = randomdata.SillyName()
 	}
-	runEngine := &RunEngine{
-		RunArgs: runArgs,
-		//JobName:      runArgs.Name,
-		//RunTag:       runArgs.Tag,
-		//NumInstances: runArgs.NumInstances,
-		Job: job,
-	}
+
 	return runEngine, nil
 }
 
@@ -115,7 +129,8 @@ func (run *RunEngine) Run(username, token *string) error {
 	runJobRequest := request.RunJobRequest{
 		UserName:     *username,
 		RunTag:       run.RunArgs.Tag,
-		JobName:      "",
+		DryRun:       run.RunArgs.DryRun,
+		JobName:      run.RunArgs.Name,
 		TimeoutInMin: run.RunArgs.TimeoutInMin,
 		NumInstances: run.RunArgs.NumInstances,
 		YAML:         string(jobBytes),
