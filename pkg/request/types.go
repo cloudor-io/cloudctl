@@ -36,23 +36,24 @@ type RunJobRequest struct {
 type JobRunInfo struct {
 	// unique id, read-only
 	// job name, can be auto-generated
-	JobName      string           `json:"job_name,omitempty" yaml:"job_name"`
-	HourRate     float64          `json:"hour_rate,omitempty" yaml:"hour_rate"`
-	TimeoutInMin float64          `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
-	RateUnit     string           `json:"rate_unit,omitempty" yaml:"rate_unit"`
-	Instances    string           `json:"instances,omitempty" yaml:"instances"`
-	ComputeCost  float64          `json:"compute_cost,omitempty" yaml:"compute_cost"`
-	AdjustCost   float64          `json:"adjust_cost,omitempty" yaml:"adjust_cost"`
-	VendorIndex  int32            `json:"vendor_index" yaml:"vendor_index"`
-	Created      int64            `json:"created,omitempty" yaml:"created"`
-	Started      int64            `json:"started,omitempty" yaml:"started"`
-	Finished     int64            `json:"finished,omitempty" yaml:"finished"`
-	Duration     int64            `json:"duration,omitempty" yaml:"duration"`
-	LastUpdated  int64            `json:"last_updated,omitempty" yaml:"last_updated"`
-	InputStage   api.CloudStorage `json:"input_stage,omitempty" yaml:"input_stage"`
-	OutputStage  api.CloudStorage `json:"output_stage,omitempty" yaml:"output_stage"`
-	Reason       string           `json:"reason,omitempty" yaml:"reason"`
-	StdOut       string           `json:"std_out,omitempty" yaml:"std_out"`
+	JobName        string           `json:"job_name,omitempty" yaml:"job_name"`
+	HourRate       float64          `json:"hour_rate,omitempty" yaml:"hour_rate"`
+	TimeoutInMin   float64          `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
+	ReservedCredit float64          `json:"reserved_credit,omitempty" yaml:"reserved_credit"`
+	RateUnit       string           `json:"rate_unit,omitempty" yaml:"rate_unit"`
+	Instances      string           `json:"instances,omitempty" yaml:"instances"`
+	ComputeCost    float64          `json:"compute_cost,omitempty" yaml:"compute_cost"`
+	AdjustCost     float64          `json:"adjust_cost,omitempty" yaml:"adjust_cost"`
+	VendorIndex    int32            `json:"vendor_index,omitempty" yaml:"vendor_index"`
+	Created        int64            `json:"created,omitempty" yaml:"created"`
+	Started        int64            `json:"started,omitempty" yaml:"started"`
+	Finished       int64            `json:"finished,omitempty" yaml:"finished"`
+	Duration       int64            `json:"duration,omitempty" yaml:"duration"`
+	LastUpdated    int64            `json:"last_updated,omitempty" yaml:"last_updated"`
+	InputStage     api.CloudStorage `json:"input_stage,omitempty" yaml:"input_stage"`
+	OutputStage    api.CloudStorage `json:"output_stage,omitempty" yaml:"output_stage"`
+	Reason         string           `json:"reason,omitempty" yaml:"reason"`
+	StdOut         string           `json:"std_out,omitempty" yaml:"std_out"`
 }
 
 // Use structured data structure for communication

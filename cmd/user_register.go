@@ -84,7 +84,7 @@ var registerCmd = &cobra.Command{
 			fmt.Errorf("Error posting to server: %v", err)
 			return err
 		}
-		fmt.Printf("Register successful: %s.\n", *resp)
+		fmt.Printf("Register successful: %s.\n", string(resp))
 		return nil
 	},
 }

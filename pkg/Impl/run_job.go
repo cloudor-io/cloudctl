@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"strconv"
 
 	"github.com/Pallinder/go-randomdata"
 	"github.com/cloudor-io/cloudctl/pkg/api"
@@ -145,12 +146,18 @@ func (run *RunEngine) Run(username, token *string) error {
 		log.Fatalf("Submitting job failed %v", err)
 		return err
 	}
-	log.Printf("Submitting job succeeded: %s", *resp)
-	jobMessage := &request.RunJobMessage{}
-	err = json.Unmarshal([]byte(*resp), jobMessage)
+	// somewhere the json is encoded twice, unquote it TODO
+	original := string(resp)
+	unquoted, err := strconv.Unquote(original)
 	if err != nil {
-		log.Fatalf("Internal error, cann't parse job response.")
+		log.Fatalf("Intenal error while unquoting response: %v", err)
 	}
+	jobMessage := request.RunJobMessage{}
+	err = json.Unmarshal([]byte(unquoted), &jobMessage)
+	if err != nil {
+		log.Fatalf("Internal error, cann't parse job response: %v", err)
+	}
+
 	localInput, localOutput := jobMessage.Job.HasLocals(run.RunArgs.Tag)
 	// if no local input, just return. User will poll the job status
 	if !localInput && !localOutput {

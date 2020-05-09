@@ -22,7 +22,7 @@ func TestDefaultJob(t *testing.T) {
 					CloudVendor{
 						Tag:          "first_choice",
 						Name:         "aws",
-						InstanceType: "g3s.xlarge",
+						InstanceType: "g4dn.xlarge",
 						Region:       "us-west-2",
 						Instances:    "1-1",
 						Inputs: []DataSpec{

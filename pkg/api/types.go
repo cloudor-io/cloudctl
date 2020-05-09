@@ -83,7 +83,7 @@ func DefaultJob() *Job {
 			CloudVendor{
 				Tag:          "first_choice",
 				Name:         "aws",
-				InstanceType: "g4dn.xlarg",
+				InstanceType: "g4dn.xlarge",
 				Region:       "us-west-2",
 				Instances:    "1-1",
 				Inputs: []DataSpec{
