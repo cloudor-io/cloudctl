@@ -158,7 +158,7 @@ func (run *RunEngine) Run(username, token *string) error {
 		log.Fatalf("Internal error, cann't parse job response: %v", err)
 	}
 	if runJobRequest.DryRun {
-		log.Printf("Dry run successful, estimated cost is %.3f%s", jobMessage.RunInfo.ReservedCredit, jobMessage.RunInfo.RateUnit)
+		log.Printf("Dry run successful, estimated cost is %.2f%s", jobMessage.RunInfo.ReservedCredit, jobMessage.RunInfo.RateUnit)
 		return nil
 	}
 

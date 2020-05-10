@@ -44,7 +44,7 @@ type JobRunInfo struct {
 	Instances      string           `json:"instances,omitempty" yaml:"instances"`
 	ComputeCost    float64          `json:"compute_cost,omitempty" yaml:"compute_cost"`
 	AdjustCost     float64          `json:"adjust_cost,omitempty" yaml:"adjust_cost"`
-	VendorIndex    int32            `json:"vendor_index,omitempty" yaml:"vendor_index"`
+	VendorIndex    *int32           `json:"vendor_index,omitempty" yaml:"vendor_index"`
 	Created        int64            `json:"created,omitempty" yaml:"created"`
 	Started        int64            `json:"started,omitempty" yaml:"started"`
 	Finished       int64            `json:"finished,omitempty" yaml:"finished"`
