@@ -12,6 +12,7 @@ type TempStorage struct {
 }
 
 type RunSpec struct {
+	Type  string `json:"type,omitempty"`
 	Image string `json:"image,omitempty" yaml:"image"`
 	// for private docker registry
 	ImagePullSecret string      `json:"image_pull_secret,omitempty" yaml:"image_pull_secret"`
@@ -77,6 +78,7 @@ func DefaultJob() *Job {
 	return &Job{
 		Kind: "job",
 		Spec: RunSpec{
+			Type:  "docker",
 			Image: "",
 		},
 		Vendors: []CloudVendor{

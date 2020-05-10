@@ -16,6 +16,7 @@ func TestDefaultJob(t *testing.T) {
 			want: &Job{
 				Kind: "job",
 				Spec: RunSpec{
+					Type:  "docker",
 					Image: "",
 				},
 				Vendors: []CloudVendor{

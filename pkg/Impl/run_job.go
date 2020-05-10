@@ -157,6 +157,10 @@ func (run *RunEngine) Run(username, token *string) error {
 	if err != nil {
 		log.Fatalf("Internal error, cann't parse job response: %v", err)
 	}
+	if runJobRequest.DryRun {
+		log.Printf("Dry run successful, estimated cost is %.3f%s", jobMessage.RunInfo.ReservedCredit, jobMessage.RunInfo.RateUnit)
+		return nil
+	}
 
 	localInput, localOutput := jobMessage.Job.HasLocals(run.RunArgs.Tag)
 	// if no local input, just return. User will poll the job status
