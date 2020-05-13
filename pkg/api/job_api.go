@@ -3,7 +3,7 @@ package api
 //////////////////////////////////////////////////
 // Find the chosen vendor by tag, if no tag is set, choose the first one
 // if no vendor exists, return -1
-func (job *Job) FindRunningVendorIndexByTag(tag string) int {
+func (job *Job) FindRunningVendorIndexByTag(tag string) int32 {
 	if len(job.Vendors) == 0 {
 		return -1
 	}
@@ -12,7 +12,7 @@ func (job *Job) FindRunningVendorIndexByTag(tag string) int {
 	}
 	for id, vendor := range job.Vendors {
 		if vendor.Tag == tag {
-			return id
+			return int32(id)
 		}
 	}
 	// not found, returns the first one

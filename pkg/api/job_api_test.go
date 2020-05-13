@@ -27,7 +27,7 @@ func TestJob_FindRunningVendorIndexByTag(t *testing.T) {
 		name   string
 		fields fields
 		runTag string
-		want   int
+		want   int32
 	}{
 		// TODO: Add test cases.
 		{
