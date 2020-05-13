@@ -44,7 +44,20 @@ type CloudStorage struct {
 	Entrypoint string `json:"entrypoint,omitempty" yaml:"entry_point"`
 	Key        string `json:"key,omitempty" yaml:"key"`
 	Secret     string `json:"secret,omitempty" yaml:"secret"`
-	expiry     int64  `json:"expiry,omitempty" yaml:"expiry"` // set when using cloudor's default stage storage
+}
+
+type S3Presign struct {
+	URL string `json:"url,omitempty" yaml:"url"`
+	// Put or Get
+	Method string              `json:"method,omitempty" yaml:"method"`
+	Header map[string][]string `json:"header,omitempty" yaml:"header"`
+	Expiry int64               `json:"expiry,omitempty" yaml:"expiry"` // set when using cloudor's default stage storage
+}
+
+type StageStorage struct {
+	Type string `json:"type,omitempty" yaml:"type"`
+	// Add other object storage here
+	S3Presign S3Presign `json:"s3_presign,omitempty" yaml:"s3_presign"`
 }
 
 type DataSpec struct {

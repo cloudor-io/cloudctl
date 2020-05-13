@@ -22,7 +22,7 @@ func TestNewJobByFile(t *testing.T) {
 }
 
 func TestUnmarshal(t *testing.T) {
-	jobMsgBytes := "{\"user_name\":\"codemk8\",\"id\":\"1berBI2ZhgxVePKg246FtYXEWWD\",\"run_info\":{\"job_name\":\"Racercarnation\",\"instances\":\"1-1\",\"vendor_index\":0,\"created\":1589003262,\"started\":-1,\"finished\":-1,\"last_updated\":1589003262,\"input_stage\":{},\"output_stage\":{}},\"job\":{\"kind\":\"job\",\"version\":\"v1alpha\",\"spec\":{\"image\":\"codemk8/conda_cuda:10.2\",\"envs\":[{\"name\":\"env1\",\"value\":\"1\"}],\"temp\":{}},\"vendors\":[{\"tag\":\"first_choice\",\"name\":\"aws\",\"instance_type\":\"g4dn.xlarge\",\"region\":\"us-west-2\",\"output\":{\"cloud_storage\":{}}}]}}"
+	jobMsgBytes := "{\"user_name\":\"codemk8\",\"id\":\"1berBI2ZhgxVePKg246FtYXEWWD\",\"run_info\":{\"job_name\":\"Racercarnation\",\"instances\":\"1-1\",\"vendor_index\":0,\"created\":1589003262,\"started\":-1,\"finished\":-1,\"last_updated\":1589003262,\"input_stage\":[],\"output_stage\":[]},\"job\":{\"kind\":\"job\",\"version\":\"v1alpha\",\"spec\":{\"image\":\"codemk8/conda_cuda:10.2\",\"envs\":[{\"name\":\"env1\",\"value\":\"1\"}],\"temp\":{}},\"vendors\":[{\"tag\":\"first_choice\",\"name\":\"aws\",\"instance_type\":\"g4dn.xlarge\",\"region\":\"us-west-2\",\"output\":{\"cloud_storage\":{}}}]}}"
 	jobMessage := &request.RunJobMessage{}
 	err := json.Unmarshal([]byte(jobMsgBytes), jobMessage)
 	if err != nil {
