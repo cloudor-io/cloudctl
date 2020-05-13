@@ -54,10 +54,16 @@ type S3Presign struct {
 	Expiry int64               `json:"expiry,omitempty" yaml:"expiry"` // set when using cloudor's default stage storage
 }
 
+// bi-directional to connect both sides (client and container)
+type S3PresignPair struct {
+	Put S3Presign `json:"put,omitempty" yaml:"put"`
+	Get S3Presign `json:"get,omitempty" yaml:"get"`
+}
+
 type StageStorage struct {
 	Type string `json:"type,omitempty" yaml:"type"`
 	// Add other object storage here
-	S3Presign S3Presign `json:"s3_presign,omitempty" yaml:"s3_presign"`
+	S3Pair S3PresignPair `json:"s3_pair,omitempty" yaml:"s3_pair"`
 }
 
 type DataSpec struct {
