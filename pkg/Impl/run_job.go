@@ -50,15 +50,15 @@ func updateJobByArgs(job *api.Job, runArgs *RunArgs) error {
 		if runArgs.InputMount == "" {
 			log.Fatalf("Input mounting point must be specified if input is used.")
 		}
-		job.Vendors[0].Inputs[0].Path = runArgs.Input
-		job.Vendors[0].Inputs[0].Mount = runArgs.InputMount
+		job.Vendors[0].Inputs[0].LocalPath = runArgs.Input
+		job.Vendors[0].Inputs[0].MountPath = runArgs.InputMount
 	}
 	if runArgs.Output != "" {
 		if runArgs.OutputMount == "" {
-			log.Fatalf("Output mounting point must be specified if output is used.")
+			log.Print("No mount point for output is specified, only getting stdout.")
 		}
-		job.Vendors[0].Output.Path = runArgs.Output
-		job.Vendors[0].Output.Mount = runArgs.OutputMount
+		job.Vendors[0].Output.LocalPath = runArgs.Output
+		job.Vendors[0].Output.MountPath = runArgs.OutputMount
 	}
 	return nil
 }

@@ -27,12 +27,10 @@ func TestDefaultJob(t *testing.T) {
 						Region:       "us-west-2",
 						Instances:    "1-1",
 						Inputs: []DataSpec{
-							DataSpec{
-								Type: "local",
-							},
+							DataSpec{},
 						},
 						Output: DataSpec{
-							Type: "local",
+							LocalPath: "./",
 						},
 					},
 				},

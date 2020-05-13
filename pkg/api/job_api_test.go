@@ -93,7 +93,7 @@ func TestJob_HasLocals(t *testing.T) {
 						Tag: "tag1",
 						Inputs: []DataSpec{
 							DataSpec{
-								Type: "local",
+								LocalPath: "./input",
 							},
 						},
 					},

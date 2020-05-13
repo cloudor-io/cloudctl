@@ -40,16 +40,18 @@ type Project struct {
 
 //////////////////////////////////////////////////
 type CloudStorage struct {
+	Type       string `json:"type,omitempty" yaml:"type"`
 	Entrypoint string `json:"entrypoint,omitempty" yaml:"entry_point"`
 	Key        string `json:"key,omitempty" yaml:"key"`
 	Secret     string `json:"secret,omitempty" yaml:"secret"`
+	expiry     int64  `json:"expiry,omitempty" yaml:"expiry"` // set when using cloudor's default stage storage
 }
 
 type DataSpec struct {
-	Type         string       `json:"type,omitempty" yaml:"type"` // local, s3
-	Path         string       `json:"path,omitempty" yaml:"path"` // local path or cloud path (s3 path e)
-	CloudStorage CloudStorage `json:"cloud_storage,omitempty" yaml:"cloud_storage"`
-	Mount        string       `json:"mount,omitempty" yaml:"mount"` // mounting path in the docker image
+	LocalPath string `json:"local_path,omitempty" yaml:"local_path"` // local path on the client's machine
+	MountPath string `json:"mount_path,omitempty" yaml:"mount_path"` // mounting path in the continaer
+	// cloud storage for staging data b/w user and job
+	Stage CloudStorage `json:"stage,omitempty" yaml:"stage"`
 }
 
 // Job
@@ -89,12 +91,10 @@ func DefaultJob() *Job {
 				Region:       "us-west-2",
 				Instances:    "1-1",
 				Inputs: []DataSpec{
-					DataSpec{
-						Type: "local",
-					},
+					DataSpec{},
 				},
 				Output: DataSpec{
-					Type: "local",
+					LocalPath: "./",
 				},
 			},
 		},
