@@ -73,8 +73,9 @@ func init() {
 	runCmd.Flags().StringVarP(&runArgs.InstanceType, "instance-type", "", "aws", "instance-type in the cloud vendor")
 	runCmd.Flags().StringVarP(&runArgs.NumInstances, "num-instances", "", "1-1", "number of instances to launch")
 	runCmd.Flags().BoolVarP(&runArgs.DryRun, "dryrun", "", false, "Dry run")
-	runCmd.Flags().StringVarP(&runArgs.Input, "input", "i", "", "input, local directory. Use yaml file if use cloud storage for input")
-	runCmd.Flags().StringVarP(&runArgs.Output, "output", "o", "", "output, local directory. User yaml file if use cloud storage for output")
-	runCmd.Flags().StringVarP(&runArgs.InputMount, "input-mount", "", "", "input directory mounted to the docker image")
-	runCmd.Flags().StringVarP(&runArgs.OutputMount, "output-mount", "", "", "output directory mounted the docker image")
+	runCmd.Flags().BoolVarP(&runArgs.Detach, "detach", "", false, "Detach")
+	runCmd.Flags().StringVarP(&runArgs.Input, "input", "i", "", "input, local directory to be uploaded to the container")
+	runCmd.Flags().StringVarP(&runArgs.Output, "output", "o", "", "output, local directory to store output after job finishes")
+	runCmd.Flags().StringVarP(&runArgs.InputMount, "input-mount", "", "", "the path of the directory mounted to the container for input")
+	runCmd.Flags().StringVarP(&runArgs.OutputMount, "output-mount", "", "", "the path of the directory mounted to the container for output")
 }

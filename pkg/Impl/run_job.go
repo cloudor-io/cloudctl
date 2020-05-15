@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"strconv"
+	"time"
 
 	"github.com/Pallinder/go-randomdata"
 	"github.com/cloudor-io/cloudctl/pkg/api"
@@ -21,6 +23,7 @@ type RunArgs struct {
 	Region       string
 	InstanceType string
 	DryRun       bool
+	Detach       bool
 	TimeoutInMin float64
 	NumInstances string
 	Input        string
@@ -51,14 +54,14 @@ func updateJobByArgs(job *api.Job, runArgs *RunArgs) error {
 			log.Fatalf("Input mounting point must be specified if input is used.")
 		}
 		job.Vendors[0].Inputs[0].LocalPath = runArgs.Input
-		job.Vendors[0].Inputs[0].MountPath = runArgs.InputMount
+		job.Spec.InputMounts = append(job.Spec.InputMounts, runArgs.InputMount)
 	}
 	if runArgs.Output != "" {
 		if runArgs.OutputMount == "" {
 			log.Print("No mount point for output is specified, only getting stdout.")
 		}
 		job.Vendors[0].Output.LocalPath = runArgs.Output
-		job.Vendors[0].Output.MountPath = runArgs.OutputMount
+		job.Spec.OutputMount = runArgs.OutputMount
 	}
 	return nil
 }
@@ -161,12 +164,46 @@ func (run *RunEngine) Run(username, token *string) error {
 		log.Printf("Dry run successful, estimated cost is %.2f%s", jobMessage.RunInfo.ReservedCredit, jobMessage.RunInfo.RateUnit)
 		return nil
 	}
-
-	localInput, localOutput := jobMessage.Job.HasLocals(run.RunArgs.Tag)
+	log.Printf("Job submitted successfully.")
+	localInput, _ := jobMessage.Job.HasLocals(run.RunArgs.Tag)
 	// if no local input, just return. User will poll the job status
-	if !localInput && !localOutput {
+	if localInput {
+		log.Fatalf("Not implemented")
+	}
+
+	if run.RunArgs.Detach {
+		log.Printf("Running in detach mode, exiting.")
 		return nil
 	}
-	log.Fatalf("Not implemented")
+	return run.Wait(&jobMessage)
+}
+
+var minPollInterval = 20.0 // seconds
+
+func GetPollInterval(jobMessage *request.RunJobMessage) float64 {
+	// Timeout gives some hint about how long the job is
+	timeout := jobMessage.RunInfo.TimeoutInMin * 60
+	return math.Max(timeout/5.0, minPollInterval)
+}
+
+func (run *RunEngine) Wait(jobMessage *request.RunJobMessage) error {
+	log.Printf("Sleep for 60 seconds for the instance to boot")
+	time.Sleep(60 * time.Second)
+	// interval := GetPollInterval(jobMessage)
+	// checkPeriod := interval * time.Second
+	//
+	// ticker := time.NewTicker(checkPeriod)
+	// defer func() {
+	// 	ticker.Stop()
+	// }()
+	// count := 0
+	// stopped := false
+	// for {
+	// 	select {
+	// 	case <-ticker.C:
+	//
+	// 	}
+	// 	}
+	// }
 	return nil
 }

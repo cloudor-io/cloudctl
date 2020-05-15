@@ -8,6 +8,7 @@ type Env struct {
 
 type TempStorage struct {
 	SizeInGB int32  `json:"size_in_gb,omitempty" yaml:"size_in_gb"`
+	Type     string `json:"type,omitempty" yaml:"type"`
 	Mount    string `json:"mount,omitempty" yaml:"mount"`
 }
 
@@ -15,11 +16,16 @@ type RunSpec struct {
 	Type  string `json:"type,omitempty"`
 	Image string `json:"image,omitempty" yaml:"image"`
 	// for private docker registry
-	ImagePullSecret string      `json:"image_pull_secret,omitempty" yaml:"image_pull_secret"`
-	Envs            []Env       `json:"envs,omitempty" yaml:"envs"`
-	Command         string      `json:"command,omitempty" yaml:"command"`
-	Args            []string    `json:"args,omitempty" yaml:"args"`
-	Temp            TempStorage `json:"temp,omitempty" yaml:"temp"`
+	ImagePullSecret string   `json:"image_pull_secret,omitempty" yaml:"image_pull_secret"`
+	Envs            []Env    `json:"envs,omitempty" yaml:"envs"`
+	Command         string   `json:"command,omitempty" yaml:"command"`
+	Args            []string `json:"args,omitempty" yaml:"args"`
+	// Input mounting paths in the container. There could be more than one sources
+	InputMounts []string `json:"input_mounts,omitempty" yaml:"input_mounts"`
+	// Output mounting path in the container.
+	OutputMount string `json:"output_mount,omitempty" yaml:"output_mount"`
+
+	Temp TempStorage `json:"temp,omitempty" yaml:"temp"`
 }
 
 type Project struct {
@@ -68,7 +74,7 @@ type StageStorage struct {
 
 type DataSpec struct {
 	LocalPath string `json:"local_path,omitempty" yaml:"local_path"` // local path on the client's machine
-	MountPath string `json:"mount_path,omitempty" yaml:"mount_path"` // mounting path in the continaer
+	// MountPath string `json:"mount_path,omitempty" yaml:"mount_path"` // mounting path in the container
 	// cloud storage for staging data b/w user and job
 	Stage CloudStorage `json:"stage,omitempty" yaml:"stage"`
 }
