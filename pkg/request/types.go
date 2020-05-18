@@ -43,6 +43,8 @@ type JobRunInfo struct {
 	RateUnit       string             `json:"rate_unit,omitempty" yaml:"rate_unit"`
 	Instances      string             `json:"instances,omitempty" yaml:"instances"`
 	ComputeCost    float64            `json:"compute_cost,omitempty" yaml:"compute_cost"`
+	EgressGB       float64            `json:"egress_gb,omitempty" yaml:"egress_gb"`
+	EgressCost     float64            `json:"egress_cost,omitempty" yaml:"egress_cost"`
 	AdjustCost     float64            `json:"adjust_cost,omitempty" yaml:"adjust_cost"`
 	VendorIndex    *int32             `json:"vendor_index,omitempty" yaml:"vendor_index"`
 	Created        int64              `json:"created,omitempty" yaml:"created"`
@@ -53,6 +55,8 @@ type JobRunInfo struct {
 	InputStage     []api.StageStorage `json:"input_stage,omitempty" yaml:"input_stage"`
 	OutputStage    []api.StageStorage `json:"output_stage,omitempty" yaml:"output_stage"`
 	Reason         string             `json:"reason,omitempty" yaml:"reason"`
+	WorkingDir     string             `json:"working_dir,omitempty" yaml:"working_dir"`
+	Logs           []string           `json:"logs,omitempty" yaml:"logs"`
 	StdOut         string             `json:"std_out,omitempty" yaml:"std_out"`
 }
 
