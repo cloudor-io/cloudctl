@@ -91,10 +91,7 @@ func NewJobByFile(filePath string) (*api.Job, error) {
 
 type RunEngine struct {
 	RunArgs *RunArgs
-	//JobName      string
-	//RunTag       string
-	//NumInstances int
-	Job *api.Job
+	Job     *api.Job
 }
 
 func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {

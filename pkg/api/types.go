@@ -74,6 +74,7 @@ type StageStorage struct {
 
 type DataSpec struct {
 	LocalPath string `json:"local_path,omitempty" yaml:"local_path"` // local path on the client's machine
+	ByteSize  int64  `json:"byte_size,omitempty" yaml:"byte_size"`
 	// MountPath string `json:"mount_path,omitempty" yaml:"mount_path"` // mounting path in the container
 	// cloud storage for staging data b/w user and job
 	Stage CloudStorage `json:"stage,omitempty" yaml:"stage"`
