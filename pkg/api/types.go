@@ -24,8 +24,6 @@ type RunSpec struct {
 	InputMounts []string `json:"input_mounts,omitempty" yaml:"input_mounts"`
 	// Output mounting path in the container.
 	OutputMount string `json:"output_mount,omitempty" yaml:"output_mount"`
-
-	Temp TempStorage `json:"temp,omitempty" yaml:"temp"`
 }
 
 type Project struct {
@@ -82,13 +80,14 @@ type DataSpec struct {
 
 // Job
 type CloudVendor struct {
-	Tag          string     `json:"tag,omitempty" yaml:"tag"`
-	Name         string     `json:"name,omitempty" yaml:"name"`
-	InstanceType string     `json:"instance_type,omitempty" yaml:"instance_type"`
-	Region       string     `json:"region,omitempty" yaml:"region"`
-	Instances    string     `json:"instances,omitempty" yaml:"instances"`
-	Inputs       []DataSpec `json:"inputs,omitempty" yaml:"inputs"`
-	Output       DataSpec   `json:"output,omitempty" yaml:"output"`
+	Tag          string      `json:"tag,omitempty" yaml:"tag"`
+	Name         string      `json:"name,omitempty" yaml:"name"`
+	InstanceType string      `json:"instance_type,omitempty" yaml:"instance_type"`
+	Region       string      `json:"region,omitempty" yaml:"region"`
+	Instances    string      `json:"instances,omitempty" yaml:"instances"`
+	Inputs       []DataSpec  `json:"inputs,omitempty" yaml:"inputs"`
+	Output       DataSpec    `json:"output,omitempty" yaml:"output"`
+	Temp         TempStorage `json:"temp,omitempty" yaml:"temp"`
 }
 
 type Job struct {
