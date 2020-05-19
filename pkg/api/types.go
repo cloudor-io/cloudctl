@@ -60,6 +60,7 @@ type S3Presign struct {
 
 // bi-directional to connect both sides (client and container)
 type S3PresignPair struct {
+	Key string    `json:"key,omitempty" yaml:"key"`
 	Put S3Presign `json:"put,omitempty" yaml:"put"`
 	Get S3Presign `json:"get,omitempty" yaml:"get"`
 }
