@@ -172,35 +172,87 @@ func (run *RunEngine) Run(username, token *string) error {
 		log.Printf("Running in detach mode, exiting.")
 		return nil
 	}
-	return run.Wait(&jobMessage)
+	jobMsg, err := run.Wait(&jobMessage, username, token)
+	if err != nil {
+		return err
+	}
+	return run.Fetch(jobMsg)
 }
 
 var minPollInterval = 20.0 // seconds
 
-func GetPollInterval(jobMessage *request.RunJobMessage) float64 {
+func GetPollInterval(jobMessage *request.RunJobMessage) int64 {
 	// Timeout gives some hint about how long the job is
 	timeout := jobMessage.RunInfo.TimeoutInMin * 60
-	return math.Max(timeout/5.0, minPollInterval)
+	return int64(math.Max(timeout/5.0, minPollInterval))
 }
 
-func (run *RunEngine) Wait(jobMessage *request.RunJobMessage) error {
-	log.Printf("Sleep for 60 seconds for the instance to boot")
+func (run *RunEngine) Wait(jobMessage *request.RunJobMessage, username, token *string) (*request.RunJobMessage, error) {
+	log.Printf("Waiting for the instance to boot")
 	time.Sleep(60 * time.Second)
-	// interval := GetPollInterval(jobMessage)
-	// checkPeriod := interval * time.Second
-	//
-	// ticker := time.NewTicker(checkPeriod)
-	// defer func() {
-	// 	ticker.Stop()
-	// }()
-	// count := 0
-	// stopped := false
-	// for {
-	// 	select {
-	// 	case <-ticker.C:
-	//
-	// 	}
-	// 	}
-	// }
-	return nil
+	listJobRequest := request.ListJobRequest{
+		UserName: *username,
+		ID:       jobMessage.ID,
+	}
+	listJobBytes, err := json.Marshal(listJobRequest)
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+
+	interval := GetPollInterval(jobMessage)
+	checkPeriod := time.Second * time.Duration(interval)
+	log.Printf("polling job status every %d seconds", interval)
+	ticker := time.NewTicker(checkPeriod)
+	defer func() {
+		ticker.Stop()
+	}()
+	for {
+		select {
+		case <-ticker.C:
+			resp, err := request.PostCloudor(listJobBytes, username, token, "/job/list")
+			if err != nil {
+				log.Fatalf("Submitting job failed %v", err)
+				return nil, err
+			}
+			jobs := []request.RunJobMessage{}
+			original := string(resp)
+			unquoted, err := strconv.Unquote(original)
+			if err != nil {
+				log.Fatalf("Intenal error while unquoting response: %v", err)
+				return nil, err
+			}
+			err = json.Unmarshal([]byte(unquoted), &jobs)
+			if err != nil {
+				log.Fatalf("Internal error, cann't parse job response: %v", err)
+				return nil, err
+			}
+			if jobs[0].Status == "finished" || jobs[0].Status == "failed" {
+				log.Printf("Job returned status %s, exit", jobs[0].Status)
+				return &jobs[0], nil
+			} else {
+				log.Printf("Job returned status %s, polling", jobs[0].Status)
+			}
+		}
+	}
+}
+
+func (run *RunEngine) Fetch(jobMessage *request.RunJobMessage) error {
+	if jobMessage.Status == "finished" {
+		if len(jobMessage.RunInfo.OutputStage) > 0 {
+			outputStage := jobMessage.RunInfo.OutputStage[0]
+			if outputStage.Type == "s3" {
+				if outputStage.S3Pair.Get.URL != "" {
+					vendor := jobMessage.Job.Vendors[*jobMessage.RunInfo.VendorIndex]
+					if vendor.Output.LocalPath != "" || vendor.Output.Stage.Type == "" {
+						output := "./output.zip"
+						if vendor.Output.LocalPath != "" {
+							output = vendor.Output.LocalPath + "output.zip"
+						}
+						return DownloadFromURL(outputStage.S3Pair.Get.URL, output)
+					}
+				}
+			}
+		}
+	}
+	return nil // errors.New("Job returned status not successful.")
 }

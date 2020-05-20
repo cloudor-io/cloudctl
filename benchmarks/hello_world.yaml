@@ -9,4 +9,4 @@ vendors:
   - tag: first_choice
     name: aws
     instance_type: g4dn.xlarge  # g3s.xlarge
-    region: us-west-2
+    region: us-east-1

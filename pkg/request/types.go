@@ -70,3 +70,9 @@ type RunJobMessage struct {
 	VendorMeta string     `json:"vendor_meta,omitempty" yaml:"vendor_meta"`
 	Job        api.Job    `json:"job,omitempty" yaml:"job"`
 }
+
+type ListJobRequest struct {
+	UserName string `json:"user_name,omitempty"`
+	ID       string `json:"id,omitempty"`
+	Status   string `json:"status,omitempty"`
+}
