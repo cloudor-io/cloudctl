@@ -33,31 +33,41 @@ type RunJobRequest struct {
 	YAML         string  `json:"yaml,omitempty" yaml:"yaml"`
 }
 
+type Cost struct {
+	HourRate       float64 `json:"hour_rate,omitempty" yaml:"hour_rate"`
+	RateUnit       string  `json:"rate_unit,omitempty" yaml:"rate_unit"`
+	ComputeCost    float64 `json:"compute_cost,omitempty" yaml:"compute_cost"`
+	EgressGB       float64 `json:"egress_gb,omitempty" yaml:"egress_gb"`
+	EgressCost     float64 `json:"egress_cost,omitempty" yaml:"egress_cost"`
+	AdjustCost     float64 `json:"adjust_cost,omitempty" yaml:"adjust_cost"`
+	ReservedCredit float64 `json:"reserved_credit,omitempty" yaml:"reserved_credit"`
+}
+
+type TimeStamps struct {
+	Created  int64 `json:"created,omitempty" yaml:"created"`
+	Started  int64 `json:"started,omitempty" yaml:"started"`
+	Finished int64 `json:"finished,omitempty" yaml:"finished"`
+	Duration int64 `json:"duration,omitempty" yaml:"duration"`
+}
+
 type JobRunInfo struct {
 	// unique id, read-only
 	// job name, can be auto-generated
-	JobName        string             `json:"job_name,omitempty" yaml:"job_name"`
-	HourRate       float64            `json:"hour_rate,omitempty" yaml:"hour_rate"`
-	TimeoutInMin   float64            `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
-	ReservedCredit float64            `json:"reserved_credit,omitempty" yaml:"reserved_credit"`
-	RateUnit       string             `json:"rate_unit,omitempty" yaml:"rate_unit"`
-	Instances      string             `json:"instances,omitempty" yaml:"instances"`
-	ComputeCost    float64            `json:"compute_cost,omitempty" yaml:"compute_cost"`
-	EgressGB       float64            `json:"egress_gb,omitempty" yaml:"egress_gb"`
-	EgressCost     float64            `json:"egress_cost,omitempty" yaml:"egress_cost"`
-	AdjustCost     float64            `json:"adjust_cost,omitempty" yaml:"adjust_cost"`
-	VendorIndex    *int32             `json:"vendor_index,omitempty" yaml:"vendor_index"`
-	Created        int64              `json:"created,omitempty" yaml:"created"`
-	Started        int64              `json:"started,omitempty" yaml:"started"`
-	Finished       int64              `json:"finished,omitempty" yaml:"finished"`
-	Duration       int64              `json:"duration,omitempty" yaml:"duration"`
-	LastUpdated    int64              `json:"last_updated,omitempty" yaml:"last_updated"`
-	InputStage     []api.StageStorage `json:"input_stage,omitempty" yaml:"input_stage"`
-	OutputStage    []api.StageStorage `json:"output_stage,omitempty" yaml:"output_stage"`
-	Reason         string             `json:"reason,omitempty" yaml:"reason"`
-	WorkingDir     string             `json:"working_dir,omitempty" yaml:"working_dir"`
-	Logs           []string           `json:"logs,omitempty" yaml:"logs"`
-	StdOut         string             `json:"std_out,omitempty" yaml:"std_out"`
+	JobName      string  `json:"job_name,omitempty" yaml:"job_name"`
+	TimeoutInMin float64 `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
+
+	Instances   string             `json:"instances,omitempty" yaml:"instances"`
+	Cost        Cost               `json:"cost,omitempty" yaml:"cost"`
+	VendorIndex *int32             `json:"vendor_index,omitempty" yaml:"vendor_index"`
+	TimeStamps  TimeStamps         `json:"time_stamps,omitempty" yaml:"time_stamps"`
+	LastUpdated int64              `json:"last_updated,omitempty" yaml:"last_updated"`
+	InputStage  []api.StageStorage `json:"input_stage,omitempty" yaml:"input_stage"`
+	OutputStage []api.StageStorage `json:"output_stage,omitempty" yaml:"output_stage"`
+	Reason      string             `json:"reason,omitempty" yaml:"reason"`
+	WorkingDir  string             `json:"working_dir,omitempty" yaml:"working_dir"`
+	Logs        []string           `json:"logs,omitempty" yaml:"logs"`
+	StdOut      string             `json:"std_out,omitempty" yaml:"std_out"`
+	Reserved    map[string]string  `json:"reserved,omitempty" yaml:"reserved"`
 }
 
 // Use structured data structure for communication
