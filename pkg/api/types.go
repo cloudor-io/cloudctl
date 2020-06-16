@@ -23,7 +23,8 @@ type RunSpec struct {
 	// Input mounting paths in the container. There could be more than one sources
 	InputMounts []string `json:"input_mounts,omitempty" yaml:"input_mounts"`
 	// Output mounting path in the container.
-	OutputMount string `json:"output_mount,omitempty" yaml:"output_mount"`
+	OutputMount   string   `json:"output_mount,omitempty" yaml:"output_mount"`
+	Notifications []Notice `json:"notifications,omitempty" yaml:"notifications"`
 }
 
 type Project struct {
@@ -56,6 +57,12 @@ type S3Presign struct {
 	Method string              `json:"method,omitempty" yaml:"method"`
 	Header map[string][]string `json:"header,omitempty" yaml:"header"`
 	Expiry int64               `json:"expiry,omitempty" yaml:"expiry"` // set when using cloudor's default stage storage
+}
+
+type Notice struct {
+	Status string `json:"status,omitempty" yaml:"status"`
+	URI    string `json:"uri,omitempty" yaml:"uri"`
+	Body   string `json:"body,omitempty" yaml:"body"`
 }
 
 // bi-directional to connect both sides (client and container)
