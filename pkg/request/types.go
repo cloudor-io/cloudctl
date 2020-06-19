@@ -67,7 +67,9 @@ type JobRunInfo struct {
 	WorkingDir  string             `json:"working_dir,omitempty" yaml:"working_dir"`
 	Logs        []string           `json:"logs,omitempty" yaml:"logs"`
 	StdOut      string             `json:"std_out,omitempty" yaml:"std_out"`
-	Reserved    map[string]string  `json:"reserved,omitempty" yaml:"reserved"`
+	// Internal usage
+	UpdateNotice api.Notice        `json:"update_notice,omitempty" yaml:"update_notice"`
+	Reserved     map[string]string `json:"reserved,omitempty" yaml:"reserved"`
 }
 
 // Use structured data structure for communication
