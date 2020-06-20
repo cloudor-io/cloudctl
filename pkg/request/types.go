@@ -88,3 +88,13 @@ type ListJobRequest struct {
 	ID       string `json:"id,omitempty"`
 	Status   string `json:"status,omitempty"`
 }
+
+// JobStatus is used for streaming job status to the client
+type JobStatus struct {
+	UserName    string `json:"user_name,omitempty"`
+	ID          string `json:"id,omitempty"`
+	Status      string `json:"status,omitempty"`
+	StatusCode  int    `json:"status_code,omitempty"`
+	Vendor      string `json:"vendor,omitempty"`
+	Description string `json:"description,omitempty"`
+}
