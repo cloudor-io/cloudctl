@@ -1,2 +1,2 @@
-# cloudctl
+# cloudor
 cmd tool for cloudor.io

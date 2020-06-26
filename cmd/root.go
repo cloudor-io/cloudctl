@@ -29,7 +29,7 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "cloudctl",
+	Use:   "cloudor",
 	Short: "Run your applications on any cloud",
 	Long:  `Run your applications on any cloud`,
 	// Uncomment the following line if your bare application

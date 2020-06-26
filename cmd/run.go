@@ -34,9 +34,9 @@ var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Run an docker image on the cloud",
 	Long: `Usage:
-	cloudctl run [OPTIONS] IMAGE [COMMAND] [ARG...]
+	cloudor run [OPTIONS] IMAGE [COMMAND] [ARG...]
 	or
-	cloudctl run [OPTIONS] -f JOB_YAML_FILE 
+	cloudor run [OPTIONS] -f JOB_YAML_FILE 
 	`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		username, token, err := GetLoginToken()
@@ -68,9 +68,9 @@ func init() {
 	runCmd.Flags().StringVarP(&runArgs.File, "file", "f", "", "job config yaml file")
 	runCmd.Flags().StringVarP(&runArgs.Name, "name", "n", "", "job name")
 	runCmd.Flags().StringVarP(&runArgs.Region, "region", "", "us-west-2", "region code in the vendor")
-	runCmd.Flags().StringVarP(&runArgs.Vendor, "vendor", "", "", "cloud vendor name: aws")
+	runCmd.Flags().StringVarP(&runArgs.Vendor, "vendor", "", "", "cloud vendor name: [aws, azure]")
 	runCmd.Flags().Float64VarP(&runArgs.TimeoutInMin, "timeout", "", api.DefaultTimeout, "job timeout in minutes")
-	runCmd.Flags().StringVarP(&runArgs.InstanceType, "instance-type", "", "aws", "instance-type in the cloud vendor")
+	runCmd.Flags().StringVarP(&runArgs.InstanceType, "instance-type", "", "", "instance type in the cloud vendor")
 	runCmd.Flags().StringVarP(&runArgs.NumInstances, "num-instances", "", "1-1", "number of instances to launch")
 	runCmd.Flags().BoolVarP(&runArgs.DryRun, "dryrun", "", false, "Dry run")
 	runCmd.Flags().BoolVarP(&runArgs.Detach, "detach", "", false, "Detach")
