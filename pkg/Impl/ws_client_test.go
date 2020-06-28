@@ -18,5 +18,5 @@ func TestCheckingJob(t *testing.T) {
 		UserName: "codemk8",
 		ID:       "fake-id",
 	}
-	CheckingJob(jobMsg, userName, token)
+	CheckingJob(&jobMsg, userName, token)
 }

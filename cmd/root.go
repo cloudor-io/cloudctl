@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"os"
 
+	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
 	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
@@ -60,8 +61,6 @@ func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-const DefaultServerURL string = "https://cloudor.dev"
-
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" {
@@ -81,7 +80,7 @@ func initConfig() {
 		if err := viper.ReadInConfig(); err != nil {
 			if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 				// set the default values
-				viper.Set("server", DefaultServerURL)
+				viper.Set("server", impl.DefaultServerURL)
 				err = viper.WriteConfigAs(home + "/.cloudor/config.yaml")
 				if err != nil {
 					panic(fmt.Errorf("Fatal error writing config file %s \n", err))
