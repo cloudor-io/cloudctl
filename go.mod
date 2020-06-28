@@ -6,6 +6,7 @@ require (
 	github.com/Pallinder/go-randomdata v1.2.0
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e
 	github.com/go-resty/resty/v2 v2.2.0
+	github.com/gorilla/websocket v1.4.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/nbutton23/zxcvbn-go v0.0.0-20180912185939-ae427f1e4c1d
 	github.com/smallfish/simpleyaml v0.0.0-20170911015856-a32031077861

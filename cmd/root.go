@@ -60,7 +60,7 @@ func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-const DefaultServerURL string = "https://cloudor.dev/api/v1"
+const DefaultServerURL string = "https://cloudor.dev"
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {

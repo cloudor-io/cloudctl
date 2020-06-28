@@ -28,7 +28,7 @@ func TrimQuotes(s string) string {
 // PostCloudor issues a POST to ServerURL
 //func PostCloudor(requestBody []byte, username *string, token *string, apiPath string) (*string, error) {
 func PostCloudor(requestBody []byte, username *string, token *string, apiPath string) ([]byte, error) {
-	serverURL := viper.GetString("server")
+	serverURL := viper.GetString("server") + "/api/v1"
 	client := resty.New()
 	request := client.R().SetHeader("Content-Type", "application/json").SetBody(requestBody)
 	if username != nil {
@@ -69,7 +69,7 @@ func PostCloudor(requestBody []byte, username *string, token *string, apiPath st
 
 // LoginHandler handles login requets
 func LoginCloudor(username, password string) ([]byte, error) {
-	serverURL := viper.GetString("server")
+	serverURL := viper.GetString("server") + "/api/v1"
 	client := resty.New()
 	response, err := client.R().SetHeader("User-Agent", "CloudCtl").
 		SetBasicAuth(username, password).

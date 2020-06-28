@@ -1,18 +1,3 @@
-/*
-Copyright © 2020 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package cmd
 
 import (
@@ -63,44 +48,6 @@ func saveToken(username *string, token *request.LoginResponse) error {
 		return err
 	}
 	return nil
-}
-
-// GetLoginToken fetches the token
-func GetLoginToken() (*string, *string, error) {
-	homeDir, err := homedir.Dir()
-	if err != nil {
-		fmt.Printf("Error accessing home directory: %v", err)
-		return nil, nil, err
-	}
-	tokenPath := path.Join(homeDir, ".cloudor", ".tokens")
-	tokenName := path.Join(tokenPath, ".login")
-	f, err := os.Open(tokenName)
-	if err != nil {
-		fmt.Printf("Error creating file %v", err)
-		return nil, nil, err
-	}
-	defer f.Close()
-	reader := bufio.NewReader(f)
-
-	userLine, _, err := reader.ReadLine()
-	if err != nil {
-		fmt.Printf("Error reading file %v", err)
-		return nil, nil, err
-	}
-	tokenLine, _, err := reader.ReadLine()
-	if err != nil {
-		fmt.Printf("Error reading file %v", err)
-		return nil, nil, err
-	}
-	userLineTokens := strings.Split(string(userLine), ":")
-	tokenLineTokens := strings.Split(string(tokenLine), ":")
-	if len(userLineTokens) != 2 || len(tokenLineTokens) != 2 {
-		return nil, nil, fmt.Errorf("Login credentials corrupted. Please login again.")
-	}
-	if userLineTokens[0] != "user" || tokenLineTokens[0] != "token" {
-		return nil, nil, fmt.Errorf("Login credentials corrupted. Please login again.")
-	}
-	return &userLineTokens[1], &tokenLineTokens[1], nil
 }
 
 func credentials() (string, string, error) {

@@ -22,6 +22,7 @@ import (
 
 	"github.com/Pallinder/go-randomdata"
 	"github.com/cloudor-io/cloudctl/pkg/request"
+	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/smallfish/simpleyaml"
 	"github.com/spf13/cobra"
 )
@@ -37,7 +38,7 @@ var createCmd = &cobra.Command{
 	Short: "Create a new project",
 	Long:  `Create a project with a yaml config file or directly with a docker image`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		username, token, err := GetLoginToken()
+		username, token, err := utils.GetLoginToken()
 		if err != nil {
 			return fmt.Errorf("Error getting user credentails, please log in.")
 		}

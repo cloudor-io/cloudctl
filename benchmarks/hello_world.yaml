@@ -4,7 +4,7 @@ spec:
   image: alpine:latest # hello-world
   command: sleep
   args:
-    - 30
+    - 5
   envs: 
     - name: env1
       value: 1
