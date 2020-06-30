@@ -21,26 +21,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// projectCmd represents the project command
-var projectCmd = &cobra.Command{
-	Use:   "project",
-	Short: "project sub-command",
-	Long:  `Entry point to issue all project-related commands: create, list, describe etc. `,
+// jobCmd represents the job command
+var jobCmd = &cobra.Command{
+	Use:   "job",
+	Short: "Access your jobs on cloudor",
+	Long:  `List, get detail or cancel your job on cloudor`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Please add -h for how to run project commands.")
+		fmt.Println("job called")
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(projectCmd)
+	rootCmd.AddCommand(jobCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// projectCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// jobCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// projectCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// jobCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

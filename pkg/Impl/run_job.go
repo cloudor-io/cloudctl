@@ -172,10 +172,13 @@ func (run *RunEngine) Run(username, token *string) error {
 		log.Printf("Running in detach mode, exiting.")
 		return nil
 	}
-	jobMsg, err := run.Wait(&jobMessage, username, token)
+
+	jobMsg, err := CheckingJob(&jobMessage, username, token)
+	// jobMsg, err := run.Wait(&jobMessage, username, token)
 	if err != nil {
 		return err
 	}
+
 	return run.Fetch(jobMsg)
 }
 

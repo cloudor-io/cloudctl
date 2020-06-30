@@ -44,18 +44,6 @@ func PostCloudor(requestBody []byte, username *string, token *string, apiPath st
 	if resp.StatusCode() == http.StatusUnauthorized {
 		return nil, errors.New("unauthorized, please log in first.")
 	}
-	/*
-		body := strings.TrimSuffix(TrimQuotes(string(resp.Body())), "\\n")
-		if resp.StatusCode() == http.StatusOK {
-			return &body, nil
-		} else {
-			if body != "" {
-
-				return nil, errors.New("remote API error response: " + body)
-			}
-			return nil, errors.New("remote API error code " + strconv.Itoa(resp.StatusCode()))
-		}
-	*/
 	if resp.StatusCode() == http.StatusOK {
 		return resp.Body(), nil
 	} else {
@@ -64,7 +52,34 @@ func PostCloudor(requestBody []byte, username *string, token *string, apiPath st
 		}
 		return nil, errors.New("remote API error code " + strconv.Itoa(resp.StatusCode()))
 	}
+}
 
+// GetCloudor issues a Get to ServerURL
+func GetCloudor(username *string, token *string, apiPath string) ([]byte, error) {
+	serverURL := viper.GetString("server") + "/api/v1"
+	client := resty.New()
+	request := client.R().SetHeader("Content-Type", "application/json")
+	if username != nil {
+		request.SetHeader("From", *username)
+	}
+	if token != nil {
+		request.SetHeader("Authorization", "Bearer "+*token)
+	}
+	resp, err := request.Get(serverURL + apiPath)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode() == http.StatusUnauthorized {
+		return nil, errors.New("unauthorized, please log in first")
+	}
+	if resp.StatusCode() == http.StatusOK {
+		return resp.Body(), nil
+	}
+
+	if len(resp.Body()) != 0 {
+		return nil, errors.New("remote API error response: " + string(resp.Body()))
+	}
+	return nil, errors.New("remote API error code " + strconv.Itoa(resp.StatusCode()))
 }
 
 // LoginHandler handles login requets
