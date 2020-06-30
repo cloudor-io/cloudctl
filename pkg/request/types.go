@@ -50,6 +50,13 @@ type TimeStamps struct {
 	Duration int64 `json:"duration,omitempty" yaml:"duration"`
 }
 
+type Status struct {
+	ReturnCode  int32    `json:"return_code,omitempty" yaml:"return_code"`
+	Description string   `json:"description,omitempty" yaml:"description"`
+	StdOut      string   `json:"std_out,omitempty" yaml:"stdout"`
+	Logs        []string `json:"logs,omitempty" yaml:"logs"`
+}
+
 type JobRunInfo struct {
 	// unique id, read-only
 	// job name, can be auto-generated
@@ -63,16 +70,14 @@ type JobRunInfo struct {
 	LastUpdated int64              `json:"last_updated,omitempty" yaml:"last_updated"`
 	InputStage  []api.StageStorage `json:"input_stage,omitempty" yaml:"input_stage"`
 	OutputStage []api.StageStorage `json:"output_stage,omitempty" yaml:"output_stage"`
-	Reason      string             `json:"reason,omitempty" yaml:"reason"`
 	WorkingDir  string             `json:"working_dir,omitempty" yaml:"working_dir"`
-	Logs        []string           `json:"logs,omitempty" yaml:"logs"`
-	StdOut      string             `json:"std_out,omitempty" yaml:"std_out"`
+	Status      Status             `json:"status,omitempty" yaml:"status"`
 	// Internal usage
 	UpdateNotice api.Notice        `json:"update_notice,omitempty" yaml:"update_notice"`
 	Reserved     map[string]string `json:"reserved,omitempty" yaml:"reserved"`
 }
 
-// Use structured data structure for communication
+// RunJobMessage is the structured data structure for communication
 type RunJobMessage struct {
 	UserName   string     `json:"user_name,omitempty" yaml:"user_name"`
 	Created    int64      `json:"created,omitempty" yaml:"created"`
