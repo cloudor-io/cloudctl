@@ -7,7 +7,6 @@ import (
 	"log"
 	"math"
 	"strconv"
-	"time"
 
 	"github.com/Pallinder/go-randomdata"
 	"github.com/cloudor-io/cloudctl/pkg/api"
@@ -190,6 +189,7 @@ func GetPollInterval(jobMessage *request.RunJobMessage) int64 {
 	return int64(math.Max(timeout/5.0, minPollInterval))
 }
 
+/*
 func (run *RunEngine) Wait(jobMessage *request.RunJobMessage, username, token *string) (*request.RunJobMessage, error) {
 	log.Printf("Waiting for the instance to boot")
 	time.Sleep(60 * time.Second)
@@ -229,6 +229,8 @@ func (run *RunEngine) Wait(jobMessage *request.RunJobMessage, username, token *s
 				log.Fatalf("Internal error, cann't parse job response: %v", err)
 				return nil, err
 			}
+			if len(jobs.JobStatus.Stages) > 0 {
+			}
 			if jobs[0].Status == "finished" || jobs[0].Status == "failed" {
 				log.Printf("Job returned status %s, exit", jobs[0].Status)
 				return &jobs[0], nil
@@ -239,8 +241,9 @@ func (run *RunEngine) Wait(jobMessage *request.RunJobMessage, username, token *s
 	}
 }
 
+*/
 func (run *RunEngine) Fetch(jobMessage *request.RunJobMessage) error {
-	if jobMessage.Status == "finished" {
+	if jobMessage.RunInfo.Stages[len(jobMessage.RunInfo.Stages)-1].Status == "finished" {
 		if len(jobMessage.RunInfo.OutputStage) > 0 {
 			outputStage := jobMessage.RunInfo.OutputStage[0]
 			if outputStage.Type == "s3" {

@@ -1,6 +1,8 @@
 package request
 
 import (
+	"time"
+
 	"github.com/cloudor-io/cloudctl/pkg/api"
 )
 
@@ -43,35 +45,27 @@ type Cost struct {
 	ReservedCredit float64 `json:"reserved_credit,omitempty" yaml:"reserved_credit"`
 }
 
-type TimeStamps struct {
-	Created  int64 `json:"created,omitempty" yaml:"created"`
-	Started  int64 `json:"started,omitempty" yaml:"started"`
-	Finished int64 `json:"finished,omitempty" yaml:"finished"`
-	Duration int64 `json:"duration,omitempty" yaml:"duration"`
-}
-
 type Status struct {
-	ReturnCode  int32    `json:"return_code,omitempty" yaml:"return_code"`
-	Description string   `json:"description,omitempty" yaml:"description"`
-	StdOut      string   `json:"std_out,omitempty" yaml:"stdout"`
-	Logs        []string `json:"logs,omitempty" yaml:"logs"`
+	Code        int32  `json:"return_code,omitempty" yaml:"code"`
+	Status      string `json:"status,omitempty" yaml:"status"`
+	Description string `json:"description,omitempty" yaml:"description"`
+	StdOut      string `json:"std_out,omitempty" yaml:"stdout"`
+	UnixTime    int64  `json:"unix_time,omitempty" yaml:"unix_time"`
 }
 
 type JobRunInfo struct {
 	// unique id, read-only
 	// job name, can be auto-generated
-	JobName      string  `json:"job_name,omitempty" yaml:"job_name"`
-	TimeoutInMin float64 `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
-
-	Instances   string             `json:"instances,omitempty" yaml:"instances"`
-	Cost        Cost               `json:"cost,omitempty" yaml:"cost"`
-	VendorIndex *int32             `json:"vendor_index,omitempty" yaml:"vendor_index"`
-	TimeStamps  TimeStamps         `json:"time_stamps,omitempty" yaml:"time_stamps"`
-	LastUpdated int64              `json:"last_updated,omitempty" yaml:"last_updated"`
-	InputStage  []api.StageStorage `json:"input_stage,omitempty" yaml:"input_stage"`
-	OutputStage []api.StageStorage `json:"output_stage,omitempty" yaml:"output_stage"`
-	WorkingDir  string             `json:"working_dir,omitempty" yaml:"working_dir"`
-	Status      Status             `json:"status,omitempty" yaml:"status"`
+	JobName      string             `json:"job_name,omitempty" yaml:"job_name"`
+	TimeoutInMin float64            `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
+	Duration     int64              `json:"duration,omitempty" yaml:"duration"`
+	Instances    string             `json:"instances,omitempty" yaml:"instances"`
+	Cost         Cost               `json:"cost,omitempty" yaml:"cost"`
+	VendorIndex  *int32             `json:"vendor_index,omitempty" yaml:"vendor_index"`
+	InputStage   []api.StageStorage `json:"input_stage,omitempty" yaml:"input_stage"`
+	OutputStage  []api.StageStorage `json:"output_stage,omitempty" yaml:"output_stage"`
+	WorkingDir   string             `json:"working_dir,omitempty" yaml:"working_dir"`
+	Stages       []Status           `json:"stages,omitempty" yaml:"stages"`
 	// Internal usage
 	UpdateNotice api.Notice        `json:"update_notice,omitempty" yaml:"update_notice"`
 	Reserved     map[string]string `json:"reserved,omitempty" yaml:"reserved"`
@@ -82,7 +76,6 @@ type RunJobMessage struct {
 	UserName   string     `json:"user_name,omitempty" yaml:"user_name"`
 	Created    int64      `json:"created,omitempty" yaml:"created"`
 	ID         string     `json:"id,omitempty" yaml:"id"`
-	Status     string     `json:"status,omitempty" yaml:"status"`
 	RunInfo    JobRunInfo `json:"run_info,omitempty" yaml:"run_info"`
 	VendorMeta string     `json:"vendor_meta,omitempty" yaml:"vendor_meta"`
 	Job        api.Job    `json:"job,omitempty" yaml:"job"`
@@ -99,7 +92,18 @@ type JobStatus struct {
 	UserName    string `json:"user_name,omitempty"`
 	ID          string `json:"id,omitempty"`
 	Status      string `json:"status,omitempty"`
-	StatusCode  int    `json:"status_code,omitempty"`
+	StatusCode  int32  `json:"status_code,omitempty"`
 	Vendor      string `json:"vendor,omitempty"`
 	Description string `json:"description,omitempty"`
+}
+
+// AddJobStatus add a stage to job's runtime info
+func AddJobStatus(jobMsg *RunJobMessage, status *JobStatus) {
+	stage := Status{
+		Code:        status.StatusCode,
+		Status:      status.Status,
+		Description: status.Description,
+		UnixTime:    time.Now().Unix(),
+	}
+	jobMsg.RunInfo.Stages = append(jobMsg.RunInfo.Stages, stage)
 }
