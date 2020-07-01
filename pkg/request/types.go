@@ -107,3 +107,30 @@ func AddJobStatus(jobMsg *RunJobMessage, status *JobStatus) {
 	}
 	jobMsg.RunInfo.Stages = append(jobMsg.RunInfo.Stages, stage)
 }
+
+// GetStatusTs returns the unix time in second for a status
+func GetStatusTs(jobMsg *RunJobMessage, status string) int64 {
+	for _, stage := range jobMsg.RunInfo.Stages {
+		if stage.Status == status {
+			return stage.UnixTime
+		}
+	}
+	return int64(0)
+}
+
+// GetJobDuration gets the elapsed time in second between finished/failed to started
+func GetJobDuration(jobMsg *RunJobMessage) int64 {
+	startedTS := GetStatusTs(jobMsg, "started")
+	if startedTS == int64(0) {
+		return int64(-1)
+	}
+	failedTS := GetStatusTs(jobMsg, "failed")
+	if failedTS != int64(0) {
+		return failedTS - startedTS
+	}
+	finishedTS := GetStatusTs(jobMsg, "finished")
+	if finishedTS != int64(0) {
+		return finishedTS - startedTS
+	}
+	return int64(-1)
+}
