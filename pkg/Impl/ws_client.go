@@ -133,6 +133,6 @@ func CheckingJob(jobMsg *request.RunJobMessage, username *string, token *string)
 		log.Printf("Internal error, cann't parse job response: %v", err)
 		return nil, err
 	}
-	log.Printf("Return job message %+v", jobMessage)
+	// log.Printf("Return job message %+v", jobMessage)
 	return &jobMessage, nil
 }

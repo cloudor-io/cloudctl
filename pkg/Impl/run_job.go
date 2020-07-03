@@ -189,59 +189,6 @@ func GetPollInterval(jobMessage *request.RunJobMessage) int64 {
 	return int64(math.Max(timeout/5.0, minPollInterval))
 }
 
-/*
-func (run *RunEngine) Wait(jobMessage *request.RunJobMessage, username, token *string) (*request.RunJobMessage, error) {
-	log.Printf("Waiting for the instance to boot")
-	time.Sleep(60 * time.Second)
-	listJobRequest := request.ListJobRequest{
-		UserName: *username,
-		ID:       jobMessage.ID,
-	}
-	listJobBytes, err := json.Marshal(listJobRequest)
-	if err != nil {
-		return nil, fmt.Errorf("%v", err)
-	}
-
-	interval := GetPollInterval(jobMessage)
-	checkPeriod := time.Second * time.Duration(interval)
-	log.Printf("polling job status every %d seconds", interval)
-	ticker := time.NewTicker(checkPeriod)
-	defer func() {
-		ticker.Stop()
-	}()
-	for {
-		select {
-		case <-ticker.C:
-			resp, err := request.PostCloudor(listJobBytes, username, token, "/job/list")
-			if err != nil {
-				log.Fatalf("Submitting job failed %v", err)
-				return nil, err
-			}
-			jobs := []request.RunJobMessage{}
-			original := string(resp)
-			unquoted, err := strconv.Unquote(original)
-			if err != nil {
-				log.Fatalf("Intenal error while unquoting response: %v", err)
-				return nil, err
-			}
-			err = json.Unmarshal([]byte(unquoted), &jobs)
-			if err != nil {
-				log.Fatalf("Internal error, cann't parse job response: %v", err)
-				return nil, err
-			}
-			if len(jobs.JobStatus.Stages) > 0 {
-			}
-			if jobs[0].Status == "finished" || jobs[0].Status == "failed" {
-				log.Printf("Job returned status %s, exit", jobs[0].Status)
-				return &jobs[0], nil
-			} else {
-				log.Printf("Job returned status %s, polling", jobs[0].Status)
-			}
-		}
-	}
-}
-
-*/
 func (run *RunEngine) Fetch(jobMessage *request.RunJobMessage) error {
 	if jobMessage.RunInfo.Stages[len(jobMessage.RunInfo.Stages)-1].Status == "finished" {
 		if len(jobMessage.RunInfo.OutputStage) > 0 {
