@@ -89,12 +89,12 @@ type ListJobRequest struct {
 
 // JobStatus is used for streaming job status to the client
 type JobStatus struct {
-	UserName    string `json:"user_name,omitempty"`
-	ID          string `json:"id,omitempty"`
-	Status      string `json:"status,omitempty"`
-	StatusCode  int32  `json:"status_code,omitempty"`
-	Vendor      string `json:"vendor,omitempty"`
-	Description string `json:"description,omitempty"`
+	UserName    string `json:"user_name,omitempty" yaml:"user_name"`
+	ID          string `json:"id,omitempty" yaml:"id"`
+	Status      string `json:"status,omitempty" yaml:"status"`
+	StatusCode  int32  `json:"status_code,omitempty" yaml:"status_code"`
+	Vendor      string `json:"vendor,omitempty" yaml:"vendor"`
+	Description string `json:"description,omitempty" yaml:"description"`
 }
 
 // AddJobStatus add a stage to job's runtime info

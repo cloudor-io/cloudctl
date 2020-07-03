@@ -94,7 +94,6 @@ func CheckingJob(jobMsg *request.RunJobMessage, username *string, token *string)
 	for {
 		select {
 		case <-done:
-			log.Printf("done")
 			doneFlag = true
 			break
 		case <-interrupt:
@@ -115,7 +114,6 @@ func CheckingJob(jobMsg *request.RunJobMessage, username *string, token *string)
 			break
 		}
 	}
-	log.Printf("Getting job")
 	// get job msg
 	resp, err := request.GetCloudor(username, token, "/job/user/"+*username+"/id/"+jobMsg.ID)
 	if err != nil {
