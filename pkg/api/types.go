@@ -52,7 +52,8 @@ type CloudStorage struct {
 }
 
 type S3Presign struct {
-	URL string `json:"url,omitempty" yaml:"url"`
+	Bucket string `json:"bucket,omitempty" yaml:"bucket"`
+	URL    string `json:"url,omitempty" yaml:"url"`
 	// Put or Get
 	Method string              `json:"method,omitempty" yaml:"method"`
 	Header map[string][]string `json:"header,omitempty" yaml:"header"`
