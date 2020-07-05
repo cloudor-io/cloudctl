@@ -1,5 +1,7 @@
 package api
 
+import "strings"
+
 //////////////////////////////////////////////////
 // Find the chosen vendor by tag, if no tag is set, choose the first one
 // if no vendor exists, return -1
@@ -41,4 +43,10 @@ func (job *Job) HasLocals(tag string) (bool, bool) {
 		outputHasLocal = true
 	}
 	return inputHasLocal, outputHasLocal
+}
+
+// ImageIsLocalFile checks if an image string is a local file or not
+func ImageIsLocalFile(image string) bool {
+	// Currently just simply check suffix (tar for docker, img for singularity)
+	return strings.HasSuffix(image, ".tar") || strings.HasSuffix(image, ".img")
 }

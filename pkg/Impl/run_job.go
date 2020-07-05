@@ -2,15 +2,19 @@ package impl
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"math"
+	"net/http"
 	"strconv"
 
 	"github.com/Pallinder/go-randomdata"
 	"github.com/cloudor-io/cloudctl/pkg/api"
 	"github.com/cloudor-io/cloudctl/pkg/request"
+
+	"github.com/go-resty/resty/v2"
 	"gopkg.in/yaml.v2"
 )
 
@@ -120,6 +124,23 @@ func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {
 	return runEngine, nil
 }
 
+func UnmarshalJobMsg(resp *resty.Response) (*request.RunJobMessage, error) {
+	// somewhere the json is encoded twice, unquote it TODO
+	original := string(resp.Body())
+	unquoted, err := strconv.Unquote(original)
+	if err != nil {
+		log.Fatalf("Intenal error while unquoting response: %v", err)
+		return nil, err
+	}
+	jobMessage := request.RunJobMessage{}
+	err = json.Unmarshal([]byte(unquoted), &jobMessage)
+	if err != nil {
+		log.Fatalf("Internal error, cann't parse job response: %v", err)
+		return nil, err
+	}
+	return &jobMessage, nil
+}
+
 func (run *RunEngine) Run(username, token *string) error {
 	jobBytes, err := yaml.Marshal(run.Job)
 	if err != nil {
@@ -145,21 +166,28 @@ func (run *RunEngine) Run(username, token *string) error {
 		log.Fatalf("Submitting job failed %v", err)
 		return err
 	}
-	// somewhere the json is encoded twice, unquote it TODO
-	original := string(resp)
-	unquoted, err := strconv.Unquote(original)
-	if err != nil {
-		log.Fatalf("Intenal error while unquoting response: %v", err)
+	if resp.StatusCode() != http.StatusAccepted && resp.StatusCode() != http.StatusOK {
+		if len(resp.Body()) != 0 {
+			return errors.New("remote API error response: " + string(resp.Body()))
+		}
+		return errors.New("remote API error code " + strconv.Itoa(resp.StatusCode()))
 	}
-	jobMessage := request.RunJobMessage{}
-	err = json.Unmarshal([]byte(unquoted), &jobMessage)
+	jobMessage, err := UnmarshalJobMsg(resp)
 	if err != nil {
-		log.Fatalf("Internal error, cann't parse job response: %v", err)
+		return err
 	}
 	if runJobRequest.DryRun {
 		log.Printf("Dry run successful, estimated cost is %.2f%s", jobMessage.RunInfo.Cost.ReservedCredit, jobMessage.RunInfo.Cost.RateUnit)
 		return nil
 	}
+	if resp.StatusCode() == http.StatusAccepted {
+		err = Upload(jobMessage)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
 	log.Printf("Job submitted successfully.")
 	localInput, _ := jobMessage.Job.HasLocals(run.RunArgs.Tag)
 	// if no local input, just return. User will poll the job status
@@ -172,7 +200,7 @@ func (run *RunEngine) Run(username, token *string) error {
 		return nil
 	}
 
-	jobMsg, err := CheckingJob(&jobMessage, username, token)
+	jobMsg, err := CheckingJob(jobMessage, username, token)
 	// jobMsg, err := run.Wait(&jobMessage, username, token)
 	if err != nil {
 		return err

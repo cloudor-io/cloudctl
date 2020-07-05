@@ -20,8 +20,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/cloudor-io/cloudctl/pkg/request"
@@ -84,7 +86,13 @@ var registerCmd = &cobra.Command{
 			fmt.Errorf("Error posting to server: %v", err)
 			return err
 		}
-		fmt.Printf("Register successful: %s.\n", string(resp))
+		if resp.StatusCode() != http.StatusOK {
+			if len(resp.Body()) != 0 {
+				return errors.New("remote API error response: " + string(resp.Body()))
+			}
+			return errors.New("remote API error code " + strconv.Itoa(resp.StatusCode()))
+		}
+		fmt.Printf("Register successful: %s.\n", string(resp.Body()))
 		return nil
 	},
 }

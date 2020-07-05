@@ -1,0 +1,15 @@
+kind: job
+version: v1alpha
+spec:
+  image: /tmp/alpine.tar  # docker image save alpine:latest -o alpine.tar
+  command: sleep
+  args:
+    - 5
+  envs: 
+    - name: env1
+      value: 1
+vendors:
+  - tag: first_choice
+    name: aws
+    instance_type: t2.micro
+    region: us-west-2
