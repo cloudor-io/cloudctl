@@ -3,6 +3,7 @@ package impl
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/cloudor-io/cloudctl/pkg/request"
 	"github.com/olekukonko/tablewriter"
@@ -30,7 +31,11 @@ func (v TableView) View(jobs *[]request.RunJobMessage) {
 	data := [][]string{}
 
 	for _, job := range *jobs {
+		createdTS := request.GetStatusTs(&job, "created")
 		created := "NA" // time.Unix(job.RunInfo.TimeStamps.Created, 0).Format(time.RFC3339)
+		if createdTS > 0 {
+			created = time.Unix(createdTS, 0).Format(time.RFC3339)
+		}
 
 		vendorIndex := 0
 		if job.RunInfo.VendorIndex != nil {
@@ -43,12 +48,13 @@ func (v TableView) View(jobs *[]request.RunJobMessage) {
 		region := job.Job.Vendors[vendorIndex].Region
 		instance := job.Job.Vendors[vendorIndex].InstanceType
 		duration := "NA"
-		if job.RunInfo.Duration > 3600 {
-			duration = fmt.Sprintf("%.1f h", float64(job.RunInfo.Duration)/3600.0)
-		} else if job.RunInfo.Duration > 60 {
-			duration = fmt.Sprintf("%.1f m", float64(job.RunInfo.Duration)/60.0)
-		} else if job.RunInfo.Duration > 0 {
-			duration = fmt.Sprintf("%d s", job.RunInfo.Duration)
+		durationSec := request.GetJobDuration(&job)
+		if durationSec > 3600 {
+			duration = fmt.Sprintf("%.1fh", float64(durationSec)/3600.0)
+		} else if durationSec > 60 {
+			duration = fmt.Sprintf("%.1fm", float64(durationSec)/60.0)
+		} else if durationSec > 0 {
+			duration = fmt.Sprintf("%ds", durationSec)
 		}
 		cost := fmt.Sprintf("%.2f", job.RunInfo.Cost.ComputeCost+job.RunInfo.Cost.EgressCost+job.RunInfo.Cost.AdjustCost) + job.RunInfo.Cost.RateUnit
 		status := "NA"

@@ -135,3 +135,8 @@ func GetJobDuration(jobMsg *RunJobMessage) int64 {
 	}
 	return int64(-1)
 }
+
+// LastStatus gets the last stage's status
+func LastStatus(jobMsg *RunJobMessage) string {
+	return jobMsg.RunInfo.Stages[len(jobMsg.RunInfo.Stages)-1].Status
+}
