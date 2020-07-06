@@ -12,7 +12,7 @@ import (
 func GetJobs(userName, token *string) (*[]request.RunJobMessage, error) {
 	resp, err := request.GetCloudor(userName, token, "/job/user/"+*userName)
 	if err != nil {
-		log.Printf("getting jobs failed for user %s: %v", userName, err)
+		log.Printf("getting jobs failed for user %s: %v", *userName, err)
 		return nil, err
 	}
 	// somewhere the json is encoded twice, unquote it TODO

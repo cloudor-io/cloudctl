@@ -15,7 +15,7 @@ func TestNewJobByFile(t *testing.T) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	helloWorld := path + "/../../benchmarks/hello_world.yaml"
+	helloWorld := path + "/../../examples/hello_world.yaml"
 	job, err := NewJobByFile(helloWorld)
 	assert.Equal(t, err, nil, "no error")
 	fmt.Printf("job is %+v", *job)

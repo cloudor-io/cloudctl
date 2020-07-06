@@ -183,9 +183,15 @@ func (run *RunEngine) Run(username, token *string) error {
 	if resp.StatusCode() == http.StatusAccepted {
 		err = Upload(jobMessage)
 		if err != nil {
+			log.Printf("error uploading %v", err)
 			return err
 		}
-		return nil
+		runJobBytes, _ := json.Marshal(jobMessage)
+		resp, err = request.PostCloudor(runJobBytes, username, token, "/job/start")
+		if err != nil {
+			log.Printf("Starting job failed %v", err)
+			return err
+		}
 	}
 
 	log.Printf("Job submitted successfully.")

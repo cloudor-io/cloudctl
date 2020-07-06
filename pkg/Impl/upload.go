@@ -3,6 +3,7 @@ package impl
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -48,7 +49,7 @@ func uploadFile(presignURL, filename string) error {
 	// Get the Presigned URL from the remote service. Pass in the file's
 	// size if it is known so that the presigned URL returned will be required
 	// to be used with the size of content requested.
-	log.Printf("uploading to %s", presignURL)
+	log.Printf("uploading zipped image")
 	req, err := http.NewRequest("PUT", presignURL, nil)
 
 	if err != nil {
@@ -62,14 +63,13 @@ func uploadFile(presignURL, filename string) error {
 	if err != nil {
 		return fmt.Errorf("failed to do PUT request, %v", err)
 	}
-
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("failed to put S3 object, %d:%s",
 			resp.StatusCode, resp.Status)
 	}
-
+	log.Printf("image uploaded")
 	return nil
 }
 
@@ -82,7 +82,13 @@ func UploadImage(jobMsg *request.RunJobMessage) error {
 		if !fileExists(jobMsg.Job.Spec.Image) {
 			return fmt.Errorf("Image file does not exist %s", jobMsg.Job.Spec.Image)
 		}
-		return uploadFile(jobMsg.RunInfo.ImageStage.S3Pair.Put.URL, jobMsg.Job.Spec.Image)
+		gzipFile, err := ioutil.TempFile("", "")
+		if err != nil {
+			return err
+		}
+		zipFile(jobMsg.Job.Spec.Image, gzipFile)
+		defer os.Remove(gzipFile.Name())
+		return uploadFile(jobMsg.RunInfo.ImageStage.S3Pair.Put.URL, gzipFile.Name())
 	}
 	return nil
 }
