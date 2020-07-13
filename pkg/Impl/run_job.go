@@ -240,6 +240,8 @@ func (run *RunEngine) Fetch(jobMessage *request.RunJobMessage) error {
 				}
 			}
 		}
+	} else {
+		log.Printf("last status not finished, do not fetch output")
 	}
 	return nil // errors.New("Job returned status not successful.")
 }

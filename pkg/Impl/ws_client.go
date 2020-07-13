@@ -95,13 +95,18 @@ func CheckingJob(jobMsg *request.RunJobMessage, username *string, token *string)
 		select {
 		case <-done:
 			doneFlag = true
+			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
+			if err != nil {
+				log.Println("write close error:", err)
+				return nil, err
+			}
 			break
 		case <-interrupt:
 			// Cleanly close the connection by sending a close message and then
 			// waiting (with timeout) for the server to close the connection.
 			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
 			if err != nil {
-				log.Println("write close:", err)
+				log.Println("write close error:", err)
 				return nil, err
 			}
 			select {

@@ -11,5 +11,10 @@ spec:
 vendors:
   - tag: first_choice
     name: aws
-    instance_type: t2.micro
+    instance_type: g4dn.xlarge # t2.micro
     region: us-west-2
+  - tag: azure
+    name: azure
+    instance_type: B1S
+    region: eastus
+  
