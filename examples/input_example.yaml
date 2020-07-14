@@ -1,0 +1,22 @@
+kind: job
+version: v1alpha
+spec:
+  image: alpine:latest # hello-world
+  command: cp
+  args:
+    - -r
+    - /mnt/input/
+    - /mnt/output/.
+  input_mounts:
+    - /mnt/input
+  output_mount: /mnt/output
+vendors:
+  - tag: azure
+    name: azure
+    instance_type: B1S
+    region: eastus
+    inputs: # matches input_mounts
+      - local_dir: /tmp/input   # local 
+    output: 
+      local_dir: ./output  # matches output_mount
+

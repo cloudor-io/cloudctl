@@ -10,3 +10,7 @@ vendors:
     name: aws
     instance_type: g4dn.xlarge  # g3s.xlarge
     region: us-east-1
+  - tag: azure
+    name: azure
+    instance_type: NC6s_v2 # NC24s_v2 # NC24s_v3
+    region: eastus

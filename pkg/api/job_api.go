@@ -35,11 +35,11 @@ func (job *Job) HasLocals(tag string) (bool, bool) {
 	vendor := &job.Vendors[runVendorIndex]
 	inputHasLocal, outputHasLocal := false, false
 	for _, input := range vendor.Inputs {
-		if input.LocalPath != "" {
+		if input.LocalDir != "" {
 			inputHasLocal = true
 		}
 	}
-	if vendor.Output.LocalPath != "" {
+	if vendor.Output.LocalDir != "" {
 		outputHasLocal = true
 	}
 	return inputHasLocal, outputHasLocal

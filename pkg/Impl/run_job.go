@@ -56,14 +56,14 @@ func updateJobByArgs(job *api.Job, runArgs *RunArgs) error {
 		if runArgs.InputMount == "" {
 			log.Fatalf("Input mounting point must be specified if input is used.")
 		}
-		job.Vendors[0].Inputs[0].LocalPath = runArgs.Input
+		job.Vendors[0].Inputs[0].LocalDir = runArgs.Input
 		job.Spec.InputMounts = append(job.Spec.InputMounts, runArgs.InputMount)
 	}
 	if runArgs.Output != "" {
 		if runArgs.OutputMount == "" {
 			log.Print("No mount point for output is specified, only getting stdout.")
 		}
-		job.Vendors[0].Output.LocalPath = runArgs.Output
+		job.Vendors[0].Output.LocalDir = runArgs.Output
 		job.Spec.OutputMount = runArgs.OutputMount
 	}
 	return nil
@@ -230,10 +230,10 @@ func (run *RunEngine) Fetch(jobMessage *request.RunJobMessage) error {
 			if outputStage.Type == "s3" {
 				if outputStage.S3Pair.Get.URL != "" {
 					vendor := jobMessage.Job.Vendors[*jobMessage.RunInfo.VendorIndex]
-					if vendor.Output.LocalPath != "" || vendor.Output.Stage.Type == "" {
+					if vendor.Output.LocalDir != "" || vendor.Output.Cloud.Type == "" {
 						output := "./output.zip"
-						if vendor.Output.LocalPath != "" {
-							output = vendor.Output.LocalPath + "output.zip"
+						if vendor.Output.LocalDir != "" {
+							output = vendor.Output.LocalDir + "output.zip"
 						}
 						return DownloadFromURL(outputStage.S3Pair.Get.URL, output)
 					}

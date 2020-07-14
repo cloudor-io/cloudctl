@@ -62,9 +62,9 @@ type JobRunInfo struct {
 	Instances    string             `json:"instances,omitempty" yaml:"instances"`
 	Cost         Cost               `json:"cost,omitempty" yaml:"cost"`
 	VendorIndex  *int32             `json:"vendor_index,omitempty" yaml:"vendor_index"`
-	InputStage   []api.StageStorage `json:"input_stage,omitempty" yaml:"input_stage"`
-	ImageStage   api.StageStorage   `json:"image_stage,omitempty" yaml:"image_stage"`
+	InputStages  []api.StageStorage `json:"input_stages,omitempty" yaml:"input_stages"`
 	OutputStage  []api.StageStorage `json:"output_stage,omitempty" yaml:"output_stage"`
+	ImageStage   api.StageStorage   `json:"image_stage,omitempty" yaml:"image_stage"`
 	WorkingDir   string             `json:"working_dir,omitempty" yaml:"working_dir"`
 	Stages       []Status           `json:"stages,omitempty" yaml:"stages"`
 	// Internal usage

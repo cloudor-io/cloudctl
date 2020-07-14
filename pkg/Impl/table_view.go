@@ -1,8 +1,10 @@
 package impl
 
 import (
+	"errors"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/cloudor-io/cloudctl/pkg/request"
@@ -24,6 +26,16 @@ func NewTableView() *TableView {
 	return &TableView{
 		Table: tablewriter.NewWriter(os.Stdout),
 	}
+}
+
+// GetStatusTs returns the unix time in second for a status
+func GetStatusCode(jobMsg *request.RunJobMessage, status string) (int, error) {
+	for _, stage := range jobMsg.RunInfo.Stages {
+		if stage.Status == status {
+			return int(stage.Code), nil
+		}
+	}
+	return 0, errors.New("Not found")
 }
 
 // View implements the View interface
@@ -62,11 +74,17 @@ func (v TableView) View(jobs *[]request.RunJobMessage) {
 			lastStage := job.RunInfo.Stages[len(job.RunInfo.Stages)-1]
 			status = lastStage.Status
 		}
+		returnCode := "NA"
+		code, err := GetStatusCode(&job, "returned")
+		if err == nil {
+			returnCode = strconv.Itoa(code)
+		}
+		fmt.Printf("return code is: %s.\n", returnCode)
 		data = append(data, []string{job.ID, created,
-			status, duration, cost, vendor, region, instance})
+			status, returnCode, duration, cost, vendor, region, instance})
 	}
 
-	v.Table.SetHeader([]string{"ID", "Created", "Status", "Elapsed", "Cost", "Vendor", "Region", "Instance"})
+	v.Table.SetHeader([]string{"ID", "Created", "Status", "ReturnCode", "Elapsed", "Cost", "Vendor", "Region", "Instance"})
 	//v.Table.SetFooter([]string{"", "", "Total", strconv.Itoa(apis.Total)})
 	v.Table.SetBorder(true)
 	v.Table.AppendBulk(data)
