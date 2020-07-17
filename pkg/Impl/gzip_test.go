@@ -15,3 +15,8 @@ func Test_zipFile(t *testing.T) {
 	err = zipFile("/tmp/image.tar", gzipFile)
 	assert.Equal(t, err, nil, "")
 }
+
+func Test_zipit(t *testing.T) {
+	err := zipit("/tmp/tmp2", "/tmp/tmp2.zip")
+	assert.Equal(t, err, nil, "")
+}
