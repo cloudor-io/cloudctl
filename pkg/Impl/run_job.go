@@ -8,6 +8,8 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"os"
+	"path"
 	"strconv"
 
 	"github.com/Pallinder/go-randomdata"
@@ -194,13 +196,7 @@ func (run *RunEngine) Run(username, token *string) error {
 		}
 	}
 
-	log.Printf("Job submitted successfully.")
-	localInput, _ := jobMessage.Job.HasLocals(run.RunArgs.Tag)
-	// if no local input, just return. User will poll the job status
-	if localInput {
-		log.Fatalf("Not implemented")
-	}
-
+	log.Printf("job submitted successfully")
 	if run.RunArgs.Detach {
 		log.Printf("Running in detach mode, exiting.")
 		return nil
@@ -233,7 +229,8 @@ func (run *RunEngine) Fetch(jobMessage *request.RunJobMessage) error {
 					if vendor.Output.LocalDir != "" || vendor.Output.Cloud.Type == "" {
 						output := "./output.zip"
 						if vendor.Output.LocalDir != "" {
-							output = vendor.Output.LocalDir + "output.zip"
+							os.MkdirAll(vendor.Output.LocalDir, os.ModePerm)
+							output = path.Join(vendor.Output.LocalDir, "output.zip")
 						}
 						return DownloadFromURL(outputStage.S3Pair.Get.URL, output)
 					}

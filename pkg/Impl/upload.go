@@ -128,6 +128,7 @@ func UploadInputs(jobMsg *request.RunJobMessage) error {
 			if vendor.Inputs[inputIndex].LocalDir == "" {
 				return fmt.Errorf("Expect local dir when s3 pair keys exist for input %d", inputIndex)
 			}
+			log.Printf("uploading local dir %s", vendor.Inputs[inputIndex].LocalDir)
 			err := UploadDirToS3(vendor.Inputs[inputIndex].LocalDir, stage.S3Pair)
 			if err != nil {
 				log.Printf("error uploading %d input to s3 key: %v", inputIndex, err)

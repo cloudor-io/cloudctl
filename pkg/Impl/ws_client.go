@@ -76,7 +76,7 @@ func CheckingJob(jobMsg *request.RunJobMessage, username *string, token *string)
 				log.Printf("error parsing jobmsg: %v,", err)
 				return
 			}
-			log.Printf("Job status %s, description: %s", job.Status, job.Description)
+			log.Printf("job status \"%s\": %s", job.Status, job.Description)
 			if job.Status == "finished" || job.Status == "failed" || job.Status == "canceled" {
 				done <- struct{}{}
 				return

@@ -5,8 +5,8 @@ spec:
   command: cp
   args:
     - -r
-    - /mnt/input/
-    - /mnt/output/.
+    - /mnt/input/Makefile
+    - mnt/output/.
   input_mounts:
     - /mnt/input
   output_mount: /mnt/output
@@ -16,7 +16,15 @@ vendors:
     instance_type: B1S
     region: eastus
     inputs: # matches input_mounts
-      - local_dir: /tmp/input   # local 
+      - local_dir: /tmp/my_input   # local
     output: 
       local_dir: ./output  # matches output_mount
+  - tag: aws_west
+    name: aws
+    instance_type: t2.micro
+    region: us-west-2
+    inputs: # matches input_mounts
+      - local_dir: /tmp/my_input   # local
+    output: 
+      local_dir: ./output2  # matches output_mount
 

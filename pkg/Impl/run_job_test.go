@@ -27,8 +27,6 @@ func TestUnmarshal(t *testing.T) {
 	err := json.Unmarshal([]byte(jobMsgBytes), jobMessage)
 	if err != nil {
 		fmt.Printf("err is %v", err)
-	} else {
-		fmt.Printf("job msg is %+v", *jobMessage)
 	}
 	assert.Equal(t, err, nil, "no error")
 }
