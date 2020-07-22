@@ -79,13 +79,37 @@ func (v TableView) View(jobs *[]request.RunJobMessage) {
 		if err == nil {
 			returnCode = strconv.Itoa(code)
 		}
-		fmt.Printf("return code is: %s.\n", returnCode)
 		data = append(data, []string{job.ID, created,
 			status, returnCode, duration, cost, vendor, region, instance})
 	}
 
 	v.Table.SetHeader([]string{"ID", "Created", "Status", "ReturnCode", "Elapsed", "Cost", "Vendor", "Region", "Instance"})
 	//v.Table.SetFooter([]string{"", "", "Total", strconv.Itoa(apis.Total)})
+	v.Table.SetBorder(true)
+	v.Table.AppendBulk(data)
+	v.Table.Render()
+}
+
+// View implements the View interface
+func (v TableView) ViewTrans(transactions *[]request.TransSchema) {
+	data := [][]string{}
+
+	v.Table.SetHeader([]string{"When", "Type", "Amount", "JobID", "Credit Before", "Credit After", "ID"})
+	//v.Table.SetFooter([]string{"", "", "Total", strconv.Itoa(apis.Total)})
+	for _, trans := range *transactions {
+
+		created := time.Unix(trans.TimeStamp, 0).Format(time.RFC3339)
+		jobID := "NA"
+		if trans.Info.JobID != "" {
+			jobID = trans.Info.JobID
+		}
+		data = append(data, []string{created, trans.Info.Type,
+			fmt.Sprintf("%.2f", trans.Amount) + trans.Unit, jobID,
+			fmt.Sprintf("%.2f", trans.Info.CreditBefore) + trans.Unit,
+			fmt.Sprintf("%.2f", trans.Info.CreditAfter) + trans.Unit,
+			trans.ID})
+	}
+
 	v.Table.SetBorder(true)
 	v.Table.AppendBulk(data)
 	v.Table.Render()
