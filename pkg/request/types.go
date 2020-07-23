@@ -46,7 +46,7 @@ type Cost struct {
 }
 
 type Status struct {
-	Code        int32  `json:"return_code,omitempty" yaml:"code"`
+	ReturnCode  int32  `json:"return_code,omitempty" yaml:"return_code"`
 	Status      string `json:"status,omitempty" yaml:"status"`
 	Description string `json:"description,omitempty" yaml:"description"`
 	StdOut      string `json:"std_out,omitempty" yaml:"stdout"`
