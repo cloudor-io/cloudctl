@@ -32,7 +32,7 @@ func NewTableView() *TableView {
 func GetStatusCode(jobMsg *request.RunJobMessage, status string) (int, error) {
 	for _, stage := range jobMsg.RunInfo.Stages {
 		if stage.Status == status {
-			return int(stage.Code), nil
+			return int(*stage.ReturnCode), nil
 		}
 	}
 	return 0, errors.New("Not found")

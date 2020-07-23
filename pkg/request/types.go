@@ -46,7 +46,7 @@ type Cost struct {
 }
 
 type Status struct {
-	ReturnCode  int32  `json:"return_code,omitempty" yaml:"return_code"`
+	ReturnCode  *int32 `json:"return_code,omitempty" yaml:"return_code"`
 	Status      string `json:"status,omitempty" yaml:"status"`
 	Description string `json:"description,omitempty" yaml:"description"`
 	StdOut      string `json:"std_out,omitempty" yaml:"stdout"`
@@ -101,7 +101,7 @@ type JobStatus struct {
 // AddJobStatus add a stage to job's runtime info
 func AddJobStatus(jobMsg *RunJobMessage, status *JobStatus) {
 	stage := Status{
-		Code:        status.StatusCode,
+		ReturnCode:  &status.StatusCode,
 		Status:      status.Status,
 		Description: status.Description,
 		UnixTime:    time.Now().Unix(),
