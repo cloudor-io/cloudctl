@@ -36,13 +36,13 @@ type RunJobRequest struct {
 }
 
 type Cost struct {
-	HourRate       float64 `json:"hour_rate,omitempty" yaml:"hour_rate"`
-	RateUnit       string  `json:"rate_unit,omitempty" yaml:"rate_unit"`
-	ComputeCost    float64 `json:"compute_cost,omitempty" yaml:"compute_cost"`
-	EgressGB       float64 `json:"egress_gb,omitempty" yaml:"egress_gb"`
-	EgressCost     float64 `json:"egress_cost,omitempty" yaml:"egress_cost"`
-	AdjustCost     float64 `json:"adjust_cost,omitempty" yaml:"adjust_cost"`
-	ReservedCredit float64 `json:"reserved_credit,omitempty" yaml:"reserved_credit"`
+	HourRate       *float64 `json:"hour_rate,omitempty" yaml:"hour_rate"`
+	RateUnit       string   `json:"rate_unit,omitempty" yaml:"rate_unit"`
+	ComputeCost    *float64 `json:"compute_cost,omitempty" yaml:"compute_cost"`
+	EgressGB       *float64 `json:"egress_gb,omitempty" yaml:"egress_gb"`
+	EgressCost     *float64 `json:"egress_cost,omitempty" yaml:"egress_cost"`
+	AdjustCost     *float64 `json:"adjust_cost,omitempty" yaml:"adjust_cost"`
+	ReservedCredit *float64 `json:"reserved_credit,omitempty" yaml:"reserved_credit"`
 }
 
 type Status struct {
