@@ -1,5 +1,5 @@
 build: ./main.go
-	go build -o bin/cloudor main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/cloudor main.go
 
 test: pkg/*/*.go cmd/*.go
 	go test ./...

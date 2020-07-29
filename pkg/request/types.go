@@ -140,3 +140,11 @@ func GetJobDuration(jobMsg *RunJobMessage) int64 {
 func LastStatus(jobMsg *RunJobMessage) string {
 	return jobMsg.RunInfo.Stages[len(jobMsg.RunInfo.Stages)-1].Status
 }
+
+// SupportedOSArch defines a supported os/arch pairs
+type SupportedOSArch struct {
+	OS      string `json:"os,omitempty" yaml:"os"`
+	Arch    string `json:"arch,omitempty" yaml:"arch"`
+	Release string `json:"release,omitempty" yaml:"release"`
+	MD5     string `json:"md5,omitempty" yaml:"md5"`
+}
