@@ -44,7 +44,7 @@ var updateListCmd = &cobra.Command{
 }
 
 func init() {
-	updateCmd.AddCommand(listCmd)
+	updateCmd.AddCommand(updateListCmd)
 
 	// Here you will define your flags and configuration settings.
 

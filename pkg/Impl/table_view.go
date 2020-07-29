@@ -32,7 +32,7 @@ func NewTableView() *TableView {
 func GetStatusCode(jobMsg *request.RunJobMessage, status string) (int, error) {
 	for _, stage := range jobMsg.RunInfo.Stages {
 		if stage.Status == status {
-			return int(*stage.ReturnCode), nil
+			return int(stage.ReturnCode), nil
 		}
 	}
 	return 0, errors.New("Not found")
@@ -68,7 +68,8 @@ func (v TableView) View(jobs *[]request.RunJobMessage) {
 		} else if durationSec > 0 {
 			duration = fmt.Sprintf("%ds", durationSec)
 		}
-		cost := fmt.Sprintf("%.2f", *job.RunInfo.Cost.ComputeCost+*job.RunInfo.Cost.EgressCost+*job.RunInfo.Cost.AdjustCost) + job.RunInfo.Cost.RateUnit
+		fmt.Printf("%v", job.RunInfo.Cost)
+		cost := fmt.Sprintf("%.2f", job.RunInfo.Cost.ComputeCost+job.RunInfo.Cost.EgressCost+job.RunInfo.Cost.AdjustCost) + job.RunInfo.Cost.RateUnit
 		status := "NA"
 		if len(job.RunInfo.Stages) > 0 {
 			lastStage := job.RunInfo.Stages[len(job.RunInfo.Stages)-1]
