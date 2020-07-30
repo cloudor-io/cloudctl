@@ -3,7 +3,6 @@ package impl
 import (
 	"encoding/json"
 	"log"
-	"strconv"
 
 	"github.com/cloudor-io/cloudctl/pkg/request"
 )
@@ -15,15 +14,9 @@ func GetTrans(userName, token *string) (*[]request.TransSchema, error) {
 		log.Printf("getting jobs failed for user %s: %v", *userName, err)
 		return nil, err
 	}
-	// somewhere the json is encoded twice, unquote it TODO
-	original := string(resp)
-	unquoted, err := strconv.Unquote(original)
-	if err != nil {
-		log.Printf("Intenal error while unquoting response: %v", err)
-		return nil, err
-	}
+
 	transactions := []request.TransSchema{}
-	err = json.Unmarshal([]byte(unquoted), &transactions)
+	err = json.Unmarshal(resp, &transactions)
 	if err != nil {
 		log.Printf("Internal error, cann't parse transaction response: %v", err)
 		return nil, err

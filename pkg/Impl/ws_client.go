@@ -8,7 +8,6 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
-	"strconv"
 	"strings"
 	"time"
 
@@ -126,14 +125,9 @@ func CheckingJob(jobMsg *request.RunJobMessage, username *string, token *string)
 		return nil, err
 	}
 	// somewhere the json is encoded twice, unquote it TODO
-	original := string(resp)
-	unquoted, err := strconv.Unquote(original)
-	if err != nil {
-		log.Printf("Intenal error while unquoting response: %v", err)
-		return nil, err
-	}
+
 	jobMessage := request.RunJobMessage{}
-	err = json.Unmarshal([]byte(unquoted), &jobMessage)
+	err = json.Unmarshal(resp, &jobMessage)
 	if err != nil {
 		log.Printf("Internal error, cann't parse job response: %v", err)
 		return nil, err

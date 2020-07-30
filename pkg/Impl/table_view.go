@@ -68,7 +68,6 @@ func (v TableView) View(jobs *[]request.RunJobMessage) {
 		} else if durationSec > 0 {
 			duration = fmt.Sprintf("%ds", durationSec)
 		}
-		fmt.Printf("%v", job.RunInfo.Cost)
 		cost := fmt.Sprintf("%.2f", job.RunInfo.Cost.ComputeCost+job.RunInfo.Cost.EgressCost+job.RunInfo.Cost.AdjustCost) + job.RunInfo.Cost.RateUnit
 		status := "NA"
 		if len(job.RunInfo.Stages) > 0 {
@@ -109,6 +108,21 @@ func (v TableView) ViewTrans(transactions *[]request.TransSchema) {
 			fmt.Sprintf("%.2f", trans.Info.CreditBefore) + trans.Unit,
 			fmt.Sprintf("%.2f", trans.Info.CreditAfter) + trans.Unit,
 			trans.ID})
+	}
+
+	v.Table.SetBorder(true)
+	v.Table.AppendBulk(data)
+	v.Table.Render()
+}
+
+// View implements the View interface
+func (v TableView) ViewUpdates(releases *[]request.SupportedOSArch) {
+	data := [][]string{}
+
+	v.Table.SetHeader([]string{"OS", "Arch", "Release"})
+	//v.Table.SetFooter([]string{"", "", "Total", strconv.Itoa(apis.Total)})
+	for _, release := range *releases {
+		data = append(data, []string{release.OS, release.Arch, release.Release})
 	}
 
 	v.Table.SetBorder(true)

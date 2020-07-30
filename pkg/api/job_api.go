@@ -17,8 +17,8 @@ func (job *Job) FindRunningVendorIndexByTag(tag string) int32 {
 			return int32(id)
 		}
 	}
-	// not found, returns the first one
-	return 0
+	// not found, returns negative
+	return -1
 }
 
 // HasLocals returns a pair of boolean that indicate if the chosen

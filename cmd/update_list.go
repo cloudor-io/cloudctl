@@ -34,11 +34,11 @@ var updateListCmd = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("error getting user credentails, please log in (cloudor login)")
 		}
-		_, err = impl.ListUpdates(username, token)
+		releases, err := impl.ListUpdates(username, token)
 		if err != nil {
 			return err
 		}
-
+		impl.NewTableView().ViewUpdates(releases)
 		return nil
 	},
 }

@@ -128,14 +128,8 @@ func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {
 
 func UnmarshalJobMsg(resp *resty.Response) (*request.RunJobMessage, error) {
 	// somewhere the json is encoded twice, unquote it TODO
-	original := string(resp.Body())
-	unquoted, err := strconv.Unquote(original)
-	if err != nil {
-		log.Fatalf("Intenal error while unquoting response: %v", err)
-		return nil, err
-	}
 	jobMessage := request.RunJobMessage{}
-	err = json.Unmarshal([]byte(unquoted), &jobMessage)
+	err := json.Unmarshal(resp.Body(), &jobMessage)
 	if err != nil {
 		log.Fatalf("Internal error, cann't parse job response: %v", err)
 		return nil, err

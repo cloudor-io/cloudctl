@@ -3,7 +3,6 @@ package impl
 import (
 	"encoding/json"
 	"log"
-	"strconv"
 
 	"github.com/cloudor-io/cloudctl/pkg/request"
 )
@@ -15,15 +14,8 @@ func ListUpdates(userName, token *string) (*[]request.SupportedOSArch, error) {
 		log.Printf("getting jobs failed for user %s: %v", *userName, err)
 		return nil, err
 	}
-	// somewhere the json is encoded twice, unquote it TODO
-	original := string(resp)
-	unquoted, err := strconv.Unquote(original)
-	if err != nil {
-		log.Printf("Intenal error while unquoting response: %v", err)
-		return nil, err
-	}
 	updates := []request.SupportedOSArch{}
-	err = json.Unmarshal([]byte(unquoted), &updates)
+	err = json.Unmarshal(resp, &updates)
 	if err != nil {
 		log.Printf("Internal error, cann't parse job response: %v", err)
 		return nil, err
@@ -38,15 +30,8 @@ func GetUpdate(userName, token *string, os, arch string) (*request.SupportedOSAr
 		log.Printf("getting jobs failed for user %s: %v", *userName, err)
 		return nil, err
 	}
-	// somewhere the json is encoded twice, unquote it TODO
-	original := string(resp)
-	unquoted, err := strconv.Unquote(original)
-	if err != nil {
-		log.Printf("Intenal error while unquoting response: %v", err)
-		return nil, err
-	}
 	updates := request.SupportedOSArch{}
-	err = json.Unmarshal([]byte(unquoted), &updates)
+	err = json.Unmarshal(resp, &updates)
 	if err != nil {
 		log.Printf("Internal error, cann't parse job response: %v", err)
 		return nil, err
