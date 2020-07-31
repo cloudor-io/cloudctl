@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"runtime"
 	"strconv"
 	"time"
 
@@ -118,11 +119,16 @@ func (v TableView) ViewTrans(transactions *[]request.TransSchema) {
 // View implements the View interface
 func (v TableView) ViewUpdates(releases *[]request.SupportedOSArch) {
 	data := [][]string{}
-
+	myOS := runtime.GOOS
+	myArch := runtime.GOARCH
 	v.Table.SetHeader([]string{"OS", "Arch", "Release"})
 	//v.Table.SetFooter([]string{"", "", "Total", strconv.Itoa(apis.Total)})
 	for _, release := range *releases {
-		data = append(data, []string{release.OS, release.Arch, release.Release})
+		releaseName := release.Release
+		if myOS == release.OS && myArch == runtime.GOARCH {
+			releaseName += "*"
+		}
+		data = append(data, []string{release.OS, release.Arch, releaseName})
 	}
 
 	v.Table.SetBorder(true)

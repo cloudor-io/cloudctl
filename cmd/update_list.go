@@ -24,6 +24,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	listArch string
+	listOS   string
+)
+
 // listCmd represents the list command
 var updateListCmd = &cobra.Command{
 	Use:   "list",
@@ -55,4 +60,6 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	updateListCmd.Flags().StringVarP(&listArch, "arch", "", "", "specify arch")
+	updateListCmd.Flags().StringVarP(&listOS, "os", "", "", "specify os")
 }
