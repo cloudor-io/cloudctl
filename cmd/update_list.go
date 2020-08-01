@@ -18,13 +18,12 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"os"
 	"runtime"
 
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
 	"github.com/cloudor-io/cloudctl/pkg/request"
-
 	"github.com/cloudor-io/cloudctl/pkg/utils"
+	"github.com/kardianos/osext"
 	"github.com/spf13/cobra"
 )
 
@@ -32,6 +31,32 @@ var (
 	listArch string
 	listOS   string
 )
+
+func needUpdate(username, token *string) (bool, error) {
+	latestRelease, err := impl.GetUpdate(username, token, runtime.GOOS, runtime.GOARCH, "latest")
+	if err != nil {
+		return false, fmt.Errorf("error getting update for OS %s and Arch %s", runtime.GOOS, runtime.GOARCH)
+	}
+	if len(*latestRelease) == 0 {
+		log.Printf("could not find the latest release")
+		return false, nil
+	}
+
+	filename, err := osext.Executable()
+	if err != nil {
+		return false, err
+	}
+
+	myMD5, err := request.GetMD5(filename)
+	if err != nil {
+		return false, err
+	}
+	if myMD5 != ((*latestRelease)[0].MD5) {
+		return true, nil
+	}
+	log.Printf("current cloudor is the latest release")
+	return false, nil
+}
 
 // listCmd represents the list command
 var updateListCmd = &cobra.Command{
@@ -48,21 +73,11 @@ var updateListCmd = &cobra.Command{
 			return err
 		}
 		impl.NewTableView().ViewUpdates(releases)
-
-		latestRelease, err := impl.GetUpdate(username, token, runtime.GOOS, runtime.GOARCH, "latest")
-		if err != nil {
-			return fmt.Errorf("error getting update for OS %s and Arch %s")
-		}
-		if len(*latestRelease) == 0 {
-			log.Printf("could not find the latest release")
-		}
-		myMD5, _ := request.GetMD5(os.Args[0])
-		if myMD5 != ((*latestRelease)[0].MD5) {
+		need, err := needUpdate(username, token)
+		if need {
 			log.Printf("found new release, please run \"cloudor update\"")
-		} else {
-			log.Printf("current cloudor is the latest release")
 		}
-		return nil
+		return err
 	},
 }
 

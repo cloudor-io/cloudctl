@@ -77,7 +77,6 @@ func GetCloudor(username *string, token *string, apiPath string) ([]byte, error)
 	if resp.StatusCode() == http.StatusOK {
 		return resp.Body(), nil
 	}
-
 	if len(resp.Body()) != 0 {
 		return nil, errors.New("remote API error response: " + string(resp.Body()))
 	}

@@ -17,8 +17,13 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"runtime"
 
+	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
+	"github.com/cloudor-io/cloudctl/pkg/utils"
+	"github.com/kardianos/osext"
 	"github.com/spf13/cobra"
 )
 
@@ -26,9 +31,40 @@ import (
 var updateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Update cloudor command line tool",
-	Long:  `Update cloudor command line tool`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("update called %s %s", runtime.GOARCH, runtime.GOOS)
+	Long:  `Update the latest cloudor command line release from cloudor server`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		username, token, err := utils.GetLoginToken()
+		if err != nil {
+			return fmt.Errorf("error getting update: %v", err)
+		}
+		need, err := needUpdate(username, token)
+		if !need {
+			return nil
+		}
+		filename, err := osext.Executable()
+		if err != nil {
+			return err
+		}
+		backupFile := filename + "_bak"
+		err = os.Rename(filename, backupFile)
+		dstFile := filename
+		canReplace := true
+		if err != nil {
+			log.Printf("error backing up current cloudor binary %v", err)
+			dstFile = "cloudor"
+			canReplace = false
+		}
+		err = impl.DownloadSelfFromURL(username, token, "/releases/"+runtime.GOOS+"/"+runtime.GOARCH+"/latest", dstFile)
+		if err != nil {
+			log.Printf("error updating cloudor binary: %v", err)
+		} else {
+			// remove back up file only after succeeded
+			log.Printf("cloudor self updating completed. You may need to make the file %s to be executable.", dstFile)
+			if canReplace {
+				os.Remove(backupFile)
+			}
+		}
+		return err
 	},
 }
 

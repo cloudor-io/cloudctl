@@ -81,6 +81,7 @@ func initConfig() {
 			if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 				// set the default values
 				viper.Set("server", impl.DefaultServerURL)
+				os.Mkdir(home + "/.cloudor", 0600)
 				err = viper.WriteConfigAs(home + "/.cloudor/config.yaml")
 				if err != nil {
 					panic(fmt.Errorf("Fatal error writing config file %s \n", err))
