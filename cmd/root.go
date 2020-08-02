@@ -31,8 +31,8 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "cloudor",
-	Short: "Run your applications on any cloud",
-	Long:  `Run your applications on any cloud`,
+	Short: "Run your containers on any cloud",
+	Long:  `Run your container-based applcations on any cloud`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },

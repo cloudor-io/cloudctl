@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
 	"github.com/cloudor-io/cloudctl/pkg/utils"
@@ -39,6 +40,13 @@ var creditCmd = &cobra.Command{
 		}
 		impl.NewTableView().ViewTrans(transactions)
 		//fmt.Printf("received %d jobs", len(*jobs))
+
+		credit, err := impl.GetCredit(username, token)
+		if err != nil {
+			log.Printf("error getting user credit %v", err)
+			return err
+		}
+		log.Printf("Current credit %.2f$, reserved %.2f$", credit.Credit, credit.Reserved)
 		return nil
 	},
 }

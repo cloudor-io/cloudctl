@@ -11,7 +11,7 @@ import (
 func GetTrans(userName, token *string) (*[]request.TransSchema, error) {
 	resp, err := request.GetCloudor(userName, token, "/transaction/user/"+*userName)
 	if err != nil {
-		log.Printf("getting jobs failed for user %s: %v", *userName, err)
+		log.Printf("getting transactions failed for user %s: %v", *userName, err)
 		return nil, err
 	}
 
@@ -22,4 +22,19 @@ func GetTrans(userName, token *string) (*[]request.TransSchema, error) {
 		return nil, err
 	}
 	return &transactions, nil
+}
+
+func GetCredit(userName, token *string) (*request.CreditSchema, error) {
+	resp, err := request.GetCloudor(userName, token, "/credit")
+	if err != nil {
+		log.Printf("getting transactions failed for user %s: %v", *userName, err)
+		return nil, err
+	}
+	credit := request.CreditSchema{}
+	err = json.Unmarshal(resp, &credit)
+	if err != nil {
+		log.Printf("Internal error, cann't parse transaction response: %v", err)
+		return nil, err
+	}
+	return &credit, nil
 }

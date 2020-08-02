@@ -95,7 +95,7 @@ func (v TableView) View(jobs *[]request.RunJobMessage) {
 func (v TableView) ViewTrans(transactions *[]request.TransSchema) {
 	data := [][]string{}
 
-	v.Table.SetHeader([]string{"When", "Type", "Amount", "JobID", "Credit Before", "Credit After", "ID"})
+	v.Table.SetHeader([]string{"When", "Type", "Amount", "JobID", "Credit Before", "After"})
 	//v.Table.SetFooter([]string{"", "", "Total", strconv.Itoa(apis.Total)})
 	for _, trans := range *transactions {
 
@@ -108,7 +108,7 @@ func (v TableView) ViewTrans(transactions *[]request.TransSchema) {
 			fmt.Sprintf("%.2f", trans.Amount) + trans.Unit, jobID,
 			fmt.Sprintf("%.2f", trans.Info.CreditBefore) + trans.Unit,
 			fmt.Sprintf("%.2f", trans.Info.CreditAfter) + trans.Unit,
-			trans.ID})
+		})
 	}
 
 	v.Table.SetBorder(true)

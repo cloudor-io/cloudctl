@@ -60,7 +60,7 @@ func PostCloudor(requestBody []byte, username *string, token *string, apiPath st
 func GetCloudor(username *string, token *string, apiPath string) ([]byte, error) {
 	serverURL := viper.GetString("server") + "/api/v1"
 	client := resty.New()
-	request := client.R().SetHeader("Content-Type", "application/json")
+	request := client.R()
 	if username != nil {
 		request.SetHeader("From", *username)
 	}

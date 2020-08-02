@@ -59,7 +59,7 @@ var updateCmd = &cobra.Command{
 			log.Printf("error updating cloudor binary: %v", err)
 		} else {
 			// remove back up file only after succeeded
-			log.Printf("cloudor self updating completed. You may need to make the file %s to be executable.", dstFile)
+			log.Printf("cloudor self updating completed, written to %s.", dstFile)
 			if canReplace {
 				os.Remove(backupFile)
 			}

@@ -141,6 +141,14 @@ func LastStatus(jobMsg *RunJobMessage) string {
 	return jobMsg.RunInfo.Stages[len(jobMsg.RunInfo.Stages)-1].Status
 }
 
+// CreditSchema defines the credit interface
+type CreditSchema struct {
+	UserName string  `json:"user_name,omitempty" yaml:"user_name"`
+	Credit   float64 `json:"credit,omitempty" yaml:"credit"`
+	Reserved float64 `json:"reserved,omitempty" yaml:"reserved"`
+	Unit     string  `json:"unit,omitempty" yaml:"unit"`
+}
+
 // SupportedOSArch defines a supported os/arch pairs
 type SupportedOSArch struct {
 	OS      string `json:"os,omitempty" yaml:"os"`

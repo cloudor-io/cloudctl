@@ -47,8 +47,10 @@ func DownloadFromURL(url string, filename string) error {
 	return nil
 }
 
+// Special function to self-update from server
 func DownloadSelfFromURL(username, token *string, apiPath string, filename string) error {
-	w, err := os.Create(filename)
+	// the file is made executable
+	w, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0755) // Create(filename)
 	if err != nil {
 		return err
 	}
