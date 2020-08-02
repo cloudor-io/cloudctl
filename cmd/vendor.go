@@ -24,10 +24,11 @@ import (
 // vendorCmd represents the vendor command
 var vendorCmd = &cobra.Command{
 	Use:   "vendor",
-	Short: "list vendor",
+	Short: "List vendor",
 	Long:  `List supported cloud vendors`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("vendor called")
+		return nil
 	},
 }
 
