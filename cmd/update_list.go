@@ -54,7 +54,7 @@ func needUpdate(username, token *string) (bool, error) {
 	if myMD5 != ((*latestRelease)[0].MD5) {
 		return true, nil
 	}
-	log.Printf("current cloudor is the latest release")
+	log.Printf("current cloudor at %s is the latest release", filename)
 	return false, nil
 }
 

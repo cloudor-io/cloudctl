@@ -17,8 +17,10 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"runtime"
 
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
@@ -41,30 +43,30 @@ var updateCmd = &cobra.Command{
 		if !need {
 			return nil
 		}
-		filename, err := osext.Executable()
+		self, err := osext.Executable()
 		if err != nil {
 			return err
 		}
-		backupFile := filename + "_bak"
-		err = os.Rename(filename, backupFile)
-		dstFile := filename
-		canReplace := true
+		originalPath := path.Dir(self)
+		tmpFile, err := ioutil.TempFile(originalPath, "cloudor_")
 		if err != nil {
-			log.Printf("error backing up current cloudor binary %v", err)
-			dstFile = "cloudor"
-			canReplace = false
+			// probably the directory is not writable
+			tmpFile, _ = ioutil.TempFile(os.TempDir(), "cloudor_")
 		}
-		err = impl.DownloadSelfFromURL(username, token, "/releases/"+runtime.GOOS+"/"+runtime.GOARCH+"/latest", dstFile)
+		err = impl.DownloadSelfFromURL(username, token, "/releases/"+runtime.GOOS+"/"+runtime.GOARCH+"/latest", tmpFile.Name())
 		if err != nil {
 			log.Printf("error updating cloudor binary: %v", err)
-		} else {
-			// remove back up file only after succeeded
-			log.Printf("cloudor self updating completed, written to %s.", dstFile)
-			if canReplace {
-				os.Remove(backupFile)
-			}
+			return err
 		}
-		return err
+		err = os.Rename(tmpFile.Name(), self)
+		// remove back up file only after succeeded
+		if err != nil {
+			log.Printf("error %v", err)
+			log.Printf("Latest cloudor written to %s, please manually overwrite %s", tmpFile.Name(), self)
+		} else {
+			log.Printf("cloudor self updated to %s", self)
+		}
+		return nil
 	},
 }
 

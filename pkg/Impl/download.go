@@ -81,6 +81,7 @@ func DownloadSelfFromURL(username, token *string, apiPath string, filename strin
 		log.Printf("Failed to write object to file %s, %v", filename, err)
 		return err
 	}
+
 	return nil
 }
 
