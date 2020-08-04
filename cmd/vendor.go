@@ -18,6 +18,8 @@ package cmd
 import (
 	"fmt"
 
+	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
+	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -25,9 +27,33 @@ import (
 var vendorCmd = &cobra.Command{
 	Use:   "vendor",
 	Short: "List vendor",
-	Long:  `List supported cloud vendors`,
+	Long: `Usage:
+	cloudor vendor [ARG...]
+List supported cloud vendors, it accepts up to two arguments to specify vendor name and region
+Examples are:
+	cloudor vendor  # show all supported instances
+	cloudor vendor aws   # show all supported instances in aws
+	cloudor vendor azure eastus  # show all supported instances in azure in eastus region
+	`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Println("vendor called")
+		username, token, err := utils.GetLoginToken()
+		if err != nil {
+			return fmt.Errorf("error getting user credentails, please log in (cloudor login)")
+		}
+		vendors, err := impl.GetVendors(username, token)
+		if err != nil {
+			return err
+		}
+		selVendor := ""
+		if len(args) >= 1 {
+			selVendor = args[0]
+		}
+		selRegion := ""
+		if len(args) >= 2 {
+			selRegion = args[1]
+		}
+		vendorArray := impl.FilterVendors(vendors, selVendor, selRegion)
+		impl.NewTableView().ViewVendors(&vendorArray)
 		return nil
 	},
 }

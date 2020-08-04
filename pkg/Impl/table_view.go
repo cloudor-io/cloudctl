@@ -135,3 +135,18 @@ func (v TableView) ViewUpdates(releases *[]request.SupportedOSArch) {
 	v.Table.AppendBulk(data)
 	v.Table.Render()
 }
+
+// ViewVendors tabulates the vendor
+func (v TableView) ViewVendors(instances *[]Instance) {
+	data := [][]string{}
+	v.Table.SetHeader([]string{"Vendor", "Region", "Type"})
+	//v.Table.SetFooter([]string{"", "", "Total", strconv.Itoa(apis.Total)})
+	for _, instance := range *instances {
+
+		data = append(data, []string{instance.Vendor, instance.Region, instance.InstanceType})
+	}
+
+	v.Table.SetBorder(true)
+	v.Table.AppendBulk(data)
+	v.Table.Render()
+}
