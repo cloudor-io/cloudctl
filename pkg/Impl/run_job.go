@@ -189,8 +189,8 @@ func (run *RunEngine) Run(username, token *string) error {
 			return err
 		}
 	}
-
-	log.Printf("job submitted successfully")
+	vendor := jobMessage.Job.Vendors[*jobMessage.RunInfo.VendorIndex]
+	log.Printf("job submitted successfully, to be running on %s/%s/%s", vendor.Name, vendor.Region, vendor.InstanceType)
 	if run.RunArgs.Detach {
 		log.Printf("Running in detach mode, exiting.")
 		return nil

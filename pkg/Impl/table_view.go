@@ -139,11 +139,15 @@ func (v TableView) ViewUpdates(releases *[]request.SupportedOSArch) {
 // ViewVendors tabulates the vendor
 func (v TableView) ViewVendors(instances *[]Instance) {
 	data := [][]string{}
-	v.Table.SetHeader([]string{"Vendor", "Region", "Type"})
+	v.Table.SetHeader([]string{"Vendor", "Region", "Type", "CPU", "GPU", "Mem", "Rate (hr)"})
 	//v.Table.SetFooter([]string{"", "", "Total", strconv.Itoa(apis.Total)})
 	for _, instance := range *instances {
 
-		data = append(data, []string{instance.Vendor, instance.Region, instance.InstanceType})
+		data = append(data, []string{instance.Vendor, instance.Region, instance.InstanceType,
+			strconv.Itoa(int(instance.Instance.CPU)), instance.Instance.GPU,
+			strconv.Itoa(int(instance.Instance.MemoryGiB)) + "GiB",
+			fmt.Sprintf("$%.2f", instance.Instance.Price),
+		})
 	}
 
 	v.Table.SetBorder(true)

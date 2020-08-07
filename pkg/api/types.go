@@ -123,9 +123,6 @@ func DefaultJob() *Job {
 				InstanceType: "g4dn.xlarge",
 				Region:       "us-west-2",
 				Instances:    "1-1",
-				Inputs: []DataSpec{
-					DataSpec{},
-				},
 				Output: DataSpec{
 					LocalDir: "./",
 				},
