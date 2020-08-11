@@ -71,7 +71,7 @@ func init() {
 	runCmd.Flags().StringVarP(&runArgs.Region, "region", "", "us-west-2", "region code in the vendor")
 	runCmd.Flags().StringVarP(&runArgs.Vendor, "vendor", "", "", "cloud vendor name: [aws, azure]")
 	runCmd.Flags().Float64VarP(&runArgs.TimeoutInMin, "timeout", "", api.DefaultTimeout, "job timeout in minutes")
-	runCmd.Flags().StringVarP(&runArgs.InstanceType, "instance-type", "", "", "instance type in the cloud vendor")
+	runCmd.Flags().StringVarP(&runArgs.InstanceType, "instance", "", "", "instance type in the cloud vendor")
 	runCmd.Flags().StringVarP(&runArgs.NumInstances, "num-instances", "", "1-1", "number of instances to launch")
 	runCmd.Flags().BoolVarP(&runArgs.DryRun, "dryrun", "", false, "dry run")
 	runCmd.Flags().BoolVarP(&runArgs.Detach, "detach", "", false, "detach, do not wait for job to complete")
