@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"bufio"
 	"compress/gzip"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -41,8 +42,9 @@ func zipDir(source string, zipfile *os.File) error {
 	var baseDir string
 	if info.IsDir() {
 		baseDir = filepath.Base(source)
+	} else {
+		return fmt.Errorf("target must be a directory %s", source)
 	}
-
 	filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -52,7 +54,6 @@ func zipDir(source string, zipfile *os.File) error {
 		if err != nil {
 			return err
 		}
-
 		if baseDir != "" {
 			header.Name = filepath.Join(baseDir, strings.TrimPrefix(path, source))
 		}

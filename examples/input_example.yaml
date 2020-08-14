@@ -1,30 +1,23 @@
 kind: job
 version: v1alpha
 spec:
-  image: alpine:latest # hello-world
-  command: cp
+  image: cloudorio/pytorch_examples:1.6.0-cuda10.1-cudnn7-runtime
+  command: python
   args:
-    - -r
-    - /mnt/input/Makefile
-    - mnt/output/.
+    - /opt/pytorch/examples/word_language_model/main.py
+    - --cuda
+    - --data /mnt/wikitext-2
+    - --onnx-export /mnt/output_model
   input_mounts:
-    - /mnt/input
-  output_mount: /mnt/output
+    - /mnt/wikitext-2
+  output_mount: /mnt/output_model
 vendors:
-  - tag: azure
-    name: azure
-    instance_type: B1S
-    region: eastus
-    inputs: # matches input_mounts
-      - local_dir: /tmp/my_input   # local
-    output: 
-      local_dir: ./output  # matches output_mount
-  - tag: aws_west
+  - tag: us_west_v100
     name: aws
-    instance_type: t2.micro
+    instance_type: p3.2xlarge
     region: us-west-2
     inputs: # matches input_mounts
-      - local_dir: /tmp/my_input   # local
+      - local_dir: /tmp/data/wikitext-2   # local
     output: 
-      local_dir: ./output2  # matches output_mount
+      local_dir: ./output_model  # matches output_mount
 

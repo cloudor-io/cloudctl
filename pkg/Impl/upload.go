@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/cloudor-io/cloudctl/pkg/api"
 	"github.com/cloudor-io/cloudctl/pkg/request"
@@ -58,7 +59,6 @@ func uploadFile(presignURL, filename string) error {
 	// Get the Presigned URL from the remote service. Pass in the file's
 	// size if it is known so that the presigned URL returned will be required
 	// to be used with the size of content requested.
-	log.Printf("uploading zipped image")
 	req, err := http.NewRequest("PUT", presignURL, nil)
 
 	if err != nil {
@@ -78,7 +78,7 @@ func uploadFile(presignURL, filename string) error {
 		return fmt.Errorf("failed to put S3 object, %d:%s",
 			resp.StatusCode, resp.Status)
 	}
-	log.Printf("image uploaded")
+	log.Printf("file %s uploaded", filename)
 	return nil
 }
 
@@ -103,7 +103,7 @@ func UploadImage(jobMsg *request.RunJobMessage) error {
 		if !fileExists(jobMsg.Job.Spec.Image) {
 			return fmt.Errorf("Image file does not exist %s", jobMsg.Job.Spec.Image)
 		}
-		gzipFile, err := ioutil.TempFile("", "")
+		gzipFile, err := ioutil.TempFile("", "*.gzip")
 		if err != nil {
 			return err
 		}
@@ -140,6 +140,10 @@ func UploadInputs(jobMsg *request.RunJobMessage) error {
 }
 
 func UploadDirToS3(localDir string, s3Pair api.S3PresignPair) error {
+	if !filepath.IsAbs(localDir) {
+		return fmt.Errorf("must be absolute path, %s were given", localDir)
+	}
+
 	if !dirExists(localDir) {
 		// log.Printf("dir does not exist %s", localDir)
 		return fmt.Errorf("could not find local dir %s to upload", localDir)
@@ -148,7 +152,7 @@ func UploadDirToS3(localDir string, s3Pair api.S3PresignPair) error {
 		// log.Printf("missing s3 PUT URL in uploading dir")
 		return fmt.Errorf("missing s3 PUT URL")
 	}
-	zipFile, err := ioutil.TempFile("", "")
+	zipFile, err := ioutil.TempFile("", "*.zip")
 	if err != nil {
 		return err
 	}

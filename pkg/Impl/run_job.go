@@ -43,6 +43,9 @@ func updateJobByArgs(job *api.Job, runArgs *RunArgs) error {
 	if len(runArgs.Args) == 0 {
 		log.Fatalf("Please speccify which docker image to run.")
 	}
+	if _, err := os.Stat(runArgs.Args[0]); err == nil {
+		log.Fatalf("%s looks like a file, forgot -f flag?", runArgs.Args[0])
+	}
 	job.Spec.Image = runArgs.Args[0]
 	if runArgs.Vendor != "" {
 		job.Vendors[0].Name = runArgs.Vendor
