@@ -26,13 +26,13 @@ func saveToken(username *string, token *request.LoginResponse) error {
 	tokenPath := path.Join(homeDir, ".cloudor", ".tokens")
 	err = os.MkdirAll(tokenPath, 0700)
 	if err != nil {
-		fmt.Printf("Error creating directory: %v.", err)
+		fmt.Printf("%v.", err)
 		return err
 	}
 	tokenName := path.Join(tokenPath, ".login")
 	f, err := os.Create(tokenName)
 	if err != nil {
-		fmt.Printf("Error creating file %v", err)
+		fmt.Printf("%v", err)
 		return err
 	}
 	defer f.Close()

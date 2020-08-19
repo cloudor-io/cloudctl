@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"regexp"
@@ -79,11 +80,11 @@ var registerCmd = &cobra.Command{
 		}
 		signUpBytes, err := json.Marshal(signUpRequest)
 		if err != nil {
-			return fmt.Errorf("Error marshalling signup struct: %v", err)
+			return fmt.Errorf("error marshalling signup struct: %v", err)
 		}
 		resp, err := request.PostCloudor(signUpBytes, nil, nil, "/register")
 		if err != nil {
-			fmt.Errorf("Error posting to server: %v", err)
+			log.Printf("error posting to server: %v", err)
 			return err
 		}
 		if resp.StatusCode() != http.StatusOK {
@@ -92,7 +93,7 @@ var registerCmd = &cobra.Command{
 			}
 			return errors.New("remote API error code " + strconv.Itoa(resp.StatusCode()))
 		}
-		fmt.Printf("Register successful: %s.\n", string(resp.Body()))
+		log.Printf("register successful: %s.\n", string(resp.Body()))
 		return nil
 	},
 }

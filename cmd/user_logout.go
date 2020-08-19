@@ -16,29 +16,50 @@ limitations under the License.
 package cmd
 
 import (
+	"log"
+	"os"
+	"path"
+
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 )
 
-// userCmd represents the user command
-var userCmd = &cobra.Command{
-	Use:   "user",
-	Short: "User-related subcommands",
-	Long:  `Register, log in, describe or log out a user`,
+// logoutCmd represents the logout command
+var logoutCmd = &cobra.Command{
+	Use:   "logout",
+	Short: "Log out current user",
+	Long:  `Log out current user`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// fmt.Println("user called")
+		homeDir, err := homedir.Dir()
+		if err != nil {
+			log.Printf("error accessing home directory: %v", err)
+			return
+		}
+		loginTokenPath := path.Join(homeDir, ".cloudor", ".tokens", ".login")
+		_, err = os.Stat(loginTokenPath)
+		if os.IsNotExist(err) {
+			log.Printf("user is already logged out")
+			return
+		}
+		err = os.Remove(loginTokenPath)
+		if err != nil {
+			log.Printf("error removing the user credentials %v", err)
+		} else {
+			log.Printf("user successfully logged out")
+		}
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(userCmd)
+	userCmd.AddCommand(logoutCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// userCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// logoutCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// userCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// logoutCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
