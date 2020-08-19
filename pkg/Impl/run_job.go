@@ -193,8 +193,9 @@ func (run *RunEngine) Run(username, token *string) error {
 		}
 	}
 	vendor := jobMessage.Job.Vendors[*jobMessage.RunInfo.VendorIndex]
-	log.Printf("job submitted successfully, to be running on %s/%s/%s with timeout of %.0f minutes",
-		vendor.Name, vendor.Region, vendor.InstanceType, jobMessage.RunInfo.TimeoutInMin)
+	log.Printf("job submitted, running on %s/%s/%s w. timeout %.0f minutes, hourly rate %s%.2f",
+		vendor.Name, vendor.Region, vendor.InstanceType, jobMessage.RunInfo.TimeoutInMin,
+		jobMessage.RunInfo.Cost.RateUnit, jobMessage.RunInfo.Cost.HourRate)
 	if run.RunArgs.Detach {
 		log.Printf("Running in detach mode, exiting.")
 		return nil

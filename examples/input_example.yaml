@@ -6,8 +6,10 @@ spec:
   args:
     - /opt/pytorch/examples/word_language_model/main.py
     - --cuda
-    - --data /mnt/wikitext-2
-    - --onnx-export /mnt/output_model
+    - --data
+    - /mnt/wikitext-2
+    - --onnx-export
+    - /mnt/output_model/model.onnx
   input_mounts:
     - /mnt/wikitext-2
   output_mount: /mnt/output_model
@@ -17,7 +19,6 @@ vendors:
     instance_type: p3.2xlarge
     region: us-west-2
     inputs: # matches input_mounts
-      - local_dir: /tmp/data/wikitext-2   # local
-    output: 
-      local_dir: ./output_model  # matches output_mount
-
+      - local_dir: /tmp/data/wikitext-2 
+    output: # matches output_mount
+      local_dir: ./output_model  

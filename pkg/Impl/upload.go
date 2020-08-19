@@ -145,11 +145,9 @@ func UploadDirToS3(localDir string, s3Pair api.S3PresignPair) error {
 	}
 
 	if !dirExists(localDir) {
-		// log.Printf("dir does not exist %s", localDir)
 		return fmt.Errorf("could not find local dir %s to upload", localDir)
 	}
 	if s3Pair.Put.URL == "" {
-		// log.Printf("missing s3 PUT URL in uploading dir")
 		return fmt.Errorf("missing s3 PUT URL")
 	}
 	zipFile, err := ioutil.TempFile("", "*.zip")
@@ -160,6 +158,7 @@ func UploadDirToS3(localDir string, s3Pair api.S3PresignPair) error {
 	if err != nil {
 		return err
 	}
+	// log.Printf("local dir %s zipped to %s", localDir, zipFile.Name())
 	defer os.Remove(zipFile.Name())
 	return uploadFile(s3Pair.Put.URL, zipFile.Name())
 }
