@@ -71,7 +71,8 @@ func DownloadSelfFromURL(username, token *string, apiPath string, filename strin
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		errMsg := fmt.Sprintf("Failed to get object from url: %d:%s",
+		errMsg := fmt.Sprintf("Failed to get object from url %s: %d:%s",
+			serverURL+apiPath,
 			resp.StatusCode, resp.Status)
 		log.Print(errMsg)
 		return errors.New(errMsg)
