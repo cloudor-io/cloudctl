@@ -32,7 +32,7 @@ var creditCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		username, token, err := utils.GetLoginToken()
 		if err != nil {
-			return fmt.Errorf("error getting user credentails, please log in (cloudor login)")
+			return fmt.Errorf("error getting user credentails, please log in (cloudor user login)")
 		}
 		transactions, err := impl.GetTrans(username, token)
 		if err != nil {

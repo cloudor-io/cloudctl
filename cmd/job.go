@@ -27,7 +27,11 @@ var jobCmd = &cobra.Command{
 	Short: "Access your jobs on cloudor",
 	Long:  `List, get detail or cancel your job on cloudor`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("job called")
+		if len(args) > 0 {
+			fmt.Printf("job subcommand %s not supported. Please run \"cloudor help job\" for supported subcommand\n", args[0])
+		} else {
+			fmt.Println("job subcommand needed. Please run \"cloudor help job\" for supported subcommand")
+		}
 	},
 }
 

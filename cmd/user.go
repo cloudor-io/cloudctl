@@ -16,6 +16,8 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +27,11 @@ var userCmd = &cobra.Command{
 	Short: "User-related subcommands",
 	Long:  `Register, log in, describe or log out a user`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// fmt.Println("user called")
+		if len(args) > 0 {
+			fmt.Printf("user subcommand %s not supported. Please run \"cloudor help user\" for supported subcommand\n", args[0])
+		} else {
+			fmt.Println("user subcommand needed. Please run \"cloudor help user\" for supported subcommand")
+		}
 	},
 }
 

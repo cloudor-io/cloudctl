@@ -97,7 +97,7 @@ func LoginCloudor(username, password string) ([]byte, error) {
 		return response.Body(), nil
 	} else if response.StatusCode() == http.StatusUnauthorized {
 		log.Printf("username or password error, please try again.")
-		time.Sleep(3 * time.Second)
+		time.Sleep(2 * time.Second)
 	}
 	return nil, fmt.Errorf("Login failed with code %d", response.StatusCode())
 }
