@@ -22,7 +22,6 @@ import (
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
 	"github.com/spf13/cobra"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
@@ -31,11 +30,8 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "cloudor",
-	Short: "Run your containers on any cloud",
+	Short: "Run your container jobs on any cloud",
 	Long:  `Run your container-based applcations on any cloud`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -68,24 +64,19 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		// Find home
-		home, err := homedir.Dir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		home, err := os.UserHomeDir()
+		cobra.CheckErr(err)
 		viper.SetConfigType("yaml")
 		// Search config in home directory with name ".cloudctl" (without extension).
 		viper.AddConfigPath(home + "/.cloudor")
-		viper.SetConfigName("config.yaml")
+		viper.SetConfigName("config")
 		if err := viper.ReadInConfig(); err != nil {
 			if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 				// set the default values
+				os.Mkdir(home+"/.cloudor", 0700)
 				viper.Set("server", impl.DefaultServerURL)
-				os.Mkdir(home + "/.cloudor", 0700)
-				err = viper.WriteConfigAs(home + "/.cloudor/config.yaml")
-				if err != nil {
-					panic(fmt.Errorf("Fatal error writing config file %s \n", err))
-				}
+				err = viper.SafeWriteConfig()
+				cobra.CheckErr(err)
 			} else {
 				// Config file was found but another error was produced
 				panic(fmt.Errorf("Fatal error config file: %s \n", err))
@@ -96,7 +87,6 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		// fmt.Println("Using config file:", viper.ConfigFileUsed())
-	}
+	err := viper.ReadInConfig()
+	cobra.CheckErr(err)
 }

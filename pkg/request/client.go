@@ -84,12 +84,12 @@ func GetCloudor(username *string, token *string, apiPath string) ([]byte, error)
 }
 
 // LoginHandler handles login requets
-func LoginCloudor(username, password string) ([]byte, error) {
+func LoginCloudor(username, password, urlPath string) ([]byte, error) {
 	serverURL := viper.GetString("server") + "/api/v1"
 	client := resty.New()
 	response, err := client.R().SetHeader("User-Agent", "CloudCtl").
 		SetBasicAuth(username, password).
-		Get(serverURL + "/login")
+		Get(serverURL + urlPath)
 	if err != nil {
 		return nil, fmt.Errorf("Login failed: %v", err)
 	}

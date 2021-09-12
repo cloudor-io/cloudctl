@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"regexp"
@@ -30,6 +29,7 @@ import (
 	"github.com/cloudor-io/cloudctl/pkg/request"
 	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var IsLetterOrNumber = regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9]+$`).MatchString
@@ -69,32 +69,28 @@ var registerCmd = &cobra.Command{
 	Use:   "signup",
 	Short: "Sign up for the cloudor service",
 	Long:  `Sign up for the cloudor service`,
-	RunE: func(cmd *cobra.Command, args []string) error {
+	Run: func(cmd *cobra.Command, args []string) {
 		username, passwd, err := signupForm()
-		if err != nil {
-			return err
-		}
+		cobra.CheckErr(err)
 		signUpRequest := request.SignupRequest{
 			UserName: username,
 			Password: passwd,
 		}
 		signUpBytes, err := json.Marshal(signUpRequest)
-		if err != nil {
-			return fmt.Errorf("error marshalling signup struct: %v", err)
-		}
-		resp, err := request.PostCloudor(signUpBytes, nil, nil, "/register")
-		if err != nil {
-			log.Printf("error posting to server: %v", err)
-			return err
-		}
+		cobra.CheckErr(err)
+		resp, err := request.PostCloudor(signUpBytes, nil, nil, "auth/register")
+		cobra.CheckErr(err)
+
 		if resp.StatusCode() != http.StatusOK {
 			if len(resp.Body()) != 0 {
-				return errors.New("remote API error response: " + string(resp.Body()))
+				cobra.CheckErr(errors.New("remote API error response: " + string(resp.Body())))
 			}
-			return errors.New("remote API error code " + strconv.Itoa(resp.StatusCode()))
+			cobra.CheckErr(errors.New("remote API error code " + strconv.Itoa(resp.StatusCode())))
 		}
-		log.Printf("register successful: %s.\n", string(resp.Body()))
-		return nil
+		fmt.Printf("User register successfully, please check email to verify the address.\n")
+		viper.Set("user", username)
+		err = viper.WriteConfig()
+		cobra.CheckErr(err)
 	},
 }
 

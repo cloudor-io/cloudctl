@@ -10,6 +10,7 @@ import (
 	"syscall"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"github.com/cloudor-io/cloudctl/pkg/request"
 	"github.com/mitchellh/go-homedir"
@@ -73,26 +74,18 @@ var loginCmd = &cobra.Command{
 	Use:   "login",
 	Short: "Login to cloudor service",
 	Long:  `Login to cloudr service`,
-	RunE: func(cmd *cobra.Command, args []string) error {
+	Run: func(cmd *cobra.Command, args []string) {
 		username, password, err := credentials()
-		if err != nil {
-			return err
-		}
+		cobra.CheckErr(err)
 		tokenBytes, err := request.LoginCloudor(username, password)
-		if err != nil {
-			return err
-		}
+		cobra.CheckErr(err)
 		token := request.LoginResponse{}
 		err = json.Unmarshal(tokenBytes, &token)
-		if err != nil {
-			fmt.Printf("Error parsing tokens: %v, check compatibility.", token)
-			return err
-		}
+		cobra.CheckErr(err)
 		err = saveToken(&username, &token)
-		if err == nil {
-			fmt.Println("Login succeeded!")
-		}
-		return err
+		cobra.CheckErr(err)
+		viper.Set("user", username)
+		viper.WriteConfig()
 	},
 }
 

@@ -1,4 +1,7 @@
 build: ./main.go
+	GOOS=linux GOARCH=amd64 go build -o /usr/local/bin/cloudor main.go
+
+release: ./main.go
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /usr/local/bin/cloudor main.go
 
 test: pkg/*/*.go cmd/*.go
