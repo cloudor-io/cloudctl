@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/mail"
 	"os"
 	"regexp"
 	"strconv"
@@ -34,18 +35,34 @@ import (
 
 var IsLetterOrNumber = regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9]+$`).MatchString
 
+func valid(email string) bool {
+	_, err := mail.ParseAddress(email)
+	return err == nil
+}
+
 func signupForm() (string, string, error) {
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Print("Choose your username (length at least 5, alphabetic letters and numbers only): ")
-	username, _ := reader.ReadString('\n')
-	username = strings.TrimSpace(username)
-	if len(username) < 5 {
-		return "", "", errors.New("Username not long enough.")
-	}
-
-	if !IsLetterOrNumber(username) {
-		return "", "", errors.New("Username can only contain alphabetic letters and numbers.")
+	errCount := 0
+	var email string
+	fmt.Print("Please enter your email address: ")
+	const MAX_TRIES = 3
+	for {
+		email, _ = reader.ReadString('\n')
+		email = strings.TrimSpace(email)
+		if !valid(email) {
+			errCount++
+			if errCount == MAX_TRIES {
+				return "", "", errors.New("Invalid email address.")
+			}
+			tries := "tries"
+			if MAX_TRIES-errCount == 1 {
+				tries = "try"
+			}
+			fmt.Printf("Email format not correct, please enter your email again (%d %s left);", MAX_TRIES-errCount, tries)
+		} else {
+			break
+		}
 	}
 
 	passwd, err := utils.GetFirstPassword()
@@ -61,7 +78,7 @@ func signupForm() (string, string, error) {
 	if passwd != passwd2 {
 		return "", "", errors.New("Typed passwords do not match.")
 	}
-	return strings.TrimSpace(username), passwd, nil
+	return strings.TrimSpace(email), passwd, nil
 }
 
 // registerCmd represents the register command
@@ -70,10 +87,10 @@ var registerCmd = &cobra.Command{
 	Short: "Sign up for the cloudor service",
 	Long:  `Sign up for the cloudor service`,
 	Run: func(cmd *cobra.Command, args []string) {
-		username, passwd, err := signupForm()
+		email, passwd, err := signupForm()
 		cobra.CheckErr(err)
 		signUpRequest := request.SignupRequest{
-			UserName: username,
+			Email:    email,
 			Password: passwd,
 		}
 		signUpBytes, err := json.Marshal(signUpRequest)
@@ -88,7 +105,7 @@ var registerCmd = &cobra.Command{
 			cobra.CheckErr(errors.New("remote API error code " + strconv.Itoa(resp.StatusCode())))
 		}
 		fmt.Printf("User register successfully, please check email to verify the address.\n")
-		viper.Set("user", username)
+		viper.Set("user", email)
 		err = viper.WriteConfig()
 		cobra.CheckErr(err)
 	},

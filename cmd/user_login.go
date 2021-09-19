@@ -77,7 +77,7 @@ var loginCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		username, password, err := credentials()
 		cobra.CheckErr(err)
-		tokenBytes, err := request.LoginCloudor(username, password)
+		tokenBytes, err := request.LoginCloudor(username, password, "auth/login")
 		cobra.CheckErr(err)
 		token := request.LoginResponse{}
 		err = json.Unmarshal(tokenBytes, &token)
