@@ -76,7 +76,7 @@ func signupForm() (string, string, error) {
 		return "", "", err
 	}
 	if passwd != passwd2 {
-		return "", "", errors.New("Typed passwords do not match.")
+		return "", "", errors.New("Two passwords do not match.")
 	}
 	return strings.TrimSpace(email), passwd, nil
 }
@@ -95,7 +95,7 @@ var registerCmd = &cobra.Command{
 		}
 		signUpBytes, err := json.Marshal(signUpRequest)
 		cobra.CheckErr(err)
-		resp, err := request.PostCloudor(signUpBytes, nil, nil, "auth/register")
+		resp, err := request.PostCloudor(signUpBytes, nil, nil, "/user/register")
 		cobra.CheckErr(err)
 
 		if resp.StatusCode() != http.StatusOK {
@@ -104,8 +104,8 @@ var registerCmd = &cobra.Command{
 			}
 			cobra.CheckErr(errors.New("remote API error code " + strconv.Itoa(resp.StatusCode())))
 		}
-		fmt.Printf("User register successfully, please check email to verify the address.\n")
-		viper.Set("user", email)
+		fmt.Println("User register successfully, please check email to verify the address.")
+		viper.Set("default_email", email)
 		err = viper.WriteConfig()
 		cobra.CheckErr(err)
 	},

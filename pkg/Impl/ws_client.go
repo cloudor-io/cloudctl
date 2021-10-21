@@ -13,6 +13,7 @@ import (
 
 	"github.com/cloudor-io/cloudctl/pkg/request"
 	"github.com/gorilla/websocket"
+	"github.com/spf13/viper"
 )
 
 const DefaultServerURL string = "https://cloudor.dev"
@@ -28,8 +29,7 @@ type JobStatus struct {
 }
 
 func CheckingJob(jobMsg *request.RunJobMessage, username *string, token *string) (*request.RunJobMessage, error) {
-	// serverURL := "http://localhost:3001" // DefaultServerURL
-	serverURL := DefaultServerURL
+	serverURL := viper.GetString("server")
 	scheme := "ws"
 	if strings.HasPrefix(serverURL, "http://") {
 		serverURL = strings.Replace(serverURL, "http://", "", -1)

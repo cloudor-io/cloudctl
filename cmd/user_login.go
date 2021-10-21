@@ -53,10 +53,19 @@ func saveToken(username *string, token *request.LoginResponse) error {
 
 func credentials() (string, string, error) {
 	reader := bufio.NewReader(os.Stdin)
-
-	fmt.Print("Enter your username at cloudor: ")
+	default_email := viper.GetString("default_email")
+	if default_email == "" {
+		fmt.Print("Enter your username at cloudor: ")
+	} else {
+		fmt.Printf("Enter your username at cloudor[%s]: ", default_email)
+	}
 	username, _ := reader.ReadString('\n')
-
+	if username == "\n" {
+		username = default_email
+	}
+	if username == "" {
+		cobra.CheckErr(fmt.Errorf("Email address cannot be empty"))
+	}
 	fmt.Print("Enter Password: ")
 	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
 	fmt.Println("")
@@ -77,7 +86,7 @@ var loginCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		username, password, err := credentials()
 		cobra.CheckErr(err)
-		tokenBytes, err := request.LoginCloudor(username, password, "auth/login")
+		tokenBytes, err := request.LoginCloudor(username, password, "/user/login")
 		cobra.CheckErr(err)
 		token := request.LoginResponse{}
 		err = json.Unmarshal(tokenBytes, &token)

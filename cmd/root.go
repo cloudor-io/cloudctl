@@ -27,6 +27,8 @@ import (
 
 var cfgFile string
 
+const CloudorServerEnvName string = "CLOUDOR_SERVER"
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "cloudor",
@@ -74,7 +76,12 @@ func initConfig() {
 			if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 				// set the default values
 				os.Mkdir(home+"/.cloudor", 0700)
-				viper.Set("server", impl.DefaultServerURL)
+				val, present := os.LookupEnv(CloudorServerEnvName)
+				if present {
+					viper.Set("server", val)
+				} else {
+					viper.Set("server", impl.DefaultServerURL)
+				}
 				err = viper.SafeWriteConfig()
 				cobra.CheckErr(err)
 			} else {
