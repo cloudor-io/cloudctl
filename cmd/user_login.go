@@ -60,7 +60,8 @@ func credentials() (string, string, error) {
 		fmt.Printf("Enter your username at cloudor[%s]: ", default_email)
 	}
 	username, _ := reader.ReadString('\n')
-	if username == "\n" {
+	username = strings.TrimSpace(username)
+	if username == "" {
 		username = default_email
 	}
 	if username == "" {
@@ -93,8 +94,9 @@ var loginCmd = &cobra.Command{
 		cobra.CheckErr(err)
 		err = saveToken(&username, &token)
 		cobra.CheckErr(err)
-		viper.Set("user", username)
+		viper.Set("default_email", username)
 		viper.WriteConfig()
+		fmt.Printf("User successfully logged in.\n")
 	},
 }
 
