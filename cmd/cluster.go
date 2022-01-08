@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 NAME HERE <EMAIL ADDRESS>
+Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,41 +16,36 @@ limitations under the License.
 package cmd
 
 import (
-	"runtime"
+	"fmt"
 
-	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
-	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
-// updateCmd represents the update command
-var updateCmd = &cobra.Command{
-	Use:   "update",
-	Short: "Update cloudor command line tool",
-	Long:  `Update the latest cloudor command line release from cloudor server`,
+// clusterCmd represents the cluster command
+var clusterCmd = &cobra.Command{
+	Use:   "cluster",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		username, token, err := utils.GetLoginToken()
-		cobra.CheckErr(err)
-		need, err := needUpdate(username, token)
-		cobra.CheckErr(err)
-		if !need {
-			return
-		}
-		impl.DownloadSelfFromURL(username, token, "/releases/"+runtime.GOOS+"/"+runtime.GOARCH+"/latest")
-		return
+		fmt.Println("cluster called")
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(updateCmd)
+	rootCmd.AddCommand(clusterCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// updateCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// clusterCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// updateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// clusterCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

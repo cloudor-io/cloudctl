@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/minio/selfupdate"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
@@ -47,14 +49,7 @@ func DownloadFromURL(url string, filename string) error {
 	return nil
 }
 
-// Special function to self-update from server
-func DownloadSelfFromURL(username, token *string, apiPath string, filename string) error {
-	// the file is made executable
-	w, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0755) // Create(filename)
-	if err != nil {
-		return err
-	}
-	defer w.Close()
+func DownloadSelfFromURL(username, token *string, apiPath string) {
 	serverURL := viper.GetString("server") + "/api/v1"
 	req, err := http.NewRequest("GET", serverURL+apiPath, nil)
 	if username != nil {
@@ -64,26 +59,11 @@ func DownloadSelfFromURL(username, token *string, apiPath string, filename strin
 		req.Header.Set("Authorization", "Bearer "+*token)
 	}
 	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		log.Printf("Failed to do GET request, %v", err)
-		return err
-	}
+	cobra.CheckErr(err)
 	defer resp.Body.Close()
+	err = selfupdate.Apply(resp.Body, selfupdate.Options{})
+	cobra.CheckErr(err)
 
-	if resp.StatusCode != http.StatusOK {
-		errMsg := fmt.Sprintf("Failed to get object from url %s: %d:%s",
-			serverURL+apiPath,
-			resp.StatusCode, resp.Status)
-		log.Print(errMsg)
-		return errors.New(errMsg)
-	}
-
-	if _, err = io.Copy(w, resp.Body); err != nil {
-		log.Printf("Failed to write object to file %s, %v", filename, err)
-		return err
-	}
-
-	return nil
 }
 
 func DownloadTmpFromURL(url string) (string, error) {

@@ -98,6 +98,13 @@ type JobStatus struct {
 	Description string `json:"description,omitempty" yaml:"description"`
 }
 
+type ListClusterResponse struct {
+	Vendor       string   `json:"vendor" yaml:"vendor"`
+	Region       string   `json:"region" yaml:"region"`
+	InstanceType string   `json:"instance_type" yaml:"instance"`
+	Queue        []string `json:"queue,omitempty" yaml:"queue"`
+}
+
 // AddJobStatus add a stage to job's runtime info
 func AddJobStatus(jobMsg *RunJobMessage, status *JobStatus) {
 	stage := Status{
