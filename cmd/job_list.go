@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
 	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/spf13/cobra"
@@ -31,10 +29,7 @@ var listCmd = &cobra.Command{
 	cloudor job list
 	`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		username, token, err := utils.GetLoginToken()
-		if err != nil {
-			return fmt.Errorf("error getting user credentails, please log in (cloudor user login)")
-		}
+		username, token := utils.GetLoginToken()
 		jobs, err := impl.GetJobs(username, token)
 		if err != nil {
 			return err

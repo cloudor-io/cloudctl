@@ -18,8 +18,6 @@ package cmd
 import (
 	// "fmt"
 
-	"fmt"
-
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
 	"github.com/cloudor-io/cloudctl/pkg/api"
 	"github.com/cloudor-io/cloudctl/pkg/utils"
@@ -40,10 +38,7 @@ var runCmd = &cobra.Command{
 	cloudor run [OPTIONS] -f JOB_YAML_FILE 
 	`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		username, token, err := utils.GetLoginToken()
-		if err != nil {
-			return fmt.Errorf("error getting user credentails, please log in (cloudor user login)")
-		}
+		username, token := utils.GetLoginToken()
 
 		runArgs.Args = args
 		runEngine, err := impl.NewRunEngine(&runArgs)

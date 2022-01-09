@@ -16,7 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
 	"log"
 
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
@@ -30,10 +29,7 @@ var creditCmd = &cobra.Command{
 	Short: "List credit history",
 	Long:  `List recent ransaction history`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		username, token, err := utils.GetLoginToken()
-		if err != nil {
-			return fmt.Errorf("error getting user credentails, please log in (cloudor user login)")
-		}
+		username, token := utils.GetLoginToken()
 		transactions, err := impl.GetTrans(username, token)
 		if err != nil {
 			return err

@@ -29,8 +29,7 @@ var updateCmd = &cobra.Command{
 	Short: "Update cloudor command line tool",
 	Long:  `Update the latest cloudor command line release from cloudor server`,
 	Run: func(cmd *cobra.Command, args []string) {
-		username, token, err := utils.GetLoginToken()
-		utils.CheckErr(err)
+		username, token := utils.GetLoginToken()
 		need, err := needUpdate(username, token)
 		utils.CheckErr(err)
 		if !need {

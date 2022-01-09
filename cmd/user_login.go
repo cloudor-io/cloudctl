@@ -16,13 +16,12 @@ import (
 
 	"github.com/cloudor-io/cloudctl/pkg/request"
 	"github.com/cloudor-io/cloudctl/pkg/utils"
-	"github.com/mitchellh/go-homedir"
 	"golang.org/x/crypto/ssh/terminal"
 )
 
 // save token to $HOME/.cloudor/.tokens/.login
 func saveToken(username *string, token *request.LoginResponse) error {
-	homeDir, err := homedir.Dir()
+	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Printf("Error accessing home directory: %v", err)
 		return err

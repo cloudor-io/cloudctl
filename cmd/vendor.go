@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
 	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/spf13/cobra"
@@ -36,10 +34,7 @@ Examples are:
 	cloudor vendor azure eastus  # show all supported instances in azure in eastus region
 	`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		username, token, err := utils.GetLoginToken()
-		if err != nil {
-			return fmt.Errorf("error getting user credentails, please log in (cloudor user login)")
-		}
+		username, token := utils.GetLoginToken()
 		vendors, err := impl.GetVendors(username, token)
 		if err != nil {
 			return err

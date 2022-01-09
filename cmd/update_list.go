@@ -64,10 +64,7 @@ var updateListCmd = &cobra.Command{
 	Short: "list supported architecture and OS",
 	Long:  `List supported architecture and OS`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		username, token, err := utils.GetLoginToken()
-		if err != nil {
-			return fmt.Errorf("error getting update: %v", err)
-		}
+		username, token := utils.GetLoginToken()
 		releases, err := impl.ListUpdates(username, token)
 		if err != nil {
 			return err

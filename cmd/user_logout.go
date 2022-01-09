@@ -20,7 +20,6 @@ import (
 	"os"
 	"path"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +29,7 @@ var logoutCmd = &cobra.Command{
 	Short: "Log out current user",
 	Long:  `Log out current user`,
 	Run: func(cmd *cobra.Command, args []string) {
-		homeDir, err := homedir.Dir()
+		homeDir, err := os.UserHomeDir()
 		if err != nil {
 			log.Printf("error accessing home directory: %v", err)
 			return
