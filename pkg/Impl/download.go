@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/minio/selfupdate"
-	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
@@ -59,10 +59,10 @@ func DownloadSelfFromURL(username, token *string, apiPath string) {
 		req.Header.Set("Authorization", "Bearer "+*token)
 	}
 	resp, err := http.DefaultClient.Do(req)
-	cobra.CheckErr(err)
+	utils.CheckErr(err)
 	defer resp.Body.Close()
 	err = selfupdate.Apply(resp.Body, selfupdate.Options{})
-	cobra.CheckErr(err)
+	utils.CheckErr(err)
 
 }
 

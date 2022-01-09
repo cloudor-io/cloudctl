@@ -88,26 +88,26 @@ var registerCmd = &cobra.Command{
 	Long:  `Sign up for the cloudor service`,
 	Run: func(cmd *cobra.Command, args []string) {
 		email, passwd, err := signupForm()
-		cobra.CheckErr(err)
+		utils.CheckErr(err)
 		signUpRequest := request.SignupRequest{
 			Email:    email,
 			Password: passwd,
 		}
 		signUpBytes, err := json.Marshal(signUpRequest)
-		cobra.CheckErr(err)
+		utils.CheckErr(err)
 		resp, err := request.PostCloudor(signUpBytes, nil, nil, "/user/register")
-		cobra.CheckErr(err)
+		utils.CheckErr(err)
 
 		if resp.StatusCode() != http.StatusOK {
 			if len(resp.Body()) != 0 {
-				cobra.CheckErr(errors.New("remote API error response: " + string(resp.Body())))
+				utils.CheckErr(errors.New("remote API error response: " + string(resp.Body())))
 			}
-			cobra.CheckErr(errors.New("remote API error code " + strconv.Itoa(resp.StatusCode())))
+			utils.CheckErr(errors.New("remote API error code " + strconv.Itoa(resp.StatusCode())))
 		}
 		fmt.Println("User register successfully, please check email to verify the address.")
 		viper.Set("default_email", email)
 		err = viper.WriteConfig()
-		cobra.CheckErr(err)
+		utils.CheckErr(err)
 	},
 }
 

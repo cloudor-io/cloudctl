@@ -35,7 +35,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		username, token, err := utils.GetLoginToken()
-		cobra.CheckErr(err)
+		utils.CheckErr(err)
 		clusters := impl.ListClusters(username, token)
 		fmt.Printf("clusters: %+x", clusters)
 

@@ -20,6 +20,7 @@ import (
 	"os"
 
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
+	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/spf13/cobra"
 
 	"github.com/spf13/viper"
@@ -67,7 +68,7 @@ func initConfig() {
 	} else {
 		// Find home
 		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
+		utils.CheckErr(err)
 		viper.SetConfigType("yaml")
 		// Search config in home directory with name ".cloudctl" (without extension).
 		viper.AddConfigPath(home + "/.cloudor")
@@ -83,7 +84,7 @@ func initConfig() {
 					viper.Set("server", impl.DefaultServerURL)
 				}
 				err = viper.SafeWriteConfig()
-				cobra.CheckErr(err)
+				utils.CheckErr(err)
 			} else {
 				// Config file was found but another error was produced
 				panic(fmt.Errorf("Fatal error config file: %s \n", err))
@@ -95,5 +96,5 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	err := viper.ReadInConfig()
-	cobra.CheckErr(err)
+	utils.CheckErr(err)
 }

@@ -10,9 +10,12 @@ import (
 	"syscall"
 
 	"github.com/spf13/cobra"
+
+	"github.com/fatih/color"
 	"github.com/spf13/viper"
 
 	"github.com/cloudor-io/cloudctl/pkg/request"
+	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/mitchellh/go-homedir"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -57,7 +60,7 @@ func credentials() (string, string, error) {
 	if default_email == "" {
 		fmt.Print("Enter your username at cloudor: ")
 	} else {
-		fmt.Printf("Enter your username at cloudor[%s]: ", default_email)
+		fmt.Printf("Enter your username at cloudor [%s]: ", default_email)
 	}
 	username, _ := reader.ReadString('\n')
 	username = strings.TrimSpace(username)
@@ -65,7 +68,7 @@ func credentials() (string, string, error) {
 		username = default_email
 	}
 	if username == "" {
-		cobra.CheckErr(fmt.Errorf("Email address cannot be empty"))
+		utils.CheckErr(fmt.Errorf("Email address cannot be empty"))
 	}
 	fmt.Print("Enter Password: ")
 	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
@@ -86,17 +89,17 @@ var loginCmd = &cobra.Command{
 	Long:  `Login to cloudr service`,
 	Run: func(cmd *cobra.Command, args []string) {
 		username, password, err := credentials()
-		cobra.CheckErr(err)
+		utils.CheckErr(err)
 		tokenBytes, err := request.LoginCloudor(username, password, "/user/login")
-		cobra.CheckErr(err)
+		utils.CheckErr(err)
 		token := request.LoginResponse{}
 		err = json.Unmarshal(tokenBytes, &token)
-		cobra.CheckErr(err)
+		utils.CheckErr(err)
 		err = saveToken(&username, &token)
-		cobra.CheckErr(err)
+		utils.CheckErr(err)
 		viper.Set("default_email", username)
 		viper.WriteConfig()
-		fmt.Printf("User successfully logged in.\n")
+		color.Green("User logged in ok.\n")
 	},
 }
 
