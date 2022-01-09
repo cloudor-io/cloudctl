@@ -98,7 +98,7 @@ type JobStatus struct {
 	Description string `json:"description,omitempty" yaml:"description"`
 }
 
-type ListClusterResponse struct {
+type ListClustersResponse struct {
 	Vendor       string   `json:"vendor" yaml:"vendor"`
 	Region       string   `json:"region" yaml:"region"`
 	InstanceType string   `json:"instance_type" yaml:"instance"`

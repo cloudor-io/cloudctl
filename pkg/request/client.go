@@ -26,10 +26,13 @@ func TrimQuotes(s string) string {
 // const ServerURL string = "https://cloudor.dev/api/v1"
 
 // PostCloudor issues a POST to ServerURL
-func PostCloudor(requestBody []byte, username *string, token *string, apiPath string) (*resty.Response, error) {
+func PostCloudor(requestBody *[]byte, username *string, token *string, apiPath string) (*resty.Response, error) {
 	serverURL := viper.GetString("server") + "/api/v1"
 	client := resty.New()
-	request := client.R().SetHeader("Content-Type", "application/json").SetBody(requestBody)
+	request := client.R().SetHeader("Content-Type", "application/json")
+	if requestBody != nil {
+		request.SetBody(*requestBody)
+	}
 	if username != nil {
 		request.SetHeader("From", *username)
 	}
@@ -38,22 +41,6 @@ func PostCloudor(requestBody []byte, username *string, token *string, apiPath st
 	}
 	resp, err := request.Post(serverURL + apiPath)
 	return resp, err
-	/*
-		if err != nil {
-			return nil, err
-		}
-		if resp.StatusCode() == http.StatusUnauthorized {
-			return nil, errors.New("unauthorized, please log in first.")
-		}
-		if resp.StatusCode() == http.StatusOK {
-			return resp.Body(), nil
-		} else {
-			if len(resp.Body()) != 0 {
-				return nil, errors.New("remote API error response: " + string(resp.Body()))
-			}
-			return nil, errors.New("remote API error code " + strconv.Itoa(resp.StatusCode()))
-		}
-	*/
 }
 
 // GetCloudor issues a Get to ServerURL

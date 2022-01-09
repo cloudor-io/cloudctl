@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
@@ -31,7 +32,9 @@ var listClusterCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		username, token := utils.GetLoginToken()
 		clusters := impl.ListClusters(username, token)
-		fmt.Printf("clusters: %+x", clusters)
+		clustersBytes, err := json.MarshalIndent(clusters, "", "  ")
+		utils.CheckErr(err)
+		fmt.Printf("%s\n", string(clustersBytes))
 	},
 }
 

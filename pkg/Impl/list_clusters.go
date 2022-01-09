@@ -8,12 +8,12 @@ import (
 )
 
 // ListClusters
-func ListClusters(userName, token *string) *[]request.ListClusterResponse {
-	resp, err := request.GetCloudor(userName, token, "/cluster")
+func ListClusters(userName, token *string) *[]request.ListClustersResponse {
+	resp, err := request.PostCloudor(nil, userName, token, "/clusters")
 	utils.CheckErr(err)
 
-	clusters := []request.ListClusterResponse{}
-	err = json.Unmarshal(resp, &clusters)
+	clusters := []request.ListClustersResponse{}
+	err = json.Unmarshal(resp.Body(), &clusters)
 	utils.CheckErr(err)
 	return &clusters
 }

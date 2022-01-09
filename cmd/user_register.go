@@ -95,7 +95,7 @@ var registerCmd = &cobra.Command{
 		}
 		signUpBytes, err := json.Marshal(signUpRequest)
 		utils.CheckErr(err)
-		resp, err := request.PostCloudor(signUpBytes, nil, nil, "/user/register")
+		resp, err := request.PostCloudor(&signUpBytes, nil, nil, "/user/register")
 		utils.CheckErr(err)
 
 		if resp.StatusCode() != http.StatusOK {

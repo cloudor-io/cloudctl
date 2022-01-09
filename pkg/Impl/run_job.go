@@ -160,7 +160,7 @@ func (run *RunEngine) Run(username, token *string) error {
 	if err != nil {
 		return fmt.Errorf("%v", err)
 	}
-	resp, err := request.PostCloudor(runJobBytes, username, token, "/job/create")
+	resp, err := request.PostCloudor(&runJobBytes, username, token, "/job/create")
 	if err != nil {
 		log.Fatalf("Submitting job failed %v", err)
 		return err
@@ -186,7 +186,7 @@ func (run *RunEngine) Run(username, token *string) error {
 			return err
 		}
 		runJobBytes, _ := json.Marshal(jobMessage)
-		resp, err = request.PostCloudor(runJobBytes, username, token, "/job/start")
+		resp, err = request.PostCloudor(&runJobBytes, username, token, "/job/start")
 		if err != nil {
 			log.Printf("Starting job failed %v", err)
 			return err
