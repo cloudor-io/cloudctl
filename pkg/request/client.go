@@ -78,9 +78,9 @@ func GetCloudor(username *string, token *string, apiPath string) ([]byte, error)
 		return resp.Body(), nil
 	}
 	if len(resp.Body()) != 0 {
-		return nil, errors.New("remote API error response: " + string(resp.Body()))
+		return nil, errors.New("error code " + strconv.Itoa(resp.StatusCode()) + ":" + string(resp.Body()))
 	}
-	return nil, errors.New("remote API error code " + strconv.Itoa(resp.StatusCode()))
+	return nil, errors.New("error code " + strconv.Itoa(resp.StatusCode()))
 }
 
 // LoginHandler handles login requets

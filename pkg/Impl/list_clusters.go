@@ -2,7 +2,6 @@ package impl
 
 import (
 	"encoding/json"
-	"log"
 
 	"github.com/cloudor-io/cloudctl/pkg/request"
 	"github.com/cloudor-io/cloudctl/pkg/utils"
@@ -15,9 +14,6 @@ func ListClusters(userName, token *string) *[]request.ListClusterResponse {
 
 	clusters := []request.ListClusterResponse{}
 	err = json.Unmarshal(resp, &clusters)
-	if err != nil {
-		log.Printf("Internal error, cann't parse job response: %v", err)
-		utils.CheckErr(err)
-	}
+	utils.CheckErr(err)
 	return &clusters
 }
