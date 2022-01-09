@@ -163,3 +163,25 @@ type SupportedOSArch struct {
 	Release string `json:"release,omitempty" yaml:"release"`
 	MD5     string `json:"md5,omitempty" yaml:"md5"`
 }
+
+type JobStat struct {
+	Booting         int32
+	Running         int32
+	AssignInstances int
+}
+
+type State struct {
+	Idling      int
+	Busying     int
+	Reserved    int
+	Terminating int
+	Booting     int
+	Max         int
+	Tag         string
+	JobState    *JobStat
+}
+
+type SchedulerStatus struct {
+	Waiting int
+	Status  map[string]State
+}

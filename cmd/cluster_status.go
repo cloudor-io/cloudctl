@@ -16,31 +16,38 @@ limitations under the License.
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 
+	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
+	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
-// clusterCmd represents the cluster command
-var clusterCmd = &cobra.Command{
-	Use:   "cluster",
-	Short: "Cluster related commands",
-	Long:  `Cluster relatecd commands`,
+// statusCmd represents the status command
+var clusterStatusCmd = &cobra.Command{
+	Use:   "status",
+	Short: "Get the status of the cluster",
+	Long:  `Get the status of the cluster`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("cluster called")
+		username, token := utils.GetLoginToken()
+		status := impl.GetClusterStatus(username, token)
+		statusByte, err := json.MarshalIndent(status, "", "  ")
+		utils.CheckErr(err)
+		fmt.Printf("%s\n", string(statusByte))
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(clusterCmd)
+	clusterCmd.AddCommand(clusterStatusCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// clusterCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// statusCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// clusterCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// statusCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
