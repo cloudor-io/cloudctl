@@ -6,6 +6,8 @@ import (
 	"github.com/cloudor-io/cloudctl/pkg/api"
 )
 
+// Do not change
+
 // LoginResponse defines the body from login request
 type LoginResponse struct {
 	Token string `json:"token,omitempty"`
@@ -30,7 +32,7 @@ type RunJobRequest struct {
 	JobName      string  `json:"job_name,omitempty" yaml:"job_name"`
 	RunTag       string  `json:"run_tag,omitempty" yaml:"run_tag"`
 	DryRun       bool    `json:"dry_run,omitempty" yaml:"dry_run"`
-	NumInstances string  `json:"num_instances,omitempty" yaml:"num_instances"`
+	NumInstances int     `json:"num_instances,omitempty" yaml:"num_instances"`
 	TimeoutInMin float64 `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
 	YAML         string  `json:"yaml,omitempty" yaml:"yaml"`
 }

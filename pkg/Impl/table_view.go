@@ -57,9 +57,6 @@ func (v TableView) View(jobs *[]request.RunJobMessage) {
 		if len(job.Job.Vendors) <= vendorIndex {
 			continue
 		}
-		vendor := job.Job.Vendors[vendorIndex].Name
-		region := job.Job.Vendors[vendorIndex].Region
-		instance := job.Job.Vendors[vendorIndex].InstanceType
 		duration := "NA"
 		durationSec := request.GetJobDuration(&job)
 		if durationSec > 3600 {
@@ -81,10 +78,10 @@ func (v TableView) View(jobs *[]request.RunJobMessage) {
 			returnCode = strconv.Itoa(code)
 		}
 		data = append(data, []string{job.ID, created,
-			status, returnCode, duration, cost, vendor, region, instance})
+			status, returnCode, duration, cost})
 	}
 
-	v.Table.SetHeader([]string{"ID", "Created", "Status", "ReturnCode", "Elapsed", "Cost", "Vendor", "Region", "Instance"})
+	v.Table.SetHeader([]string{"ID", "Created", "Status", "ReturnCode", "Elapsed", "Cost"})
 	//v.Table.SetFooter([]string{"", "", "Total", strconv.Itoa(apis.Total)})
 	v.Table.SetBorder(true)
 	v.Table.AppendBulk(data)

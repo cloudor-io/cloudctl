@@ -15,18 +15,19 @@ import (
 	"github.com/Pallinder/go-randomdata"
 	"github.com/cloudor-io/cloudctl/pkg/api"
 	"github.com/cloudor-io/cloudctl/pkg/request"
+	"github.com/cloudor-io/cloudctl/pkg/utils"
 
 	"github.com/go-resty/resty/v2"
 	"gopkg.in/yaml.v2"
 )
 
 type RunArgs struct {
-	File         string
-	Tag          string
-	Name         string
-	Vendor       string
-	Region       string
-	InstanceType string
+	File string
+	Tag  string
+	Name string
+	// Vendor       string
+	// Region       string
+	// InstanceType string
 	DryRun       bool
 	Detach       bool
 	TimeoutInMin float64
@@ -39,24 +40,17 @@ type RunArgs struct {
 }
 
 // update job info by arguments:
-func updateJobByArgs(job *api.Job, runArgs *RunArgs) error {
+func updateJobByArgs(job *api.Job, runArgs *RunArgs) {
 	if len(runArgs.Args) == 0 {
-		log.Fatalf("Please speccify which docker image to run.")
+		utils.CheckErr(fmt.Errorf("Please speccify which docker image to run."))
 	}
 	if _, err := os.Stat(runArgs.Args[0]); err == nil {
-		log.Fatalf("%s looks like a file, forgot -f flag?", runArgs.Args[0])
+		utils.CheckErr(fmt.Errorf("%s looks like a file, forgot -f flag?", runArgs.Args[0]))
 	}
 	job.Spec.Image = runArgs.Args[0]
-	if runArgs.Vendor != "" {
-		job.Vendors[0].Name = runArgs.Vendor
-	}
-	if runArgs.Region != "" {
-		job.Vendors[0].Region = runArgs.Region
-	}
-	if runArgs.InstanceType != "" {
-		job.Vendors[0].InstanceType = runArgs.InstanceType
-	}
-	job.Vendors[0].Instances = runArgs.NumInstances
+	instances, err := strconv.Atoi(runArgs.NumInstances)
+	utils.CheckErr(err)
+	job.Vendors[0].Instances = instances
 	if runArgs.Input != "" {
 		if runArgs.InputMount == "" {
 			log.Fatalf("Input mounting point must be specified if input is used.")
@@ -71,13 +65,9 @@ func updateJobByArgs(job *api.Job, runArgs *RunArgs) error {
 		job.Vendors[0].Output.LocalDir = runArgs.Output
 		job.Spec.OutputMount = runArgs.OutputMount
 	}
-	return nil
 }
 
 func updateJobByFile(job *api.Job, runArgs *RunArgs) error {
-	if runArgs.Vendor != "" {
-		log.Printf("vendor argument %s ignored, use yaml file.", runArgs.Vendor)
-	}
 	log.Panic("To be implemented")
 	return nil
 }
@@ -115,10 +105,7 @@ func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {
 		runEngine.Job = job
 	} else {
 		job := api.DefaultJob()
-		err := updateJobByArgs(job, runArgs)
-		if err != nil {
-			return nil, err
-		}
+		updateJobByArgs(job, runArgs)
 		runEngine.Job = job
 	}
 	// give it a random name if not specified
@@ -146,14 +133,15 @@ func (run *RunEngine) Run(username, token *string) error {
 		log.Fatalf("Error marshal job struct to yaml %v", err)
 		return err
 	}
-
+	num, err := strconv.Atoi(run.RunArgs.NumInstances)
+	utils.CheckErr(err)
 	runJobRequest := request.RunJobRequest{
 		UserName:     *username,
 		RunTag:       run.RunArgs.Tag,
 		DryRun:       run.RunArgs.DryRun,
 		JobName:      run.RunArgs.Name,
 		TimeoutInMin: run.RunArgs.TimeoutInMin,
-		NumInstances: run.RunArgs.NumInstances,
+		NumInstances: num, // run.RunArgs.NumInstances,
 		YAML:         string(jobBytes),
 	}
 	runJobBytes, err := json.Marshal(runJobRequest)
@@ -192,10 +180,10 @@ func (run *RunEngine) Run(username, token *string) error {
 			return err
 		}
 	}
-	vendor := jobMessage.Job.Vendors[*jobMessage.RunInfo.VendorIndex]
-	log.Printf("job submitted, running on %s/%s/%s w. timeout %.0f minutes, hourly rate %s%.2f",
-		vendor.Name, vendor.Region, vendor.InstanceType, jobMessage.RunInfo.TimeoutInMin,
-		jobMessage.RunInfo.Cost.RateUnit, jobMessage.RunInfo.Cost.HourRate)
+	// vendor := jobMessage.Job.Vendors[*jobMessage.RunInfo.VendorIndex]
+	// log.Printf("job submitted, running on %s/%s/%s w. timeout %.0f minutes, hourly rate %s%.2f",
+	//		vendor.Name, vendor.Region, vendor.InstanceType, jobMessage.RunInfo.TimeoutInMin,
+	//		jobMessage.RunInfo.Cost.RateUnit, jobMessage.RunInfo.Cost.HourRate)
 	if run.RunArgs.Detach {
 		log.Printf("Running in detach mode, exiting.")
 		return nil
@@ -222,8 +210,8 @@ func (run *RunEngine) Fetch(jobMessage *request.RunJobMessage) error {
 	if jobMessage.RunInfo.Stages[len(jobMessage.RunInfo.Stages)-1].Status == "finished" {
 		if len(jobMessage.RunInfo.OutputStage) > 0 {
 			outputStage := jobMessage.RunInfo.OutputStage[0]
-			if outputStage.Type == "s3" {
-				if outputStage.S3Pair.Get.URL != "" {
+			if outputStage.Cloud.Type == "s3" {
+				if outputStage.Pair.Get.URL != "" {
 					vendor := jobMessage.Job.Vendors[*jobMessage.RunInfo.VendorIndex]
 					if vendor.Output.LocalDir != "" || vendor.Output.Cloud.Type == "" {
 						output := "./output.zip"
@@ -231,7 +219,7 @@ func (run *RunEngine) Fetch(jobMessage *request.RunJobMessage) error {
 							os.MkdirAll(vendor.Output.LocalDir, os.ModePerm)
 							output = path.Join(vendor.Output.LocalDir, "output.zip")
 						}
-						return DownloadFromURL(outputStage.S3Pair.Get.URL, output)
+						return DownloadFromURL(outputStage.Pair.Get.URL, output)
 					}
 				}
 			}

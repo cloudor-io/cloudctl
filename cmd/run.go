@@ -37,15 +37,13 @@ var runCmd = &cobra.Command{
 	or
 	cloudor run [OPTIONS] -f JOB_YAML_FILE 
 	`,
-	RunE: func(cmd *cobra.Command, args []string) error {
+	Run: func(cmd *cobra.Command, args []string) {
 		username, token := utils.GetLoginToken()
 
 		runArgs.Args = args
 		runEngine, err := impl.NewRunEngine(&runArgs)
-		if err != nil {
-			return err
-		}
-		return runEngine.Run(username, token)
+		utils.CheckErr(err)
+		utils.CheckErr(runEngine.Run(username, token))
 	},
 }
 
@@ -63,10 +61,7 @@ func init() {
 	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	runCmd.Flags().StringVarP(&runArgs.File, "file", "f", "", "job config yaml file")
 	runCmd.Flags().StringVarP(&runArgs.Name, "name", "n", "", "job name")
-	runCmd.Flags().StringVarP(&runArgs.Region, "region", "r", "us-west-2", "region code in the vendor")
-	runCmd.Flags().StringVarP(&runArgs.Vendor, "vendor", "v", "", "cloud vendor name: [aws, azure]")
 	runCmd.Flags().Float64VarP(&runArgs.TimeoutInMin, "timeout", "", api.DefaultTimeout, "job timeout in minutes")
-	runCmd.Flags().StringVarP(&runArgs.InstanceType, "instance", "i", "", "instance type in the cloud vendor")
 	runCmd.Flags().StringVarP(&runArgs.NumInstances, "num-instances", "", "1-1", "number of instances to launch")
 	runCmd.Flags().BoolVarP(&runArgs.DryRun, "dryrun", "", false, "dry run")
 	runCmd.Flags().BoolVarP(&runArgs.Detach, "detach", "", false, "detach, do not wait for job to complete")

@@ -99,7 +99,7 @@ func Upload(jobMsg *request.RunJobMessage) error {
 // UploadImage uploads the local image file to a stage area (S3 presigned URL)
 func UploadImage(jobMsg *request.RunJobMessage) error {
 	// The Put URL is prepared by the server in create step
-	if jobMsg.RunInfo.ImageStage.S3Pair.Put.URL != "" {
+	if jobMsg.RunInfo.ImageStage.Pair.Put.URL != "" {
 		if !fileExists(jobMsg.Job.Spec.Image) {
 			return fmt.Errorf("Image file does not exist %s", jobMsg.Job.Spec.Image)
 		}
@@ -109,7 +109,7 @@ func UploadImage(jobMsg *request.RunJobMessage) error {
 		}
 		zipFile(jobMsg.Job.Spec.Image, gzipFile)
 		defer os.Remove(gzipFile.Name())
-		return uploadFile(jobMsg.RunInfo.ImageStage.S3Pair.Put.URL, gzipFile.Name())
+		return uploadFile(jobMsg.RunInfo.ImageStage.Pair.Put.URL, gzipFile.Name())
 	}
 	return nil
 }
@@ -121,15 +121,15 @@ func UploadInputs(jobMsg *request.RunJobMessage) error {
 	}
 	vendor := jobMsg.Job.Vendors[*jobMsg.RunInfo.VendorIndex]
 	for inputIndex, stage := range jobMsg.RunInfo.InputStages {
-		if stage.Type == "s3" {
-			if stage.S3Pair.Key == "" {
-				return fmt.Errorf("Expect non-empty s3 pair key in input stage %d", inputIndex)
-			}
+		if stage.Cloud.Type == "s3" {
+			//if stage.Pair.Key == "" {
+			//				return fmt.Errorf("Expect non-empty s3 pair key in input stage %d", inputIndex)
+			//	}
 			if vendor.Inputs[inputIndex].LocalDir == "" {
 				return fmt.Errorf("Expect local dir when s3 pair keys exist for input %d", inputIndex)
 			}
 			log.Printf("uploading local dir %s", vendor.Inputs[inputIndex].LocalDir)
-			err := UploadDirToS3(vendor.Inputs[inputIndex].LocalDir, stage.S3Pair)
+			err := UploadDirToS3(vendor.Inputs[inputIndex].LocalDir, stage.Pair)
 			if err != nil {
 				log.Printf("error uploading %d input to s3 key: %v", inputIndex, err)
 				return fmt.Errorf("%v", err)
@@ -139,7 +139,7 @@ func UploadInputs(jobMsg *request.RunJobMessage) error {
 	return nil
 }
 
-func UploadDirToS3(localDir string, s3Pair api.S3PresignPair) error {
+func UploadDirToS3(localDir string, s3Pair api.PresignPair) error {
 	if !filepath.IsAbs(localDir) {
 		return fmt.Errorf("must be absolute path, %s were given", localDir)
 	}
