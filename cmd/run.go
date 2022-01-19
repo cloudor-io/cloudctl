@@ -62,7 +62,7 @@ func init() {
 	runCmd.Flags().StringVarP(&runArgs.File, "file", "f", "", "job config yaml file")
 	runCmd.Flags().StringVarP(&runArgs.Name, "name", "n", "", "job name")
 	runCmd.Flags().Float64VarP(&runArgs.TimeoutInMin, "timeout", "", api.DefaultTimeout, "job timeout in minutes")
-	runCmd.Flags().StringVarP(&runArgs.NumInstances, "num-instances", "", "1-1", "number of instances to launch")
+	runCmd.Flags().IntVarP(&runArgs.NumInstances, "num-instances", "", 1, "number of instances to launch")
 	runCmd.Flags().BoolVarP(&runArgs.DryRun, "dryrun", "", false, "dry run")
 	runCmd.Flags().BoolVarP(&runArgs.Detach, "detach", "", false, "detach, do not wait for job to complete")
 	runCmd.Flags().StringVarP(&runArgs.Tag, "tag", "t", "", "vendor tag name selection")

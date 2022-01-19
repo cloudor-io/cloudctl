@@ -31,7 +31,7 @@ type RunArgs struct {
 	DryRun       bool
 	Detach       bool
 	TimeoutInMin float64
-	NumInstances string
+	NumInstances int
 	Input        string
 	InputMount   string
 	Output       string
@@ -48,9 +48,9 @@ func updateJobByArgs(job *api.Job, runArgs *RunArgs) {
 		utils.CheckErr(fmt.Errorf("%s looks like a file, forgot -f flag?", runArgs.Args[0]))
 	}
 	job.Spec.Image = runArgs.Args[0]
-	instances, err := strconv.Atoi(runArgs.NumInstances)
-	utils.CheckErr(err)
-	job.Vendors[0].Instances = instances
+	// instances, err := strconv.Atoi(runArgs.NumInstances)
+	// utils.CheckErr(err)
+	job.Vendors[0].Instances = runArgs.NumInstances
 	if runArgs.Input != "" {
 		if runArgs.InputMount == "" {
 			log.Fatalf("Input mounting point must be specified if input is used.")
@@ -133,15 +133,15 @@ func (run *RunEngine) Run(username, token *string) error {
 		log.Fatalf("Error marshal job struct to yaml %v", err)
 		return err
 	}
-	num, err := strconv.Atoi(run.RunArgs.NumInstances)
-	utils.CheckErr(err)
+	//num, err := strconv.Atoi(run.RunArgs.NumInstances)
+	//utils.CheckErr(err)
 	runJobRequest := request.RunJobRequest{
 		UserName:     *username,
 		RunTag:       run.RunArgs.Tag,
 		DryRun:       run.RunArgs.DryRun,
 		JobName:      run.RunArgs.Name,
 		TimeoutInMin: run.RunArgs.TimeoutInMin,
-		NumInstances: num, // run.RunArgs.NumInstances,
+		NumInstances: run.RunArgs.NumInstances,
 		YAML:         string(jobBytes),
 	}
 	runJobBytes, err := json.Marshal(runJobRequest)
