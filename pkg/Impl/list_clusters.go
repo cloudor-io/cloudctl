@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/cloudor-io/cloudctl/pkg/api"
 	"github.com/cloudor-io/cloudctl/pkg/request"
 	"github.com/cloudor-io/cloudctl/pkg/utils"
 )
@@ -20,11 +21,11 @@ func ListClusters(userName, token *string) *[]request.ListClustersResponse {
 }
 
 // ListClusters
-func GetClusterStatus(userName, token *string) request.SchedulerStatus {
+func GetClusterStatus(userName, token *string) api.SchedulerStatus {
 	resp, err := request.PostCloudor(nil, userName, token, "/cluster/status")
 	utils.CheckErr(err)
 
-	status := request.SchedulerStatus{}
+	status := api.SchedulerStatus{}
 	err = json.Unmarshal(resp.Body(), &status)
 	fmt.Printf("%s\n", string(resp.Body()))
 	utils.CheckErr(err)

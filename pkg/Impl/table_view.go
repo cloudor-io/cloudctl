@@ -8,13 +8,14 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/cloudor-io/cloudctl/pkg/api"
 	"github.com/cloudor-io/cloudctl/pkg/request"
 	"github.com/olekukonko/tablewriter"
 )
 
 // View interface
 type View interface {
-	show(jobs *[]request.RunJobMessage)
+	show(jobs *[]api.RunJobMessage)
 }
 
 // TableView shows the API list nicely
@@ -30,7 +31,7 @@ func NewTableView() *TableView {
 }
 
 // GetStatusTs returns the unix time in second for a status
-func GetStatusCode(jobMsg *request.RunJobMessage, status string) (int, error) {
+func GetStatusCode(jobMsg *api.RunJobMessage, status string) (int, error) {
 	for _, stage := range jobMsg.RunInfo.Stages {
 		if stage.Status == status {
 			return int(stage.ReturnCode), nil
@@ -40,52 +41,54 @@ func GetStatusCode(jobMsg *request.RunJobMessage, status string) (int, error) {
 }
 
 // View implements the View interface
-func (v TableView) View(jobs *[]request.RunJobMessage) {
-	data := [][]string{}
+func (v TableView) View(jobs *[]api.RunJobMessage) {
+	/*
+		data := [][]string{}
 
-	for _, job := range *jobs {
-		createdTS := request.GetStatusTs(&job, "created")
-		created := "NA" // time.Unix(job.RunInfo.TimeStamps.Created, 0).Format(time.RFC3339)
-		if createdTS > 0 {
-			created = time.Unix(createdTS, 0).Format(time.RFC3339)
-		}
+			for _, job := range *jobs {
+				createdTS := api.GetStatusTs(&job, "created")
+				created := "NA" // time.Unix(job.RunInfo.TimeStamps.Created, 0).Format(time.RFC3339)
+				if createdTS > 0 {
+					created = time.Unix(createdTS, 0).Format(time.RFC3339)
+				}
 
-		vendorIndex := 0
-		if job.RunInfo.VendorIndex != nil {
-			vendorIndex = int(*job.RunInfo.VendorIndex)
-		}
-		if len(job.Job.Vendors) <= vendorIndex {
-			continue
-		}
-		duration := "NA"
-		durationSec := request.GetJobDuration(&job)
-		if durationSec > 3600 {
-			duration = fmt.Sprintf("%.1fh", float64(durationSec)/3600.0)
-		} else if durationSec > 60 {
-			duration = fmt.Sprintf("%.1fm", float64(durationSec)/60.0)
-		} else if durationSec > 0 {
-			duration = fmt.Sprintf("%ds", durationSec)
-		}
-		cost := fmt.Sprintf("%.2f", job.RunInfo.Cost.ComputeCost+job.RunInfo.Cost.EgressCost+job.RunInfo.Cost.AdjustCost) + job.RunInfo.Cost.RateUnit
-		status := "NA"
-		if len(job.RunInfo.Stages) > 0 {
-			lastStage := job.RunInfo.Stages[len(job.RunInfo.Stages)-1]
-			status = lastStage.Status
-		}
-		returnCode := "NA"
-		code, err := GetStatusCode(&job, "returned")
-		if err == nil {
-			returnCode = strconv.Itoa(code)
-		}
-		data = append(data, []string{job.ID, created,
-			status, returnCode, duration, cost})
-	}
+				vendorIndex := 0
+				if job.RunInfo.VendorIndex != nil {
+					vendorIndex = int(*job.RunInfo.VendorIndex)
+				}
+				if len(job.Job.Vendors) <= vendorIndex {
+					continue
+				}
+				duration := "NA"
+				durationSec := request.GetJobDuration(&job)
+				if durationSec > 3600 {
+					duration = fmt.Sprintf("%.1fh", float64(durationSec)/3600.0)
+				} else if durationSec > 60 {
+					duration = fmt.Sprintf("%.1fm", float64(durationSec)/60.0)
+				} else if durationSec > 0 {
+					duration = fmt.Sprintf("%ds", durationSec)
+				}
+				cost := fmt.Sprintf("%.2f", job.RunInfo.Cost.ComputeCost+job.RunInfo.Cost.EgressCost+job.RunInfo.Cost.AdjustCost) + job.RunInfo.Cost.RateUnit
+				status := "NA"
+				if len(job.RunInfo.Stages) > 0 {
+					lastStage := job.RunInfo.Stages[len(job.RunInfo.Stages)-1]
+					status = lastStage.Status
+				}
+				returnCode := "NA"
+				code, err := GetStatusCode(&job, "returned")
+				if err == nil {
+					returnCode = strconv.Itoa(code)
+				}
+				data = append(data, []string{job.ID, created,
+					status, returnCode, duration, cost})
+			}
 
-	v.Table.SetHeader([]string{"ID", "Created", "Status", "ReturnCode", "Elapsed", "Cost"})
-	//v.Table.SetFooter([]string{"", "", "Total", strconv.Itoa(apis.Total)})
-	v.Table.SetBorder(true)
-	v.Table.AppendBulk(data)
-	v.Table.Render()
+			v.Table.SetHeader([]string{"ID", "Created", "Status", "ReturnCode", "Elapsed", "Cost"})
+			//v.Table.SetFooter([]string{"", "", "Total", strconv.Itoa(apis.Total)})
+			v.Table.SetBorder(true)
+			v.Table.AppendBulk(data)
+			v.Table.Render()
+	*/
 }
 
 // View implements the View interface

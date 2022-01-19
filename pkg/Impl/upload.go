@@ -10,7 +10,6 @@ import (
 	"path/filepath"
 
 	"github.com/cloudor-io/cloudctl/pkg/api"
-	"github.com/cloudor-io/cloudctl/pkg/request"
 )
 
 func fileExists(filename string) bool {
@@ -83,7 +82,7 @@ func uploadFile(presignURL, filename string) error {
 }
 
 // Upload image and inputs, if applicable
-func Upload(jobMsg *request.RunJobMessage) error {
+func Upload(jobMsg *api.RunJobMessage) error {
 	// TODO use go routine to paralize them?
 	err := UploadImage(jobMsg)
 	if err != nil {
@@ -97,7 +96,7 @@ func Upload(jobMsg *request.RunJobMessage) error {
 }
 
 // UploadImage uploads the local image file to a stage area (S3 presigned URL)
-func UploadImage(jobMsg *request.RunJobMessage) error {
+func UploadImage(jobMsg *api.RunJobMessage) error {
 	// The Put URL is prepared by the server in create step
 	if jobMsg.RunInfo.ImageStage.Pair.Put.URL != "" {
 		if !fileExists(jobMsg.Job.Spec.Image) {
@@ -115,7 +114,7 @@ func UploadImage(jobMsg *request.RunJobMessage) error {
 }
 
 // UploadInputs uploads
-func UploadInputs(jobMsg *request.RunJobMessage) error {
+func UploadInputs(jobMsg *api.RunJobMessage) error {
 	if len(jobMsg.RunInfo.InputStages) == 0 {
 		return nil
 	}

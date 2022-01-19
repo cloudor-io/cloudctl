@@ -116,10 +116,11 @@ func NewRunEngine(runArgs *RunArgs) (*RunEngine, error) {
 	return runEngine, nil
 }
 
-func UnmarshalJobMsg(resp *resty.Response) (*request.RunJobMessage, error) {
+func UnmarshalJobMsg(resp *resty.Response) (*api.RunJobMessage, error) {
 	// somewhere the json is encoded twice, unquote it TODO
-	jobMessage := request.RunJobMessage{}
+	jobMessage := api.RunJobMessage{}
 	err := json.Unmarshal(resp.Body(), &jobMessage)
+
 	if err != nil {
 		log.Fatalf("Internal error, cann't parse job response: %v", err)
 		return nil, err
@@ -145,14 +146,9 @@ func (run *RunEngine) Run(username, token *string) error {
 		YAML:         string(jobBytes),
 	}
 	runJobBytes, err := json.Marshal(runJobRequest)
-	if err != nil {
-		return fmt.Errorf("%v", err)
-	}
+	utils.CheckErr(err)
 	resp, err := request.PostCloudor(&runJobBytes, username, token, "/job/create")
-	if err != nil {
-		log.Fatalf("Submitting job failed %v", err)
-		return err
-	}
+	utils.CheckErr(err)
 	if resp.StatusCode() != http.StatusAccepted && resp.StatusCode() != http.StatusOK {
 		if len(resp.Body()) != 0 {
 			return errors.New("remote API error response: " + string(resp.Body()))
@@ -160,9 +156,7 @@ func (run *RunEngine) Run(username, token *string) error {
 		return errors.New("remote API error code " + strconv.Itoa(resp.StatusCode()))
 	}
 	jobMessage, err := UnmarshalJobMsg(resp)
-	if err != nil {
-		return err
-	}
+	utils.CheckErr(err)
 	if runJobRequest.DryRun {
 		log.Printf("Dry run successful, estimated cost is %.2f%s", jobMessage.RunInfo.Cost.ReservedCredit, jobMessage.RunInfo.Cost.RateUnit)
 		return nil
@@ -191,22 +185,19 @@ func (run *RunEngine) Run(username, token *string) error {
 
 	jobMsg, err := CheckingJob(jobMessage, username, token)
 	// jobMsg, err := run.Wait(&jobMessage, username, token)
-	if err != nil {
-		return err
-	}
-
+	utils.CheckErr(err)
 	return run.Fetch(jobMsg)
 }
 
 var minPollInterval = 20.0 // seconds
 
-func GetPollInterval(jobMessage *request.RunJobMessage) int64 {
+func GetPollInterval(jobMessage *api.RunJobMessage) int64 {
 	// Timeout gives some hint about how long the job is
 	timeout := jobMessage.RunInfo.TimeoutInMin * 60
 	return int64(math.Max(timeout/5.0, minPollInterval))
 }
 
-func (run *RunEngine) Fetch(jobMessage *request.RunJobMessage) error {
+func (run *RunEngine) Fetch(jobMessage *api.RunJobMessage) error {
 	if jobMessage.RunInfo.Stages[len(jobMessage.RunInfo.Stages)-1].Status == "finished" {
 		if len(jobMessage.RunInfo.OutputStage) > 0 {
 			outputStage := jobMessage.RunInfo.OutputStage[0]

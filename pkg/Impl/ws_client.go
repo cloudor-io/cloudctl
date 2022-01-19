@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cloudor-io/cloudctl/pkg/api"
 	"github.com/cloudor-io/cloudctl/pkg/request"
 	"github.com/gorilla/websocket"
 	"github.com/spf13/viper"
@@ -28,7 +29,7 @@ type JobStatus struct {
 	Description string `json:"description,omitempty"`
 }
 
-func CheckingJob(jobMsg *request.RunJobMessage, username *string, token *string) (*request.RunJobMessage, error) {
+func CheckingJob(jobMsg *api.RunJobMessage, username *string, token *string) (*api.RunJobMessage, error) {
 	serverURL := viper.GetString("server")
 	scheme := "ws"
 	if strings.HasPrefix(serverURL, "http://") {
@@ -126,7 +127,7 @@ func CheckingJob(jobMsg *request.RunJobMessage, username *string, token *string)
 	}
 	// somewhere the json is encoded twice, unquote it TODO
 
-	jobMessage := request.RunJobMessage{}
+	jobMessage := api.RunJobMessage{}
 	err = json.Unmarshal(resp, &jobMessage)
 	if err != nil {
 		log.Printf("Internal error, cann't parse job response: %v", err)
