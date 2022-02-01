@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 NAME HERE <EMAIL ADDRESS>
+Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,48 +17,49 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-	"path"
+	"os/exec"
+	"runtime"
 
+	"github.com/cloudor-io/cloudctl/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
-// logoutCmd represents the logout command
-var logoutCmd = &cobra.Command{
-	Use:   "logout",
-	Short: "Log out current user",
-	Long:  `Log out current user`,
+func openbrowser(url string) {
+	var err error
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	utils.CheckErr(err)
+}
+
+// payCmd represents the pay command
+var payCmd = &cobra.Command{
+	Use:   "pay",
+	Short: "Make a payment",
+	Long: `Make a payment.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		homeDir, err := os.UserHomeDir()
-		if err != nil {
-			fmt.Printf("error accessing home directory: %v", err)
-			return
-		}
-		loginTokenPath := path.Join(homeDir, ".cloudor", ".tokens", ".login")
-		_, err = os.Stat(loginTokenPath)
-		if os.IsNotExist(err) {
-			fmt.Printf("user is already logged out")
-			return
-		}
-		err = os.Remove(loginTokenPath)
-		if err != nil {
-			fmt.Printf("error removing the user credentials %v", err)
-		} else {
-			fmt.Printf("user successfully logged out")
-		}
+		fmt.Println("pay called")
 	},
 }
 
 func init() {
-	userCmd.AddCommand(logoutCmd)
+	creditCmd.AddCommand(payCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// logoutCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// payCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// logoutCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// payCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

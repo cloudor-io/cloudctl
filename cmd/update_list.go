@@ -17,7 +17,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"runtime"
 
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
@@ -38,7 +37,7 @@ func needUpdate(username, token *string) (bool, error) {
 		return false, fmt.Errorf("error getting update for OS %s and Arch %s", runtime.GOOS, runtime.GOARCH)
 	}
 	if len(*latestRelease) == 0 {
-		log.Printf("could not find the latest release")
+		fmt.Printf("could not find the latest release")
 		return false, nil
 	}
 
@@ -54,7 +53,7 @@ func needUpdate(username, token *string) (bool, error) {
 	if myMD5 != ((*latestRelease)[0].MD5) {
 		return true, nil
 	}
-	log.Printf("current cloudor at %s is the latest release", filename)
+	fmt.Printf("current cloudor at %s is the latest release", filename)
 	return false, nil
 }
 
@@ -72,7 +71,7 @@ var updateListCmd = &cobra.Command{
 		impl.NewTableView().ViewUpdates(releases)
 		need, err := needUpdate(username, token)
 		if need {
-			log.Printf("found new release, please run \"cloudor update\"")
+			fmt.Printf("found new release, please run \"cloudor update\"")
 		}
 		return err
 	},

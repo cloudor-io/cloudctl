@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -77,7 +76,7 @@ func uploadFile(presignURL, filename string) error {
 		return fmt.Errorf("failed to put S3 object, %d:%s",
 			resp.StatusCode, resp.Status)
 	}
-	log.Printf("file %s uploaded", filename)
+	fmt.Printf("file %s uploaded", filename)
 	return nil
 }
 
@@ -127,10 +126,10 @@ func UploadInputs(jobMsg *api.RunJobMessage) error {
 			if vendor.Inputs[inputIndex].LocalDir == "" {
 				return fmt.Errorf("Expect local dir when s3 pair keys exist for input %d", inputIndex)
 			}
-			log.Printf("uploading local dir %s", vendor.Inputs[inputIndex].LocalDir)
+			fmt.Printf("uploading local dir %s", vendor.Inputs[inputIndex].LocalDir)
 			err := UploadDirToS3(vendor.Inputs[inputIndex].LocalDir, stage.Pair)
 			if err != nil {
-				log.Printf("error uploading %d input to s3 key: %v", inputIndex, err)
+				fmt.Printf("error uploading %d input to s3 key: %v", inputIndex, err)
 				return fmt.Errorf("%v", err)
 			}
 		}
@@ -157,7 +156,7 @@ func UploadDirToS3(localDir string, s3Pair api.PresignPair) error {
 	if err != nil {
 		return err
 	}
-	// log.Printf("local dir %s zipped to %s", localDir, zipFile.Name())
+	// fmt.Printf("local dir %s zipped to %s", localDir, zipFile.Name())
 	defer os.Remove(zipFile.Name())
 	return uploadFile(s3Pair.Put.URL, zipFile.Name())
 }

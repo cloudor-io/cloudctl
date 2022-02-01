@@ -3,6 +3,7 @@ package impl
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -51,7 +52,7 @@ func CheckingJob(jobMsg *api.RunJobMessage, username *string, token *string) (*a
 	header.Add("Sec-WebSocket-Protocol", "Bearer "+*token)
 	c, _, err := websocket.DefaultDialer.Dial(u.String(), header)
 	if err != nil {
-		log.Printf("Error dial websocket %v:", err)
+		fmt.Printf("Error dial websocket %v:", err)
 		return nil, err
 	}
 	defer c.Close()
@@ -67,16 +68,16 @@ func CheckingJob(jobMsg *api.RunJobMessage, username *string, token *string) (*a
 				return
 			}
 			if mtype != websocket.TextMessage {
-				log.Printf("Received wrong msg type %d", mtype)
+				fmt.Printf("Received wrong msg type %d", mtype)
 				return
 			}
 			job := JobStatus{}
 			err = json.Unmarshal(message, &job)
 			if err != nil {
-				log.Printf("error parsing jobmsg: %v,", err)
+				fmt.Printf("error parsing jobmsg: %v,", err)
 				return
 			}
-			log.Printf("job status \"%s\": %s", job.Status, job.Description)
+			fmt.Printf("job status \"%s\": %s", job.Status, job.Description)
 			if job.Status == "finished" || job.Status == "failed" || job.Status == "canceled" {
 				done <- struct{}{}
 				return
@@ -87,7 +88,7 @@ func CheckingJob(jobMsg *api.RunJobMessage, username *string, token *string) (*a
 	jobBytes, _ := json.Marshal(jobMsg)
 	err = c.WriteMessage(websocket.TextMessage, jobBytes)
 	if err != nil {
-		log.Printf("Error writing job to websocket: %v", err)
+		fmt.Printf("Error writing job to websocket: %v", err)
 		return nil, err
 	}
 	doneFlag := false
@@ -122,7 +123,7 @@ func CheckingJob(jobMsg *api.RunJobMessage, username *string, token *string) (*a
 	// get job msg
 	resp, err := request.GetCloudor(username, token, "/job/user/"+*username+"/id/"+jobMsg.ID)
 	if err != nil {
-		log.Printf("getting job failed %v", err)
+		fmt.Printf("getting job failed %v", err)
 		return nil, err
 	}
 	// somewhere the json is encoded twice, unquote it TODO
@@ -130,9 +131,9 @@ func CheckingJob(jobMsg *api.RunJobMessage, username *string, token *string) (*a
 	jobMessage := api.RunJobMessage{}
 	err = json.Unmarshal(resp, &jobMessage)
 	if err != nil {
-		log.Printf("Internal error, cann't parse job response: %v", err)
+		fmt.Printf("Internal error, cann't parse job response: %v", err)
 		return nil, err
 	}
-	// log.Printf("Return job message %+v", jobMessage)
+	// fmt.Printf("Return job message %+v", jobMessage)
 	return &jobMessage, nil
 }

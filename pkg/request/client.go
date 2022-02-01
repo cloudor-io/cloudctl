@@ -3,7 +3,6 @@ package request
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -83,7 +82,7 @@ func LoginCloudor(username, password, urlPath string) ([]byte, error) {
 	if response.StatusCode() == http.StatusOK {
 		return response.Body(), nil
 	} else if response.StatusCode() == http.StatusUnauthorized {
-		log.Printf("username or password error, please try again.")
+		fmt.Printf("username or password error, please try again.")
 		time.Sleep(2 * time.Second)
 	}
 	return nil, fmt.Errorf("Login failed with code %d", response.StatusCode())

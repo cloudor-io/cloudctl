@@ -16,7 +16,7 @@ import (
 
 func DownloadFromURL(url string, filename string) error {
 	var w *os.File
-	// log.Printf("downloading to file %s", filename)
+	// fmt.Printf("downloading to file %s", filename)
 	if len(filename) > 0 {
 		f, err := os.Create(filename)
 		if err != nil {
@@ -30,7 +30,7 @@ func DownloadFromURL(url string, filename string) error {
 	req, err := http.NewRequest("GET", url, nil)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Printf("Failed to do GET request, %v", err)
+		fmt.Printf("Failed to do GET request, %v", err)
 		return err
 	}
 	defer resp.Body.Close()
@@ -43,7 +43,7 @@ func DownloadFromURL(url string, filename string) error {
 	}
 
 	if _, err = io.Copy(w, resp.Body); err != nil {
-		log.Printf("Failed to write object to file %s, %v", filename, err)
+		fmt.Printf("Failed to write object to file %s, %v", filename, err)
 		return err
 	}
 	return nil
@@ -73,7 +73,7 @@ func DownloadTmpFromURL(url string) (string, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Printf("Failed to do GET request, %v", err)
+		fmt.Printf("Failed to do GET request, %v", err)
 		return "", err
 	}
 	defer resp.Body.Close()

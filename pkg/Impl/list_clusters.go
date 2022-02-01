@@ -2,7 +2,6 @@ package impl
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/cloudor-io/cloudctl/pkg/api"
 	"github.com/cloudor-io/cloudctl/pkg/request"
@@ -27,7 +26,6 @@ func GetClusterStatus(userName, token *string) api.SchedulerStatus {
 
 	status := api.SchedulerStatus{}
 	err = json.Unmarshal(resp.Body(), &status)
-	fmt.Printf("%s\n", string(resp.Body()))
 	utils.CheckErr(err)
 	return status
 }

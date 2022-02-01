@@ -2,7 +2,7 @@ package impl
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 
 	"github.com/cloudor-io/cloudctl/pkg/request"
 )
@@ -11,14 +11,14 @@ import (
 func GetVendors(userName, token *string) (*request.Vendors, error) {
 	resp, err := request.GetCloudor(userName, token, "/vendor")
 	if err != nil {
-		log.Printf("getting vendors failed for user %s: %v", *userName, err)
+		fmt.Printf("getting vendors failed for user %s: %v", *userName, err)
 		return nil, err
 	}
 
 	vendors := request.Vendors{}
 	err = json.Unmarshal(resp, &vendors)
 	if err != nil {
-		log.Printf("Internal error, cann't parse job response: %v", err)
+		fmt.Printf("Internal error, cann't parse job response: %v", err)
 		return nil, err
 	}
 	return &vendors, nil

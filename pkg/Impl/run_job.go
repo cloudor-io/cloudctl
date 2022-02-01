@@ -158,28 +158,28 @@ func (run *RunEngine) Run(username, token *string) error {
 	jobMessage, err := UnmarshalJobMsg(resp)
 	utils.CheckErr(err)
 	if runJobRequest.DryRun {
-		log.Printf("Dry run successful, estimated cost is %.2f%s", jobMessage.RunInfo.Cost.ReservedCredit, jobMessage.RunInfo.Cost.RateUnit)
+		fmt.Printf("Dry run successful, estimated cost is %d%s", jobMessage.RunInfo.Cost.ReservedCredit, jobMessage.RunInfo.Cost.RateUnit)
 		return nil
 	}
 	if resp.StatusCode() == http.StatusAccepted {
 		err = Upload(jobMessage)
 		if err != nil {
-			log.Printf("error uploading %v", err)
+			fmt.Printf("error uploading %v", err)
 			return err
 		}
 		runJobBytes, _ := json.Marshal(jobMessage)
 		resp, err = request.PostCloudor(&runJobBytes, username, token, "/job/start")
 		if err != nil {
-			log.Printf("Starting job failed %v", err)
+			fmt.Printf("Starting job failed %v", err)
 			return err
 		}
 	}
 	// vendor := jobMessage.Job.Vendors[*jobMessage.RunInfo.VendorIndex]
-	// log.Printf("job submitted, running on %s/%s/%s w. timeout %.0f minutes, hourly rate %s%.2f",
+	// fmt.Printf("job submitted, running on %s/%s/%s w. timeout %.0f minutes, hourly rate %s%.2f",
 	//		vendor.Name, vendor.Region, vendor.InstanceType, jobMessage.RunInfo.TimeoutInMin,
 	//		jobMessage.RunInfo.Cost.RateUnit, jobMessage.RunInfo.Cost.HourRate)
 	if run.RunArgs.Detach {
-		log.Printf("Running in detach mode, exiting.")
+		fmt.Printf("Running in detach mode, exiting.")
 		return nil
 	}
 
@@ -216,7 +216,7 @@ func (run *RunEngine) Fetch(jobMessage *api.RunJobMessage) error {
 			}
 		}
 	} else {
-		log.Printf("last status not finished, do not fetch output")
+		fmt.Printf("last status not finished, do not fetch output")
 	}
 	return nil // errors.New("Job returned status not successful.")
 }

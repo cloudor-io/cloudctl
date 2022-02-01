@@ -16,7 +16,7 @@ limitations under the License.
 package cmd
 
 import (
-	"log"
+	"fmt"
 
 	impl "github.com/cloudor-io/cloudctl/pkg/Impl"
 	"github.com/cloudor-io/cloudctl/pkg/utils"
@@ -39,10 +39,10 @@ var creditCmd = &cobra.Command{
 
 		credit, err := impl.GetCredit(username, token)
 		if err != nil {
-			log.Printf("error getting user credit %v", err)
+			fmt.Printf("error getting user credit %v", err)
 			return err
 		}
-		log.Printf("Current credit %.2f$, reserved %.2f$", credit.Credit, credit.Reserved)
+		fmt.Printf("Current credit %.2f$, reserved %.2f$", credit.Credit, credit.Reserved)
 		return nil
 	},
 }
