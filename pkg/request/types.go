@@ -61,7 +61,7 @@ type JobRunInfo struct {
 	JobName      string             `json:"job_name,omitempty" yaml:"job_name"`
 	TimeoutInMin float64            `json:"timeout_in_min,omitempty" yaml:"timeout_in_min"`
 	Duration     int64              `json:"duration,omitempty" yaml:"duration"`
-	Instances    string             `json:"instances,omitempty" yaml:"instances"`
+	Instances    *int32             `json:"instances,omitempty" yaml:"instances"`
 	Cost         Cost               `json:"cost,omitempty" yaml:"cost"`
 	VendorIndex  *int32             `json:"vendor_index,omitempty" yaml:"vendor_index"`
 	InputStages  []api.StageStorage `json:"input_stages,omitempty" yaml:"input_stages"`

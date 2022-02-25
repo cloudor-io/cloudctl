@@ -179,7 +179,7 @@ func (run *RunEngine) Run(username, token *string) error {
 	//		vendor.Name, vendor.Region, vendor.InstanceType, jobMessage.RunInfo.TimeoutInMin,
 	//		jobMessage.RunInfo.Cost.RateUnit, jobMessage.RunInfo.Cost.HourRate)
 	if run.RunArgs.Detach {
-		fmt.Printf("Running in detach mode, exiting.")
+		fmt.Println("Running in detach mode, exiting.")
 		return nil
 	}
 
